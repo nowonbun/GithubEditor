@@ -1,0 +1,106 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#29343a">
+<title>Nowonbun blog editor</title>
+<!-- link rel="stylesheet" type="text/css" href="./css/blog/style.css"-->
+<!-- https://getbootstrap.com/docs/3.3/getting-started/ -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/rainbow.min.css">
+<link rel="stylesheet" href="./css/highlight.init.css">
+<link rel="stylesheet" type="text/css" href="./css/loader.css">
+<link rel="stylesheet" type="text/css" href="./css/common.css">
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+</head>
+<body>
+	<div class="loader off"></div>
+	<section class="loader-layout off"></section>
+	<nav class="navbar navbar-expand-lg nav-costom">
+		<button class="menu-toggle" type="button">MENU</button>
+		<a class="navbar-brand navbar-brand-flex-left" href="./" style="color: #000;">明月の開発ストーリ</a>
+		<div class="collapse navbar-collapse navbar-collapse-flex-100" id="navbarSupportedContent">
+			<div class="form-inline my-2 my-lg-0 search-custom">
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</div>
+		</div>
+	</nav>
+	<aside class="leftside">
+		<h5 class="side-header"><img src="https://t1.daumcdn.net/cfile/tistory/1935C94C505D9F8B13">明月の開発ストーリ</h5>
+		<div class="side-menu bs-glyphicons">
+			<ul class="bs-glyphicons-list">
+				<li onclick="location.href='./';"><span class="fa fa-home" aria-hidden="true" title="Home"></span> <span>Home</span></li>
+				<li onclick="location.href='./write.html'"><span class="fa fa-file-text-o" aria-hidden="true" title="Write"></span> <span>Write</span></li>
+				<li><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li class="menu-close"><span class="fa fa-times" aria-hidden="true" title="Close"></span> <span>Close</span></li>
+				<li class="menu-close-off"><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+			</ul>
+		</div>
+		<div class="side-list">
+			<ul class="side-nav">
+				<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)"> Development note 
+						<span class="fa fa-chevron-down pull-right"></span>
+					</a>
+					<ul class="sub_category_list off">
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/C%20%2C%20C%2B%2B%20%2C%20MFC"> C , C++ , MFC </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/C%EF%BC%83"> C＃ </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/Java"> Java </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/Javascript%2C%20JQuery%2C%20CSS"> Javascript, JQuery, CSS </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/Window"> Window </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/Linux"> Linux </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Development%20note/Etc."> Etc. </a></li>
+					</ul></li>
+				<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)"> Study 
+						<span class="fa fa-chevron-down pull-right"></span>
+					</a>
+					<ul class="sub_category_list off">
+						<li class=""><a class="link_sub_item" href="/category/Study/C%20%2C%20C%2B%2B%20%2C%20MFC"> C , C++ , MFC </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Study/Java"> Java </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Study/C%EF%BC%83"> C＃ </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Study/Javascript%2C%20Jquery%2C%20CSS"> Javascript, Jquery, CSS </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Study/Database"> Database </a></li>
+					</ul></li>
+				<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)"> Open source 
+						<span class="fa fa-chevron-down pull-right"></span>
+					</a>
+					<ul class="sub_category_list off">
+						<li class=""><a class="link_sub_item" href="/category/Open%20source/Javascript%2C%20Jquery%2C%20CSS"> Javascript, Jquery, CSS </a></li>
+					</ul></li>
+				<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)"> Other 
+						<span class="fa fa-chevron-down pull-right"></span>
+					</a>
+					<ul class="sub_category_list off">
+						<li class=""><a class="link_sub_item" href="/category/Other/Experience"> Experience </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Other/Japan%20life"> Japan life </a></li>
+						<li class=""><a class="link_sub_item" href="/category/Other/Secret%20document"> Secret document </a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</aside>
+	<section class="menu-back-layout menu-close off"></section>
+	<div class="container-fluid main-container">
+		<!-- 메인 -->

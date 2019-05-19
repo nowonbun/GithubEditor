@@ -1,0 +1,203 @@
+@charset "UTF-8";
+
+/*common*/
+body {
+	min-width: 320px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.on {
+	display: block !important;
+}
+
+.off {
+	display: none !important;
+	width: 0px !important;
+	width: 0px !important;
+}
+
+.main-container {
+	max-width: 900px;
+}
+
+/*header*/
+.navbar-brand-flex-left {
+	flex: auto;
+	margin-left: 10px;
+}
+
+.navbar-collapse-flex-100 {
+	flex-basis: 100% !important;
+}
+
+.nav-costom {
+	box-shadow: 0px 4px 4px;
+	margin-bottom: 20px;
+}
+
+.nav-costom>button {
+	color: #000;
+	/* padding: 0px !important; */
+	font-size: 1rem;
+	background: #E9E9E9;
+	/* border: 1px double; */
+	/* padding: 22px; */
+	border-radius: 10px;
+	border-style: double;
+	border-color: #000;
+	padding: 2px 5px;
+}
+
+.search-custom {
+	margin-left: auto;
+	margin-right: 0px;
+}
+
+/*menu*/
+aside.leftside {
+	position: fixed;
+	width: 300px;
+	background-color: rgba(255, 255, 255, 1);
+	z-index: 1001;
+	/* transition: left 50ms linear; */
+	border: 1px solid #000;
+	overflow: auto;
+	display: none;
+	top: 0px;
+	box-shadow: 2px 0px 4px;
+	height: 100%
+}
+
+.menu-close-off {
+	display: none;
+}
+
+section.menu-back-layout {
+	background-color: rgba(255, 255, 255, 0.7);
+	z-index: 1000;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+div.bs-glyphicons {
+	width: 100%;
+	height: 55px;
+	/* margin-bottom: 20px; */
+}
+
+ul.bs-glyphicons-list {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+ul.bs-glyphicons-list>li {
+	float: left;
+	width: 20%;
+	height: 55px;
+	padding: 3px;
+	font-size: 10px;
+	line-height: 1;
+	text-align: center;
+	cursor: pointer;
+	padding-top: 6px;
+}
+
+ul.bs-glyphicons-list>li>span:first-child {
+	font-size: 30px;
+	width: 100%;
+}
+
+ul.bs-glyphicons-list>li:hover {
+	background-color: #81a9db;
+	color: #FFF;
+}
+
+aside.leftside h5.side-header>img {
+	width: 50px;
+	height: 50px;
+	background-color: #FFF;
+	border-radius: 30px;
+	margin-right: 20px;
+}
+
+h5.side-header {
+	padding: 10px;
+	box-shadow: 0px 2px 8px;
+}
+
+div.side-list a {
+	text-decoration: none;
+	color: #000;
+}
+
+div.side-list a:hover {
+	color: #81a9db;
+}
+
+div.side-list ul {
+	list-style: none;
+	padding: 0px;
+}
+
+div.side-list>ul.side-nav>li>a {
+	height: 40px;
+	display: block;
+	border-bottom: 1px solid #bdc3c7;
+	margin: 10px;
+	padding: 5px;
+	padding-top: 12px;
+	padding-bottom: 3px;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+div.side-list>ul.side-nav>li>ul>li>a {
+	height: 30px;
+	display: block;
+	margin: 5px;
+	margin-left: 30px;
+	padding: 5px;
+	padding-top: 7px;
+	padding-bottom: 3px;
+	font-size: 15px;
+}
+
+/*Small devices (landscape phones, 576px and up)*/
+@media screen and (min-width: 576px) {
+}
+
+/*Medium devices (tablets, 768px and up)*/
+@media screen and ( min-width : 768px) {
+}
+
+/*Large devices (desktops, 992px and up)*/
+@media screen and ( min-width : 992px) {
+	.navbar-expand-lg .navbar-toggler {
+		display: inherit;
+	}
+}
+
+/*Extra large devices (large desktops, 1200px and up)*/
+@media screen and ( min-width : 1200px) {
+	.menu-toggle {
+		display: none;
+	}
+	.main-container {
+		margin-left: calc(( 100vw - 1200px) / 2 + 300px);
+	}
+	aside.leftside {
+		display: block;
+		top: 70px;
+		height: calc(100vh - 70px);
+	}
+	h5.side-header, .menu-close {
+		display: none;
+	}
+	.menu-close-off {
+		display: block;
+	}
+}
