@@ -12,11 +12,20 @@ public class Category implements Serializable {
 	@Id
 	private String code;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private String name;
 
 	private String uniqcode;
+
+	private int seq;
+
+	@ManyToOne
+	@JoinColumn(name = "p_category_code")
+	private Category category;
+
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	private List<Category> categories;
 
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
 	private List<Post> posts;
@@ -32,11 +41,11 @@ public class Category implements Serializable {
 		this.code = code;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 
@@ -54,6 +63,36 @@ public class Category implements Serializable {
 
 	public void setUniqcode(String uniqcode) {
 		this.uniqcode = uniqcode;
+	}
+
+	public Category getCategory() {
+		return this.category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public List<Category> getCategories() {
+		return this.categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public Category addCategory(Category category) {
+		getCategories().add(category);
+		category.setCategory(this);
+
+		return category;
+	}
+
+	public Category removeCategory(Category category) {
+		getCategories().remove(category);
+		category.setCategory(null);
+
+		return category;
 	}
 
 	public List<Post> getPosts() {
@@ -76,6 +115,14 @@ public class Category implements Serializable {
 		post.setCategory(null);
 
 		return post;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+
+	public int getSeq() {
+		return this.seq;
 	}
 
 }

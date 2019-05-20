@@ -20,7 +20,7 @@ public class Attachment implements Serializable {
 	@Lob
 	private byte[] data;
 
-	private byte isdeleted;
+	private boolean isdeleted;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
@@ -56,11 +56,11 @@ public class Attachment implements Serializable {
 		this.data = data;
 	}
 
-	public byte getIsdeleted() {
+	public boolean getIsdeleted() {
 		return this.isdeleted;
 	}
 
-	public void setIsdeleted(byte isdeleted) {
+	public void setIsdeleted(boolean isdeleted) {
 		this.isdeleted = isdeleted;
 	}
 

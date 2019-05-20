@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="kr">
 <head>
@@ -57,47 +58,27 @@
 		</div>
 		<div class="side-list">
 			<ul class="side-nav">
-				<li class="">
-					<a class="link_item link-item-collapse" href="javascript:void(0)"> Development note 
-						<span class="fa fa-chevron-down pull-right"></span>
-					</a>
-					<ul class="sub_category_list off">
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/C%20%2C%20C%2B%2B%20%2C%20MFC"> C , C++ , MFC </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/C%EF%BC%83"> C＃ </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/Java"> Java </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/Javascript%2C%20JQuery%2C%20CSS"> Javascript, JQuery, CSS </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/Window"> Window </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/Linux"> Linux </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Development%20note/Etc."> Etc. </a></li>
-					</ul></li>
-				<li class="">
-					<a class="link_item link-item-collapse" href="javascript:void(0)"> Study 
-						<span class="fa fa-chevron-down pull-right"></span>
-					</a>
-					<ul class="sub_category_list off">
-						<li class=""><a class="link_sub_item" href="/category/Study/C%20%2C%20C%2B%2B%20%2C%20MFC"> C , C++ , MFC </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Study/Java"> Java </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Study/C%EF%BC%83"> C＃ </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Study/Javascript%2C%20Jquery%2C%20CSS"> Javascript, Jquery, CSS </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Study/Database"> Database </a></li>
-					</ul></li>
-				<li class="">
-					<a class="link_item link-item-collapse" href="javascript:void(0)"> Open source 
-						<span class="fa fa-chevron-down pull-right"></span>
-					</a>
-					<ul class="sub_category_list off">
-						<li class=""><a class="link_sub_item" href="/category/Open%20source/Javascript%2C%20Jquery%2C%20CSS"> Javascript, Jquery, CSS </a></li>
-					</ul></li>
-				<li class="">
-					<a class="link_item link-item-collapse" href="javascript:void(0)"> Other 
-						<span class="fa fa-chevron-down pull-right"></span>
-					</a>
-					<ul class="sub_category_list off">
-						<li class=""><a class="link_sub_item" href="/category/Other/Experience"> Experience </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Other/Japan%20life"> Japan life </a></li>
-						<li class=""><a class="link_sub_item" href="/category/Other/Secret%20document"> Secret document </a></li>
-					</ul>
-				</li>
+				<c:forEach items="${menulist}" var="item">
+					<c:choose>
+					    <c:when test="${empty item.subMenu}">
+						    <li class="">
+								<a class="link_item link-item-collapse" href="${item.url}">${item.text}</a>
+							</li>
+						</c:when>
+						<c:otherwise>
+							<li class="">
+								<a class="link_item link-item-collapse" href="javascript:void(0)"> ${item.text}
+									<span class="fa fa-chevron-down pull-right"></span>
+								</a>
+								<ul class="sub_category_list off">
+									<c:forEach items="${item.subMenu}" var="sub">
+										<li class=""><a class="link_sub_item" href="${sub.url }">${sub.text}</a></li>
+									</c:forEach>
+								</ul>
+							</li>
+    					</c:otherwise>
+					</c:choose>
+				</c:forEach>
 			</ul>
 		</div>
 	</aside>

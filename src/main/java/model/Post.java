@@ -20,12 +20,14 @@ public class Post implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createddate;
 
-	private byte isdeleted;
+	private boolean isdeleted;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
 
 	private String title;
+
+	private String tag;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
@@ -60,11 +62,11 @@ public class Post implements Serializable {
 		this.createddate = createddate;
 	}
 
-	public byte getIsdeleted() {
+	public boolean getIsdeleted() {
 		return this.isdeleted;
 	}
 
-	public void setIsdeleted(byte isdeleted) {
+	public void setIsdeleted(boolean isdeleted) {
 		this.isdeleted = isdeleted;
 	}
 
@@ -100,4 +102,11 @@ public class Post implements Serializable {
 		this.attachments = attachments;
 	}
 
+	public String getTag() {
+		return this.tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 }

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="./particle/top.jsp"></jsp:include>
 <style>
 #title_txt {
@@ -29,6 +30,9 @@ select#category_sel {
 		<hr class="titileHr">
 		<div class="categoryArea">
 			<select class="form-control" id="category_sel">
+				<c:forEach items="${categorylist}" var="item">
+				    <option value="${item.value }">${item.text }</option>
+				</c:forEach>
 			</select>
 		</div>
 	</div>
@@ -50,7 +54,37 @@ select#category_sel {
 		return obj;
 	})({
 		init : function() {
-			
+			$('#add_btn').on('click', function(){
+				if($.trim($('#title_txt').val()) === ""){
+					toastr.error("empty title");
+					return;
+				}
+				_.loading.on();
+				$.ajax({
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						title: $.trim($('#title_txt').val()),
+						category: $('#category_sel').val(),
+						contents: $('#article_contents').summernote('code'),
+						tag: $.trim($('#tag_txt').val())
+					},
+					url : "./createPost.ajax",
+					success : function(data) {
+						if (data.ret) {
+							toastr.success(data.message);
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						console.log(errorThrown);
+						toastr.error("예상치 못한 에러가 발생했습니다. 로그를 확인해 주십시오.");
+					},
+					complete : function(jqXHR, textStatus) {
+						_.loading.off();
+					}
+				});
+			});
 		},
 		onLoad : function() {
 			_.loading.on();
