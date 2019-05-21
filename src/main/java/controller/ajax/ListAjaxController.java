@@ -46,6 +46,8 @@ public class ListAjaxController extends AbstractController {
 				bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
 				ret.add(bean);
 			}
+			//https://stackoverflow.com/questions/240546/remove-html-tags-from-a-string
+			//summary
 
 			returnJson(res, ret);
 		} catch (Throwable e) {
