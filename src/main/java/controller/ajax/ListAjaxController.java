@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.Jsoup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,12 +43,13 @@ public class ListAjaxController extends AbstractController {
 				bean.setIdx(post.getIdx());
 				bean.setTitle(post.getTitle());
 				bean.setTags(post.getTag());
+				bean.setSummary(Jsoup.parse(post.getContents()).text());
 				bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
 				bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
 				ret.add(bean);
 			}
-			//https://stackoverflow.com/questions/240546/remove-html-tags-from-a-string
-			//summary
+			// https://stackoverflow.com/questions/240546/remove-html-tags-from-a-string
+			// summary
 
 			returnJson(res, ret);
 		} catch (Throwable e) {

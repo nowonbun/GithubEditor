@@ -229,8 +229,12 @@ select#category_sel {
 			},
 			onLoad : function() {
 				_.loading.on();
+				var node_height = $(window).height() - 400;
+				if(node_height < 250){
+					node_height = 250;
+				}
 				$('#article_contents').summernote({
-					height : $(window).height() - 400,
+					height : node_height,
 					maximumImageFileSize : maximumImageFileSize
 				});
 				_.loading.off();

@@ -3,6 +3,7 @@ package bean;
 public class ListBean {
 	private int idx;
 	private String title;
+	private String summary;
 	private String tags;
 	private String createddate;
 	private String lastupdateddate;
@@ -45,6 +46,14 @@ public class ListBean {
 
 	public void setLastupdateddate(String lastupdateddate) {
 		this.lastupdateddate = lastupdateddate;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 
 }

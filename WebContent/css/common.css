@@ -182,53 +182,82 @@ div.searchList h3>span {
 }
 
 div.searchList h3>span:before {
-    content: "\201C";
-    color: #81a9db;
-    font-size: 25px;
+	content: "\201C";
+	color: #81a9db;
+	font-size: 25px;
 }
 
 div.searchList h3>span:after {
-    content: "\201D";
-    color: #81a9db;
-    font-size: 25px;
+	content: "\201D";
+	color: #81a9db;
+	font-size: 25px;
 }
 
-article > div.searchListEntity {
-    box-shadow: 2px 2px 4px;
-    margin: 10px 0px;
-    padding: 0px 30px;
+article>div.searchListEntity {
+	box-shadow: 2px 2px 4px;
+	margin: 10px 0px;
+	padding: 0px 30px;
 }
 
-article > div.searchListEntity > div.list-body a {
-    text-decoration: none;
+article>div.searchListEntity>div.list-body a {
+	text-decoration: none;
+	color: #000;
+}
+
+article>div.searchListEntity>div.list-body .flexbox {
+	float: left;
+}
+
+article>div.searchListEntity>div.list-body a.list-link>h3 {
+	/*font-size: 1.5rem;*/
+	white-space: normal;
+	line-height: 1.2;
+	min-height: 1.2em;
+	max-height: 2.4em;
+	/* white-space: nowrap; */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+	word-wrap: break-word;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	margin-top: 15px;
+}
+
+article>div.searchListEntity>div.list-body a.list-link:hover>h3 {
+	color: #81a9db;
+}
+
+.data-column-label, .date-column, .tag-column {
+	font-size: 0.70rem;
+}
+
+.list-meta p {
+	margin-bottom: 5px;
+	line-height: 0.75rem;
+}
+
+.note-editing-area p {
+	margin-bottom: 0px;
+}
+
+article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
+    font-size: 15px;
     color: #000;
-}
-article > div.searchListEntity > div.list-body .flexbox{
-    float: left;
-}
-
-article > div.searchListEntity > div.list-body a.list-link > h3 {
-    /*font-size: 1.5rem;*/
+    /* min-height: 80px; */
     white-space: normal;
     line-height: 1.2;
-    min-height: 1.2em;
-    max-height: 2.4em;
+    height: 3.6em;
     /* white-space: nowrap; */
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
     word-wrap: break-word;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    margin-top: 15px;
-}
-.data-column-label, .date-column, .tag-column{
-	font-size: 0.70rem;
-}
-.list-meta p {
-	margin-bottom: 5px;
-    line-height: 0.75rem;
+    word-break: break-all;
 }
 
 /*Small devices (landscape phones, 576px and up)*/

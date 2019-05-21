@@ -75,6 +75,7 @@
 						if(post.tags !== undefined && post.tags !== null){
 							$article.find(".tag-column").text(post.tags);	
 						}
+						$article.find(".list-summary").text(post.summary);
 						$article.find(".date-column.create-date").text(post.createddate);
 						$article.find(".date-column.update-date").text(post.lastupdateddate);
 						$(".list-area").append($article);
