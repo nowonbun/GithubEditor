@@ -19,7 +19,9 @@ import dao.CategoryDao;
 import model.Category;
 
 public class AbstractController {
-	
+
+	private Gson GSON = null;
+
 	protected Cookie[] getCookies(HttpServletRequest request) {
 		return request.getCookies();
 	}
@@ -54,8 +56,10 @@ public class AbstractController {
 	protected void returnJson(HttpServletResponse res, Object data) {
 		try {
 			res.setContentType("content-type: application/json; charset=utf-8");
-			Gson gson = new Gson();
-			res.getWriter().println(gson.toJson(data));
+			if (GSON == null) {
+				GSON = new Gson();
+			}
+			res.getWriter().println(GSON.toJson(data));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

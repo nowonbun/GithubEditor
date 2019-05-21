@@ -30,18 +30,14 @@ create table post(
 
 create table attachment(
 	idx int auto_increment not null,
+	post_idx int null,
 	data longblob not null,
+	type varchar(255) null,
+	filename varchar(255) null,
 	createddate datetime,
 	lastupdateddate datetime,
 	isdeleted bit default 0,
 	
-	primary key(idx)
+	primary key(idx),
+	foreign key (post_idx) references post(idx)
 ) comment = 'transaction';
-
-create table post_attachemt(
-	post_idx int not null,
-	attach_idx int not null,
-	
-	foreign key (post_idx) references post(idx),
-	foreign key (attach_idx) references attachment(idx)
-) comment = 'map';

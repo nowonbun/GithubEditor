@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import common.AbstractDao;
+import model.Category;
 import model.Post;
 
 public class PostDao extends AbstractDao<Post> {
@@ -32,6 +33,25 @@ public class PostDao extends AbstractDao<Post> {
 			} catch (NoResultException e) {
 				return null;
 			}
+		});
+	}
+
+	public long getCountByCategory(Category category) {
+		return transaction((em) -> {
+			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false and p.category = :category");
+			query.setParameter("category", category);
+			return (long) query.getSingleResult();
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Post> selectByCategory(Category category, int start, int count) {
+		return transaction((em) -> {
+			Query query = em.createQuery("SELECT p FROM Post p where p.isdeleted = false and p.category = :category order by p.idx desc");
+			query.setParameter("category", category);
+			query.setFirstResult(start);
+			query.setMaxResults(count);
+			return (List<Post>) query.getResultList();
 		});
 	}
 }

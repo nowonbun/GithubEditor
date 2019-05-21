@@ -35,4 +35,17 @@ public class CategoryDao extends AbstractDao<Category> {
 			}
 		});
 	}
+
+	public Category select(String code) {
+		return transaction((em) -> {
+			try {
+				Query query = em.createQuery("SELECT c FROM Category c WHERE c.code = :code");
+				query.setParameter("code", code);
+				return (Category) query.getSingleResult();
+			} catch (NoResultException e) {
+				return null;
+			}
+		});
+	}
+	
 }

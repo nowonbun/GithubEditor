@@ -32,7 +32,7 @@ public class Post implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;
 
-	@ManyToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Attachment> attachments;
 
 	public Post() {
@@ -78,20 +78,20 @@ public class Post implements Serializable {
 		this.lastupdateddate = lastupdateddate;
 	}
 
+	public String getTag() {
+		return this.tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
 	public String getTitle() {
 		return this.title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Category getCategory() {
-		return this.category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 
 	public List<Attachment> getAttachments() {
@@ -102,11 +102,26 @@ public class Post implements Serializable {
 		this.attachments = attachments;
 	}
 
-	public String getTag() {
-		return this.tag;
+	public Attachment addAttachment(Attachment attachment) {
+		getAttachments().add(attachment);
+		attachment.setPost(this);
+
+		return attachment;
 	}
 
-	public void setTag(String tag) {
-		this.tag = tag;
+	public Attachment removeAttachment(Attachment attachment) {
+		getAttachments().remove(attachment);
+		attachment.setPost(null);
+
+		return attachment;
 	}
+
+	public Category getCategory() {
+		return this.category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 }

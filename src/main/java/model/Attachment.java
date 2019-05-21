@@ -3,7 +3,6 @@ package model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NamedQuery(name = "Attachment.findAll", query = "SELECT a FROM Attachment a")
@@ -25,9 +24,12 @@ public class Attachment implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "post_attachemt", joinColumns = { @JoinColumn(name = "attach_idx") }, inverseJoinColumns = { @JoinColumn(name = "post_idx") })
-	private List<Post> posts;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Post post;
+
+	private String filename;
+
+	private String type;
 
 	public Attachment() {
 	}
@@ -56,6 +58,14 @@ public class Attachment implements Serializable {
 		this.data = data;
 	}
 
+	public String getFilename() {
+		return this.filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
 	public boolean getIsdeleted() {
 		return this.isdeleted;
 	}
@@ -72,12 +82,20 @@ public class Attachment implements Serializable {
 		this.lastupdateddate = lastupdateddate;
 	}
 
-	public List<Post> getPosts() {
-		return this.posts;
+	public String getType() {
+		return this.type;
 	}
 
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Post getPost() {
+		return this.post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 }

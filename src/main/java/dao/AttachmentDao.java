@@ -36,4 +36,16 @@ public class AttachmentDao extends AbstractDao<Attachment> {
 			}
 		});
 	}
+
+	public Attachment select(int idx) {
+		return transaction((em) -> {
+			try {
+				Query query = em.createQuery("SELECT a FROM Attachment a WHERE a.idx=:idx");
+				query.setParameter("idx", idx);
+				return (Attachment) query.getSingleResult();
+			} catch (NoResultException e) {
+				return null;
+			}
+		});
+	}
 }
