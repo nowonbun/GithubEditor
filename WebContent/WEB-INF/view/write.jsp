@@ -1,25 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="./particle/top.jsp"></jsp:include>
-<style>
-#title_txt {
-	font-size: 25px;
-	height: 40px;
-}
-
-#tag_txt {
-	font-size: 18px;
-	height: 34px;
-}
-
-div.titleArea {
-	margin-bottom: 15px;
-}
-
-select#category_sel {
-	height: 34px;
-}
-</style>
 <div class="modal attachment-dialog" tabindex="-1" role="dialog" aria-label="Insert Image" aria-modal="true" style="display: none;">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -29,15 +10,10 @@ select#category_sel {
 			</div>
 			<div class="modal-body">
 				<div class="form-group note-form-group note-group-select-from-files">
-					<label class="note-form-label">Select from files</label> <input class="note-attach-input note-form-control note-input" type="file" name="files" accept="*" multiple="multiple"> <small>Maximum
-						file size : 512 KB</small>
+					<label class="note-form-label">Select from files</label> 
+					<input class="note-attach-input note-form-control note-input" type="file" name="files" accept="*" multiple="multiple"> 
+					<small>Maximum file size : 1 MB</small>
 				</div>
-				<div class="form-group note-group-attach-url" style="overflow: auto;">
-					<label class="note-form-label">Attachment URL</label> <input class="note-attach-url form-control note-form-control note-input  col-md-12" type="text">
-				</div>
-			</div>
-			<div class="modal-footer">
-				<input type="button" href="#" class="btn btn-primary note-btn note-btn-primary note-attach-btn" value="Insert Image" disabled="">
 			</div>
 		</div>
 	</div>

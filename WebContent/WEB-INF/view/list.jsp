@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:include page="./particle/top.jsp"></jsp:include>
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 list-area-panel">
 	<div class="searchList">
 		<h3>
 			<span>${title}</span> 検索結果
