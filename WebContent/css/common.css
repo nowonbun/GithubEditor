@@ -219,7 +219,7 @@ article>div.searchListEntity>div.list-body .flexbox {
 	float: left;
 }
 
-article>div.searchListEntity>div.list-body a.list-link>h3 {
+article>div.searchListEntity>div.list-body a.list-link>h5 {
 	/*font-size: 1.5rem;*/
 	white-space: normal;
 	line-height: 1.2;
@@ -236,7 +236,7 @@ article>div.searchListEntity>div.list-body a.list-link>h3 {
 	margin-top: 15px;
 }
 
-article>div.searchListEntity>div.list-body a.list-link:hover>h3 {
+article>div.searchListEntity>div.list-body a.list-link:hover>h5 {
 	color: #81a9db;
 }
 
@@ -254,7 +254,7 @@ article>div.searchListEntity>div.list-body a.list-link:hover>h3 {
 }
 
 article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
-    font-size: 15px;
+    font-size: 0.85rem;
     color: #000;
     /* min-height: 80px; */
     white-space: normal;
@@ -300,11 +300,16 @@ article.entry.post {
 
 article.entry.post p{
 	margin-bottom: 0px;
+	font-size: 0.9rem;
 }
 
 article.entry.post #article_contents{
 	min-height:300px;
 	height: calc(100vh - 300px);
+}
+
+.categoryArea{
+    font-size: 0.7rem;
 }
 
 /*Small devices (landscape phones, 576px and up)*/

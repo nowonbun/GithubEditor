@@ -7,6 +7,9 @@ public class PostBean {
 	private String categoryName;
 	private String contents;
 	private String tags;
+	private String categoryUrl;
+	private String createDate;
+	private String lastUpdateDate;
 
 	public int getIdx() {
 		return idx;
@@ -54,6 +57,30 @@ public class PostBean {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	public String getCategoryUrl() {
+		return categoryUrl;
+	}
+
+	public void setCategoryUrl(String categoryUrl) {
+		this.categoryUrl = categoryUrl;
+	}
+
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(String lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 }

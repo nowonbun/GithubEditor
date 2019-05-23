@@ -27,11 +27,11 @@
 <article class="entry post">
 	<div class="titleArea">
 		<div class="title" id="article_title">
-			<h2>${post.title }</h2>
+			<h3 id="titleTxt">${post.title }</h3>
 		</div>
 		<hr class="titileHr">
 		<div class="categoryArea">
-			${post.categoryName }
+			<a href="${post.categoryUrl }">${post.categoryName }</a> &nbsp;&nbsp; ${post.createDate}
 		</div>
 	</div>
 	<div class="article">
@@ -46,6 +46,22 @@
 		</div>
 	</div>
 </article>
+<div id="template" style="display:none;">
+	<div id="categoryAreaTemplate">
+		<select class="form-control">
+			<c:forEach items="${categorylist}" var="item">
+				<c:choose>
+					<c:when test="${item.value eq post.categoryCode }">
+						<option value="${item.value }" selected>${item.text }</option>
+					</c:when>
+					<c:otherwise>
+						<option value="${item.value }">${item.text }</option>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</select>
+	</div>
+</div>
 <jsp:include page="./particle/bottom.jsp"></jsp:include>
 <script>
 	var _this = (function(obj) {
@@ -55,7 +71,8 @@
 	})((function() {
 		var modifyMode = false;
 		function changeModifyMode(){
-			console.log("Mode change");
+			$("#article_title").html($("<input type='text' class='form-control' id='title_txt' placeholder='title'>").val($("#titleTxt").text()));
+			$(".categoryArea").html($($("#categoryAreaTemplate").html()).prop("id","category_sel"));
 			modifyMode = true;
 		}
 		function updatePost(){

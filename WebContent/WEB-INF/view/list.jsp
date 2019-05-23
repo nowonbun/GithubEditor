@@ -18,7 +18,7 @@
 		<div class="list-body" style="width: 100%;">
 			<div class="flexbox">
 				<a class="list-link" href="">
-					<h3 class="list-head ie-nanum ci-link"></h3>
+					<h5 class="list-head ie-nanum ci-link"></h5>
 					<p class="list-summary"></p>
 				</a>
 				<div class="list-meta ie-dotum">
