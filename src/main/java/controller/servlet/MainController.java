@@ -129,6 +129,7 @@ public class MainController extends AbstractController {
 			bean.setTags(post.getTag());
 			bean.setContents(post.getContents());
 			modelmap.addAttribute("post", bean);
+			modelmap.addAttribute("data", getGson().toJson(bean));
 			modelmap.addAttribute("categorylist", getCategorySelectList());
 			return "post";
 		} catch (Throwable e) {

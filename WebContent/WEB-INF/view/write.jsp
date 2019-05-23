@@ -42,7 +42,7 @@
 		<hr />
 		<div class="list-meta ie-dotum">
 			<span class="timeago ff-h dt-published tag-column" id="article_tag"> 
-				<input type='text' class='form-control' id='tag_txt' placeholder="tag">
+				<input type='text' class='form-control' id='tag_txt' placeholder='tag'>
 			</span>
 		</div>
 	</div>
@@ -124,15 +124,12 @@
 		}
 		return {
 			init : function() {
-				$(document).on("change", "input[type=file].note-image-input", function() {
+				$("input[type=file].note-image-input").on("change", function() {
 					if ($(this)[0].files[0].size > maximumImageFileSize) {
 						toastr.error("big file.");
 					}
 				});
-				$(document).on("click", ".attachment-tools", function() {
-					$(".attachment-dialog").modal("show");
-				});
-				$(document).on("change", "input[type=file].note-attach-input", function() {
+				$("input[type=file].note-attach-input").on("change", function() {
 					if ($(this)[0].files[0].size > maximumImageFileSize) {
 						toastr.error("big file.");
 						$("input[type=file].note-attach-input").val("");
@@ -211,14 +208,21 @@
 				}
 				$('#article_contents').summernote({
 					height : node_height,
-					maximumImageFileSize : maximumImageFileSize
+					maximumImageFileSize : maximumImageFileSize,
+					callbacks:{
+						onInit: function(){
+							//attachfile
+							var button = $('<button type="button" role="button" tabindex="-1" title="" aria-label="Attachfile" data-original-title="Attachfile"></button>');
+							button.addClass("note-btn btn btn-light btn-sm attachment-tools");
+							button.append($('<i class="fa fa-paperclip"></i>'));
+							button.on("click", function(){
+								$(".attachment-dialog").modal("show");
+							});
+							$(".note-btn-group.btn-group.note-insert").append(button);			
+						}
+					}
 				});
 				_.loading.off();
-				//attachfile
-				var button = $('<button type="button" role="button" tabindex="-1" title="" aria-label="Attachfile" data-original-title="Attachfile"></button>');
-				button.addClass("note-btn btn btn-light btn-sm attachment-tools");
-				button.append($('<i class="fa fa-paperclip"></i>'));
-				$(".note-btn-group.btn-group.note-insert").append(button);
 			}
 		}
 	})());

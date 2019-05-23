@@ -53,13 +53,17 @@ public class AbstractController {
 		}
 	}
 
+	protected Gson getGson() {
+		if (GSON == null) {
+			GSON = new Gson();
+		}
+		return GSON;
+	}
+
 	protected void returnJson(HttpServletResponse res, Object data) {
 		try {
 			res.setContentType("content-type: application/json; charset=utf-8");
-			if (GSON == null) {
-				GSON = new Gson();
-			}
-			res.getWriter().println(GSON.toJson(data));
+			res.getWriter().println(getGson().toJson(data));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -94,13 +98,15 @@ public class AbstractController {
 	protected void setMenu(ModelMap modelmap) {
 		try {
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
+					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			List<MenuBean> selectList = new ArrayList<>();
 			for (Category c : pList) {
 				MenuBean bean = new MenuBean();
 				bean.setUrl("list.html?category=" + c.getCode());
 				bean.setText(c.getName());
-				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
+						.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
 					bean.setSubMenu(new ArrayList<>());
 					for (Category sub : sublist) {
