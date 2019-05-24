@@ -127,4 +127,56 @@ public class PostAjaxController extends AbstractController {
 			res.setStatus(406);
 		}
 	}
+
+	@RequestMapping(value = "/modifyPost.ajax")
+	public void modifyPost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		try {
+			String idx = req.getParameter("idx");
+			String title = req.getParameter("title");
+			String category = req.getParameter("category");
+			String contents = req.getParameter("contents");
+			String tags = req.getParameter("tags");
+			if (Util.StringIsEmptyOrNull(idx) || Util.StringIsEmptyOrNull(title) || Util.StringIsEmptyOrNull(category)) {
+				throw new RuntimeException();
+			}
+			int id = Integer.parseInt(idx);
+			Post post = FactoryDao.getDao(PostDao.class).select(id);
+			post.setTitle(title);
+			post.setCategory(FactoryDao.getDao(CategoryDao.class).select(category));
+
+			// Document doc = Jsoup.connect("http://jobc.tistory.com/").get();
+			Document doc = Jsoup.parse(contents);
+			Elements nodes = doc.select("img[data-filename],a.attachfile[data-filename]");
+			post.setAttachments(new ArrayList<>());
+			for (Element node : nodes) {
+				String attr = null;
+				if (node.tagName().equals("img")) {
+					attr = node.attr("src");
+				}
+				if (node.tagName().equals("a")) {
+					attr = node.attr("href");
+				}
+				if (!Util.StringIsEmptyOrNull(attr)) {
+					String aIdx = attr.replace("./getAttachFile.ajax?idx=", "");
+					try {
+						int aId = Integer.parseInt(aIdx);
+						Attachment attachment = FactoryDao.getDao(AttachmentDao.class).select(aId);
+						post.getAttachments().add(attachment);
+						attachment.setPost(post);
+					} catch (NumberFormatException e) {
+
+					}
+				}
+			}
+			post.setIsdeleted(false);
+			post.setTag(tags);
+			post.setContents(contents);
+			post.setLastupdateddate(new Date());
+			FactoryDao.getDao(PostDao.class).update(post);
+
+			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
+		} catch (Throwable e) {
+			res.setStatus(406);
+		}
+	}
 }

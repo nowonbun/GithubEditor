@@ -118,6 +118,7 @@ public class MainController extends AbstractController {
 			}
 			PostBean bean = new PostBean();
 			bean.setIdx(post.getIdx());
+			//TODO: Null Eception was occurrd.
 			bean.setCategoryCode(post.getCategory().getCode());
 			bean.setCategoryUrl("./list.html?category=" + post.getCategory().getCode());
 			bean.setCategoryName(post.getCategory().getCategory().getName() + " / " + post.getCategory().getName());
