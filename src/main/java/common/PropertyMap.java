@@ -1,6 +1,8 @@
 package common;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
@@ -28,7 +30,9 @@ public class PropertyMap {
 				map.put(session, pro);
 				ClassLoader cl = Thread.currentThread().getContextClassLoader();
 				URL url = cl.getResource(session + ".properties");
-				pro.load(url.openStream());
+				try (InputStream straem = url.openStream()) {
+					pro.load(straem);
+				}
 			}
 			Properties property = map.get(session);
 			return property.getProperty(key);
@@ -43,6 +47,22 @@ public class PropertyMap {
 			return Integer.parseInt(data);
 		} catch (Throwable e) {
 			return 0;
+		}
+	}
+
+	public String getTemplateFile(String templatefile) {
+		try {
+			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			URL url = cl.getResource(templatefile + ".tpl.html");
+			File file = new File(url.getFile());
+			byte[] data = new byte[(int) file.length()];
+			try (InputStream straem = url.openStream()) {
+				straem.read(data, 0, data.length);
+				return new String(data);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }
