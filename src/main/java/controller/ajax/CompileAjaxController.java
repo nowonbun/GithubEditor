@@ -19,8 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import bean.StatusBean;
 import common.AbstractController;
+import common.FactoryDao;
 import common.PropertyMap;
 import common.Util;
+import dao.CategoryDao;
+import dao.PostDao;
+import model.Category;
+import model.Post;
 
 @Controller
 public class CompileAjaxController extends AbstractController {
@@ -93,12 +98,39 @@ public class CompileAjaxController extends AbstractController {
 			setStatus(CompileStatus.start, "The git root files will be initialize", 10);
 			File file = new File(path);
 			file.mkdir();
-
+			
+			String main = PropertyMap.getInstance().getTemplateFile("main");
+			String list = PropertyMap.getInstance().getTemplateFile("list");
 			// file create
-			createFile(path + "\\index.html", PropertyMap.getInstance().getTemplateFile("main"));
+			createFile(path + "\\index.html", main);
 
-			setStatus(CompileStatus.start, "The compiler was start.", 1);
+			List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
+			categorys.parallelStream().forEach(category -> {
+				String template = list;
+				template = replaceCategory(category, template);
+				createFile(path + "\\" + category.getUniqcode() + ".html", template);
+			});
+
+			List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
+			posts.parallelStream().forEach(post -> {
+				String template = PropertyMap.getInstance().getTemplateFile("post");
+				template = replacePost(post, template);
+				createFile(path + "\\" + post.getIdx() + ".html", template);
+			});
+
+			// rss - xml
+			// sitemap - xml
+
+			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 		});
+	}
+
+	private String replaceCategory(Category category, String template) {
+		return template;
+	}
+
+	private String replacePost(Post post, String template) {
+		return template;
 	}
 
 	private void createFile(String filename, String data) {
