@@ -23,6 +23,7 @@ body {
 	box-shadow: 1px 1px 2px;
 	padding-top: 10px;
     padding-bottom: 10px;
+	min-height: calc( 100vh - 50px);
 }
 
 /*header*/
@@ -204,6 +205,10 @@ div.searchList h3>span:after {
 	font-size: 25px;
 }
 
+article>div.no-result{
+	margin-top: 100px;
+}
+
 article>div.searchListEntity {
 	box-shadow: 1px 1px 2px;
 	margin: 10px 0px;
@@ -305,7 +310,7 @@ article.entry.post p{
 
 article.entry.post #article_contents{
 	min-height:300px;
-	height: calc(100vh - 300px);
+	/*height: calc(100vh - 300px);*/
 }
 
 .categoryArea{

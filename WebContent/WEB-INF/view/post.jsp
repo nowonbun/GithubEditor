@@ -18,10 +18,28 @@
 		</div>
 	</div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">削除メッセージ</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">このポストを削除しますか？</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-danger" id="delete_btn">削除</button>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="row" style="margin-bottom: 20px;">
 	<div class="col-md-12" style="text-align: right;">
 		<button class="btn btn-success" id="modify_btn">修正</button>
-		<button class="btn btn-success" id="delete_btn">削除</button>
+		<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">削除</button>
 	</div>
 </div>
 <article class="entry post">
@@ -35,19 +53,15 @@
 		</div>
 	</div>
 	<div class="article">
-		<div class="tt_article_useless_p_margin" id="article_contents">
-			${post.contents }
-		</div>
+		<div class="tt_article_useless_p_margin" id="article_contents">${post.contents }</div>
 		<hr />
 		<div class="list-meta ie-dotum">
-			<span class="timeago ff-h dt-published tag-column" id="article_tag"> 
-				${post.tags }
-			</span>
+			<span class="timeago ff-h dt-published tag-column" id="article_tag"> ${post.tags } </span>
 		</div>
 	</div>
 </article>
 <input type="hidden" id="originalData" value='${data }'>
-<div id="template" style="display:none;">
+<div id="template" style="display: none;">
 	<div id="categoryAreaTemplate">
 		<select class="form-control">
 			<c:forEach items="${categorylist}" var="item">
@@ -63,6 +77,5 @@
 		</select>
 	</div>
 </div>
-<jsp:include page="./particle/bottom.jsp"></jsp:include>
 <script type="text/javascript" src="./js/post.js"></script>
 <jsp:include page="./particle/bottom.jsp"></jsp:include>

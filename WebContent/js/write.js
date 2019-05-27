@@ -26,7 +26,7 @@ var _this = (function(obj) {
 					error : function(jqXHR, textStatus, errorThrown) {
 						console.log(jqXHR);
 						console.log(errorThrown);
-						toastr.error("예상치 못한 에러가 발생했습니다. 로그를 확인해 주십시오.");
+						toastr.error("エラーが発生しました。ログを確認してください。");
 					},
 					complete : function(jqXHR, textStatus) {
 						_.loading.off();
@@ -49,7 +49,7 @@ var _this = (function(obj) {
 					error : function(jqXHR, textStatus, errorThrown) {
 						console.log(jqXHR);
 						console.log(errorThrown);
-						toastr.error("예상치 못한 에러가 발생했습니다. 로그를 확인해 주십시오.");
+						toastr.error("エラーが発生しました。ログを確認してください。");
 						er.call(this, data);
 					},
 					complete : function(jqXHR, textStatus) {

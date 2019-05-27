@@ -38,8 +38,7 @@ public class PostDao extends AbstractDao<Post> {
 
 	public long getCountByCategory(Category category) {
 		return transaction((em) -> {
-			Query query = em
-					.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false and p.category = :category");
+			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false and p.category = :category");
 			query.setParameter("category", category);
 			return (long) query.getSingleResult();
 		});
@@ -48,12 +47,18 @@ public class PostDao extends AbstractDao<Post> {
 	@SuppressWarnings("unchecked")
 	public List<Post> selectByCategory(Category category, int start, int count) {
 		return transaction((em) -> {
-			Query query = em.createQuery(
-					"SELECT p FROM Post p where p.isdeleted = false and p.category = :category order by p.idx desc");
+			Query query = em.createQuery("SELECT p FROM Post p where p.isdeleted = false and p.category = :category order by p.idx desc");
 			query.setParameter("category", category);
 			query.setFirstResult(start);
 			query.setMaxResults(count);
 			return (List<Post>) query.getResultList();
+		});
+	}
+
+	public long getCount() {
+		return transaction((em) -> {
+			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false");
+			return (long) query.getSingleResult();
 		});
 	}
 

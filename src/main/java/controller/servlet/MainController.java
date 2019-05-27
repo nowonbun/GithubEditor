@@ -84,12 +84,7 @@ public class MainController extends AbstractController {
 			if (category == null) {
 				throw new RuntimeException();
 			}
-			String title = null;
-			if (category.getCategory() != null) {
-				title = category.getCategory().getName() + " / " + category.getName();
-			} else {
-				title = category.getName();
-			}
+			String title = getCategoryName(category);
 			long count = FactoryDao.getDao(PostDao.class).getCountByCategory(category);
 
 			modelmap.addAttribute("title", title);
@@ -118,10 +113,10 @@ public class MainController extends AbstractController {
 			}
 			PostBean bean = new PostBean();
 			bean.setIdx(post.getIdx());
-			//TODO: Null Eception was occurrd.
+			// TODO: Null Eception was occurrd.
 			bean.setCategoryCode(post.getCategory().getCode());
 			bean.setCategoryUrl("./list.html?category=" + post.getCategory().getCode());
-			bean.setCategoryName(post.getCategory().getCategory().getName() + " / " + post.getCategory().getName());
+			bean.setCategoryName(getCategoryName(post.getCategory()));
 			bean.setCreateDate(Util.convertDateFormat(post.getCreateddate()));
 			if (post.getLastupdateddate() != null) {
 				bean.setLastUpdateDate(Util.convertDateFormat(post.getLastupdateddate()));
@@ -139,4 +134,12 @@ public class MainController extends AbstractController {
 		}
 	}
 
+	private String getCategoryName(Category category) {
+		String name = "";
+		if (category.getCategory() != null) {
+			name += getCategoryName(category.getCategory()) + " / ";
+		}
+		name += category.getName();
+		return name;
+	}
 }

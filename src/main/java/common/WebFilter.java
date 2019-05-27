@@ -48,7 +48,7 @@ public class WebFilter implements Filter {
 		}
 		res.setStatus(403);
 		HttpServletResponse httpResponse = (HttpServletResponse) sres;
-		httpResponse.sendRedirect("/error.html");
+		httpResponse.sendRedirect("./error.html");
 	}
 
 	public void destroy() {

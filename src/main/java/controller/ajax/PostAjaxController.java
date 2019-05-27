@@ -141,6 +141,9 @@ public class PostAjaxController extends AbstractController {
 			}
 			int id = Integer.parseInt(idx);
 			Post post = FactoryDao.getDao(PostDao.class).select(id);
+			if (post == null) {
+				throw new RuntimeException();
+			}
 			post.setTitle(title);
 			post.setCategory(FactoryDao.getDao(CategoryDao.class).select(category));
 
@@ -171,6 +174,28 @@ public class PostAjaxController extends AbstractController {
 			post.setIsdeleted(false);
 			post.setTag(tags);
 			post.setContents(contents);
+			post.setLastupdateddate(new Date());
+			FactoryDao.getDao(PostDao.class).update(post);
+
+			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
+		} catch (Throwable e) {
+			res.setStatus(406);
+		}
+	}
+
+	@RequestMapping(value = "/deletePost.ajax")
+	public void deletePost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		try {
+			String idx = req.getParameter("idx");
+			if (Util.StringIsEmptyOrNull(idx)) {
+				throw new RuntimeException();
+			}
+			int id = Integer.parseInt(idx);
+			Post post = FactoryDao.getDao(PostDao.class).select(id);
+			if (post == null) {
+				throw new RuntimeException();
+			}
+			post.setIsdeleted(true);
 			post.setLastupdateddate(new Date());
 			FactoryDao.getDao(PostDao.class).update(post);
 

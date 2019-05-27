@@ -47,6 +47,5 @@
 		</div>
 	</div>
 </article>
-<jsp:include page="./particle/bottom.jsp"></jsp:include>
 <script type="text/javascript" src="./js/write.js"></script>
 <jsp:include page="./particle/bottom.jsp"></jsp:include>
