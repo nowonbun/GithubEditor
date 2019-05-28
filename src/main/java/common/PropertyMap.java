@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
@@ -13,7 +12,6 @@ import java.util.Properties;
 public class PropertyMap {
 	private static PropertyMap singleton = null;
 	private String webContentPath = null;
-	private Map<String, String> flyweight = new HashMap<>();
 
 	public static PropertyMap getInstance() {
 		if (singleton == null) {
@@ -56,16 +54,7 @@ public class PropertyMap {
 
 	public String getTemplateFile(String templatefileName) {
 		try {
-			File file = null;
-			// TODO: why null Exception???
-			synchronized (flyweight) {
-				if (!flyweight.containsKey(templatefileName)) {
-					ClassLoader cl = Thread.currentThread().getContextClassLoader();
-					URL url = cl.getResource(templatefileName + ".tpl.html");
-					flyweight.put(templatefileName, url.getFile());
-				}
-				file = new File(flyweight.get(templatefileName));
-			}
+			File file = new File(getClassPath() + File.separator + templatefileName + ".tpl.html");
 			byte[] data = new byte[(int) file.length()];
 			try (InputStream straem = new FileInputStream(file)) {
 				straem.read(data, 0, data.length);
@@ -83,5 +72,9 @@ public class PropertyMap {
 
 	public String getWebRootPath() {
 		return this.webContentPath;
+	}
+
+	public String getClassPath() {
+		return getWebRootPath() + File.separator + "WEB-INF" + File.separator + "classes";
 	}
 }

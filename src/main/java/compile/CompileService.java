@@ -70,12 +70,34 @@ public class CompileService {
 			File file = new File(path);
 			file.mkdir();
 
-			List<File> jsFiles = getFiles(PropertyMap.getInstance().getWebRootPath() + "\\js", null);
-			File jsDir = new File(path + File.pathSeparator);
+			List<File> jsFiles = getFiles(PropertyMap.getInstance().getWebRootPath() + File.separator + "js", null);
+			File jsDir = new File(path + File.separator + "js");
 			jsDir.mkdir();
 			jsFiles.parallelStream().forEach(f -> {
 				try {
-					copyFile(f.getAbsolutePath(), path + File.pathSeparator + f.getName());
+					copyFile(f.getAbsolutePath(), jsDir.getAbsolutePath() + File.separator + f.getName());
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			});
+			
+			List<File> cssFiles = getFiles(PropertyMap.getInstance().getWebRootPath() + File.separator + "css", null);
+			File cssDir = new File(path + File.separator + "css");
+			cssDir.mkdir();
+			cssFiles.parallelStream().forEach(f -> {
+				try {
+					copyFile(f.getAbsolutePath(), cssDir.getAbsolutePath() + File.separator + f.getName());
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			});
+			
+			List<File> imgFiles = getFiles(PropertyMap.getInstance().getWebRootPath() + File.separator + "img", null);
+			File imgDir = new File(path + File.separator + "img");
+			imgDir.mkdir();
+			imgFiles.parallelStream().forEach(f -> {
+				try {
+					copyFile(f.getAbsolutePath(), imgDir.getAbsolutePath() + File.separator + f.getName());
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
@@ -84,20 +106,20 @@ public class CompileService {
 			String main = PropertyMap.getInstance().getTemplateFile("main");
 			String list = PropertyMap.getInstance().getTemplateFile("list");
 			// file create
-			createFile(path + File.pathSeparator + "index.html", main);
+			createFile(path + File.separator + "index.html", main);
 
 			List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
 			categorys.parallelStream().forEach(category -> {
 				String template = list;
 				template = replaceCategory(category, template);
-				createFile(path + File.pathSeparator + category.getUniqcode() + ".html", template);
+				createFile(path + File.separator + category.getUniqcode() + ".html", template);
 			});
 
 			List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
 			posts.parallelStream().forEach(post -> {
 				String template = PropertyMap.getInstance().getTemplateFile("post");
 				template = replacePost(post, template);
-				createFile(path + File.pathSeparator + post.getIdx() + ".html", template);
+				createFile(path + File.separator + post.getIdx() + ".html", template);
 			});
 
 			// rss - xml
