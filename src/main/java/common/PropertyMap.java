@@ -1,15 +1,19 @@
 package common;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
 public class PropertyMap {
 	private static PropertyMap singleton = null;
+	private String webContentPath = null;
+	private Map<String, String> flyweight = new HashMap<>();
 
 	public static PropertyMap getInstance() {
 		if (singleton == null) {
@@ -50,13 +54,20 @@ public class PropertyMap {
 		}
 	}
 
-	public String getTemplateFile(String templatefile) {
+	public String getTemplateFile(String templatefileName) {
 		try {
-			ClassLoader cl = Thread.currentThread().getContextClassLoader();
-			URL url = cl.getResource(templatefile + ".tpl.html");
-			File file = new File(url.getFile());
+			File file = null;
+			// TODO: why null Exception???
+			synchronized (flyweight) {
+				if (!flyweight.containsKey(templatefileName)) {
+					ClassLoader cl = Thread.currentThread().getContextClassLoader();
+					URL url = cl.getResource(templatefileName + ".tpl.html");
+					flyweight.put(templatefileName, url.getFile());
+				}
+				file = new File(flyweight.get(templatefileName));
+			}
 			byte[] data = new byte[(int) file.length()];
-			try (InputStream straem = url.openStream()) {
+			try (InputStream straem = new FileInputStream(file)) {
 				straem.read(data, 0, data.length);
 				return new String(data);
 			}
@@ -64,5 +75,13 @@ public class PropertyMap {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public void setWebRootPath(String path) {
+		this.webContentPath = path;
+	}
+
+	public String getWebRootPath() {
+		return this.webContentPath;
 	}
 }
