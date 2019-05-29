@@ -1,5 +1,5 @@
 package compile;
 
 public enum CompileStatus {
-	wait, start
+	wait, start, init, copy, write
 }

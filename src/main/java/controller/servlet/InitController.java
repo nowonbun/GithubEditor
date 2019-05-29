@@ -16,7 +16,7 @@ public class InitController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		String path = getServletContext().getRealPath("/");
-		System.out.println(path);
+		//System.out.println(path);
 		PropertyMap.getInstance().setWebRootPath(path);
 	}
 }
