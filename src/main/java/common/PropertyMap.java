@@ -30,9 +30,11 @@ public class PropertyMap {
 			if (!map.containsKey(session)) {
 				Properties pro = new Properties();
 				map.put(session, pro);
-				ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				URL url = cl.getResource(session + ".properties");
-				try (InputStream straem = url.openStream()) {
+				// ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				// URL url = cl.getResource(session + ".properties");
+				// try (InputStream straem = url.openStream()) {
+				File file = new File(getClassPath() + File.separator + session + ".properties");
+				try (InputStream straem = new FileInputStream(file)) {
 					pro.load(straem);
 				}
 			}

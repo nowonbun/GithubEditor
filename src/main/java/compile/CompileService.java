@@ -98,37 +98,61 @@ public class CompileService {
 			});
 			String rss = createRss(posts);
 			createFile(path + File.separator + "rss", rss);
-			// rss - xml
-			// sitemap - xml
+
+			String sitemap = createSiteMap(posts);
+			createFile(path + File.separator + "sitemap.xml", sitemap);
 
 			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 		});
 	}
-	
-	private String createRss(List<Post> posts)
-    {
-		//file:///home/nowonbun/Downloads/rss
+
+	private String createSiteMap(List<Post> posts) {
+		// http://www.nowonbun.com/sitemap.xml
 		StringBuffer xml = new StringBuffer();
 		xml.append("<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>");
-		xml.append("<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
-		xml.append(createTag("channel", ()->{
+		xml.append("<urlset xmlns=\\\"http://www.sitemaps.org/schemas/sitemap/0.9\\\">");
+		for (Post post : posts) {
+			xml.append(createTag("url", () -> {
+				StringBuffer url = new StringBuffer();
+				url.append(createTag("loc", ""));
+				// yyyy-MM-ddTHH:mm:ss.fffffffzzz
+				url.append(createTag("lastmod", ""));
+				url.append(createTag("changefred", ""));
+				url.append(createTag("priority", ""));
+				return url.toString();
+			}));
+		}
+		xml.append("</urlset>");
+		return xml.toString();
+	}
+
+	private String createRss(List<Post> posts) {
+		// file:///home/nowonbun/Downloads/rss
+		StringBuffer xml = new StringBuffer();
+		xml.append("<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>");
+		xml.append(
+				"<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
+		xml.append(createTag("channel", () -> {
 			StringBuffer channel = new StringBuffer();
-			channel.append(createTag("title", ""));
-			channel.append(createTag("link",""));
-			channel.append(createTag("description",""));
-			channel.append(createTag("language",""));
+			channel.append(createTag("title", PropertyMap.getInstance().getProperty("config", "rss_title")));
+			channel.append(createTag("link", PropertyMap.getInstance().getProperty("config", "rss_link")));
+			channel.append(
+					createTag("description", PropertyMap.getInstance().getProperty("config", "rss_description")));
+			channel.append(createTag("language", PropertyMap.getInstance().getProperty("config", "rss_language")));
 			// format "ddd, dd MMM yyyy HH:mm:ss 'GMT'"
-			channel.append(createTag("pubDate",""));
-			channel.append(createTag("generator",""));
-			channel.append(createTag("managingEditor", ""));
-			channel.append(createTag("webMaster", ""));
-			for(Post post: posts) {
-				channel.append(createTag("item", () ->{
+			channel.append(createTag("pubDate", ""));
+			channel.append(createTag("generator", PropertyMap.getInstance().getProperty("config", "rss_generator")));
+			channel.append(
+					createTag("managingEditor", PropertyMap.getInstance().getProperty("config", "rss_managingEditor")));
+			channel.append(createTag("webMaster", PropertyMap.getInstance().getProperty("config", "rss_webMaster")));
+			for (Post post : posts) {
+				channel.append(createTag("item", () -> {
 					StringBuffer item = new StringBuffer();
 					item.append(createTag("title", ""));
 					item.append(createTag("link", ""));
 					item.append(createTag("description", ""));
 					item.append(createTag("category", ""));
+					item.append(createTag("author", PropertyMap.getInstance().getProperty("config", "rss_author")));
 					item.append(createTag("guid", ""));
 					item.append(createTag("pubDate", ""));
 					return item.toString();
@@ -138,36 +162,33 @@ public class CompileService {
 		}));
 		xml.append("</rss>");
 		return xml.toString();
-    }
-	
-	 private String CreateDescription(String contents)
-     {
-		 //return "";
-         contents = contents.toLowerCase();
-         int pos = contents.indexOf("<pre");
-         while (pos > -1)
-         {
-             int epos = contents.indexOf("</pre>", pos);
-             if (epos < 0)
-             {
-                 break;
-             }
-             //contents = contents.Remove(pos, epos - pos);
-             //contents.subSequence(beginIndex, endIndex)
-             pos = contents.indexOf("<pre");
-         }
-         return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "") + "]]>";
-         //return "<![CDATA[" + Regex.Replace(contents, "<[^>]*>", "").Replace("&nbsp;", "") + "]]>";
-     }
-	
+	}
+
+	private String CreateDescription(String contents) {
+		// return "";
+		contents = contents.toLowerCase();
+		int pos = contents.indexOf("<pre");
+		while (pos > -1) {
+			int epos = contents.indexOf("</pre>", pos);
+			if (epos < 0) {
+				break;
+			}
+			// contents = contents.Remove(pos, epos - pos);
+			// contents.subSequence(beginIndex, endIndex)
+			pos = contents.indexOf("<pre");
+		}
+		return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "") + "]]>";
+		// return "<![CDATA[" + Regex.Replace(contents, "<[^>]*>", "").Replace("&nbsp;",
+		// "") + "]]>";
+	}
+
 	private String createTag(String tagName, Callable<String> func) {
 		try {
 			return createTag(tagName, func.call());
-		}catch(Throwable e) {
+		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	private String createTag(String tagName, String data) {
 		return "<" + tagName + ">" + data + "</" + tagName + ">";
