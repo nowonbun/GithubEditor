@@ -86,6 +86,7 @@ public class PostAjaxController extends AbstractController {
 	@RequestMapping(value = "/addAttachFile.ajax")
 	public void addAttachFile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		try {
+			//filename encoding.
 			String filename = req.getParameter("filename");
 			String type = req.getParameter("type");
 			String data = req.getParameter("data");

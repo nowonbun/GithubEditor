@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -22,6 +23,7 @@ import common.Util;
 import common.IF.LambdaExpression;
 import dao.CategoryDao;
 import dao.PostDao;
+import model.Attachment;
 import model.Category;
 import model.Post;
 
@@ -74,6 +76,12 @@ public class CompileService {
 			File file = new File(path);
 			file.mkdir();
 
+			File attachPath = new File(path + File.separator + "contetns");
+			if (attachPath.exists()) {
+				deleteFiles(attachPath);
+			}
+			attachPath.mkdir();
+
 			setStatus(CompileStatus.copy, "The Javascript files was copied to git root", 15);
 			copyDirectory("js");
 			setStatus(CompileStatus.copy, "The Css files was copied to git root", 20);
@@ -84,28 +92,56 @@ public class CompileService {
 			String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 			String listTemp = PropertyMap.getInstance().getTemplateFile("list");
 			String postTemp = PropertyMap.getInstance().getTemplateFile("post");
-			// file create
+			// index.html
 			createFile(path + File.separator + "index.html", mainTemp);
 
+			// list.html
 			List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
 			categorys.parallelStream().forEach(category -> {
 				String template = replaceCategory(category, listTemp);
 				createFile(path + File.separator + category.getUniqcode() + ".html", template);
 			});
 
+			// post.html
 			List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
 			posts.parallelStream().forEach(post -> {
+				File postAttach = new File(attachPath.getAbsolutePath() + File.separator + post.getIdx());
+				if (postAttach.exists()) {
+					deleteFiles(postAttach);
+				}
+				postAttach.mkdir();
+				for (Attachment attach : post.getAttachments()) {
+					try {
+						createFile(
+								postAttach.getAbsoluteFile() + File.separator + attach.getIdx() + "_"
+										+ URLEncoder.encode(attach.getFilename(), StandardCharsets.UTF_8.toString()),
+								attach.getData());
+					} catch (Throwable e) {
+						throw new RuntimeException(e);
+					}
+				}
 				String template = replacePost(post, postTemp);
 				createFile(path + File.separator + post.getIdx() + ".html", template);
 			});
+
+			// rss
 			String rss = createRss(posts);
 			createFile(path + File.separator + "rss", rss);
 
+			// sitemap
 			String sitemap = createSiteMap(posts);
 			createFile(path + File.separator + "sitemap.xml", sitemap);
 
 			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 		});
+	}
+
+	private void createFile(String path, byte[] data) {
+		try (FileOutputStream stream = new FileOutputStream(path)) {
+			stream.write(data, 0, data.length);
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private String createSiteMap(List<Post> posts) {
@@ -119,7 +155,8 @@ public class CompileService {
 				url.append(createTag("loc",
 						PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html"));
 				url.append(createTag("lastmod", Util.convertGMT2DateFormat(post.getLastupdateddate())));
-				url.append(createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
+				url.append(
+						createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
 				url.append(createTag("priority", PropertyMap.getInstance().getProperty("config", "sitemap_priority")));
 				return url.toString();
 			}));
@@ -177,7 +214,6 @@ public class CompileService {
 	}
 
 	private String createDescription(String contents) {
-		// return "";
 		contents = contents.toLowerCase();
 		int pos = contents.indexOf("<pre");
 		while (pos > -1) {
@@ -191,13 +227,14 @@ public class CompileService {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		//return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "") + "]]>";
+		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "")
+		// + "]]>";
 		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
-		if(ret.length() > 1020) {
-			return ret.substring(0, 1020);	
+		if (ret.length() > 1020) {
+			return ret.substring(0, 1020);
 		}
 		return ret;
-		
+
 	}
 
 	private String createTag(String tagName, Callable<String> func) {
@@ -217,7 +254,7 @@ public class CompileService {
 		List<File> files = getFiles(PropertyMap.getInstance().getWebRootPath() + File.separator + dirName);
 		File newDir = new File(path + File.separator + dirName);
 		if (newDir.exists()) {
-			deleteFiles(newDir.getAbsolutePath());
+			deleteFiles(newDir);
 		}
 		newDir.mkdir();
 		files.parallelStream().forEach(f -> {
@@ -278,6 +315,10 @@ public class CompileService {
 			list.add(file);
 		}
 		return list;
+	}
+
+	private void deleteFiles(File file) {
+		deleteFiles(file.getAbsolutePath());
 	}
 
 	private void deleteFiles(String path) {
