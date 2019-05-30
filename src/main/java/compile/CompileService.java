@@ -11,12 +11,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import common.FactoryDao;
 import common.PropertyMap;
+import common.Util;
 import common.IF.LambdaExpression;
 import dao.CategoryDao;
 import dao.PostDao;
@@ -114,11 +116,11 @@ public class CompileService {
 		for (Post post : posts) {
 			xml.append(createTag("url", () -> {
 				StringBuffer url = new StringBuffer();
-				url.append(createTag("loc", ""));
-				// yyyy-MM-ddTHH:mm:ss.fffffffzzz
-				url.append(createTag("lastmod", ""));
-				url.append(createTag("changefred", ""));
-				url.append(createTag("priority", ""));
+				url.append(createTag("loc",
+						PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html"));
+				url.append(createTag("lastmod", Util.convertGMT2DateFormat(post.getLastupdateddate())));
+				url.append(createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
+				url.append(createTag("priority", PropertyMap.getInstance().getProperty("config", "sitemap_priority")));
 				return url.toString();
 			}));
 		}
@@ -139,22 +141,23 @@ public class CompileService {
 			channel.append(
 					createTag("description", PropertyMap.getInstance().getProperty("config", "rss_description")));
 			channel.append(createTag("language", PropertyMap.getInstance().getProperty("config", "rss_language")));
-			// format "ddd, dd MMM yyyy HH:mm:ss 'GMT'"
-			channel.append(createTag("pubDate", ""));
+			channel.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
 			channel.append(createTag("generator", PropertyMap.getInstance().getProperty("config", "rss_generator")));
 			channel.append(
 					createTag("managingEditor", PropertyMap.getInstance().getProperty("config", "rss_managingEditor")));
 			channel.append(createTag("webMaster", PropertyMap.getInstance().getProperty("config", "rss_webMaster")));
 			for (Post post : posts) {
 				channel.append(createTag("item", () -> {
+					String link = PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx()
+							+ ".html";
 					StringBuffer item = new StringBuffer();
-					item.append(createTag("title", ""));
-					item.append(createTag("link", ""));
-					item.append(createTag("description", ""));
-					item.append(createTag("category", ""));
+					item.append(createTag("title", post.getTitle()));
+					item.append(createTag("link", link));
+					item.append(createTag("description", createDescription(post.getContents())));
+					item.append(createTag("category", getCategoryName(post.getCategory())));
 					item.append(createTag("author", PropertyMap.getInstance().getProperty("config", "rss_author")));
-					item.append(createTag("guid", ""));
-					item.append(createTag("pubDate", ""));
+					item.append(createTag("guid", link));
+					item.append(createTag("pubDate", Util.convertGMTDateFormat(post.getLastupdateddate())));
 					return item.toString();
 				}));
 			}
@@ -164,7 +167,16 @@ public class CompileService {
 		return xml.toString();
 	}
 
-	private String CreateDescription(String contents) {
+	private String getCategoryName(Category category) {
+		String name = "";
+		if (category.getCategory() != null) {
+			name += getCategoryName(category.getCategory()) + " / ";
+		}
+		name += category.getName();
+		return name;
+	}
+
+	private String createDescription(String contents) {
 		// return "";
 		contents = contents.toLowerCase();
 		int pos = contents.indexOf("<pre");
@@ -173,13 +185,19 @@ public class CompileService {
 			if (epos < 0) {
 				break;
 			}
-			// contents = contents.Remove(pos, epos - pos);
-			// contents.subSequence(beginIndex, endIndex)
+			epos += 6;
+			String pre = contents.substring(0, pos);
+			String after = contents.substring(epos, contents.length());
+			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "") + "]]>";
-		// return "<![CDATA[" + Regex.Replace(contents, "<[^>]*>", "").Replace("&nbsp;",
-		// "") + "]]>";
+		//return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "") + "]]>";
+		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
+		if(ret.length() > 1020) {
+			return ret.substring(0, 1020);	
+		}
+		return ret;
+		
 	}
 
 	private String createTag(String tagName, Callable<String> func) {

@@ -13,6 +13,8 @@ public class Util {
 	private final static DateFormat yyyyMMddFormat = new SimpleDateFormat("yyyy/MM/dd");
 	private final static DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMddHHmmss");
 	private final static DateFormat javascriptDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	private final static DateFormat GMTDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+	private final static DateFormat GMTDateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
 	public static boolean StringEquals(String val1, String val2) {
 		if (val1 == null) {
@@ -108,5 +110,19 @@ public class Util {
 			return null;
 		}
 		return javascriptDateFormat.format(date);
+	}
+
+	public static String convertGMTDateFormat(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return GMTDateFormat.format(date);
+	}
+
+	public static String convertGMT2DateFormat(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return GMTDateFormat2.format(date);
 	}
 }
