@@ -16,8 +16,8 @@
 <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css">
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/rainbow.min.css">
-<link rel="stylesheet" href="./css/highlight.init.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/rainbow.min.css">
+<link rel="stylesheet" type="text/css" href="./css/highlight.init.css">
 <link rel="stylesheet" type="text/css" href="./css/loader.css">
 <link rel="stylesheet" type="text/css" href="./css/common.css">
 

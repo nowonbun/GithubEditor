@@ -1,10 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#29343a">
+<title>#####TITLE#####</title>
+<link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css">
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/rainbow.min.css">
+<link rel="stylesheet" type="text/css" href="./css/highlight.init.css">
+<link rel="stylesheet" type="text/css" href="./css/loader.css">
+<link rel="stylesheet" type="text/css" href="./css/common.css">
+
+<script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
 </head>
 <body>
-
+	<div class="loader off"></div>
+	<section class="loader-layout off"></section>
+	<nav class="navbar navbar-expand-lg nav-costom">
+		<button class="menu-toggle" type="button">MENU</button>
+		<a class="navbar-brand navbar-brand-flex-left" href="./" style="color: #000;">明月の開発ストーリ</a>
+		<div class="collapse navbar-collapse navbar-collapse-flex-100" id="navbarSupportedContent">
+			<div class="form-inline my-2 my-lg-0 search-custom">
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</div>
+		</div>
+	</nav>
+	<aside class="leftside">
+		<h5 class="side-header"><img src="https://t1.daumcdn.net/cfile/tistory/1935C94C505D9F8B13">明月の開発ストーリ</h5>
+		<div class="side-menu bs-glyphicons">
+			<ul class="bs-glyphicons-list">
+				<li onclick="location.href='./';"><span class="fa fa-home" aria-hidden="true" title="Home"></span> <span>Home</span></li>
+				<li><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li class="menu-close"><span class="fa fa-times" aria-hidden="true" title="Close"></span> <span>Close</span></li>
+				<li class="menu-close-off"><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+			</ul>
+		</div>
+		<div class="form-inline my-2 my-lg-0 search-custom side-search" style="padding: 5px;">
+			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width:65%">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+		</div>
+		<div class="side-list">
+			<ul class="side-nav">
+				#####MENU#####
+			</ul>
+		</div>
+	</aside>
+	<section class="menu-back-layout menu-close off"></section>
+	<div class="container-fluid main-container">
+		<!-- 메인 -->
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 list-area-panel">
+			<div class="searchList">
+				<h3>
+					<span>#####CATEGORYNAME#####</span> 検索結果
+				</h3>
+				<p>検索件数 : <span id="searchResultCount"></span>　件</p>
+			</div>
+			<div class="list-area"></div>
+		</div>
+		<template class="list-article">
+			<article class="list-item">
+				<div class="list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity">
+					<div class="list-body" style="width: 100%;">
+						<div class="flexbox">
+							<a class="list-link" href="">
+								<h5 class="list-head ie-nanum ci-link"></h5>
+								<p class="list-summary"></p>
+							</a>
+							<div class="list-meta ie-dotum">
+								<p><span class="timeago ff-h dt-published tag-column"></span></p> 
+								<p>
+									<span class="data-column-label">作成日付 :</span>
+									<span class="timeago ff-h dt-published date-column create-date"></span>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<span class="data-column-label">修正日付 :</span>
+									<span class="timeago ff-h dt-published date-column update-date"></span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+		</template>
+		<script type="text/javascript" src="./js/list.js"></script>
+	</div>
 </body>
 </html>

@@ -24,7 +24,7 @@ public class Category implements Serializable {
 	@JoinColumn(name = "p_category_code")
 	private Category category;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
 	private List<Category> categories;
 
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
