@@ -6,6 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+
+import com.google.gson.Gson;
+
 import common.IF.LambdaExpression;
 
 public class Util {
@@ -15,6 +18,7 @@ public class Util {
 	private final static DateFormat javascriptDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private final static DateFormat GMTDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
 	private final static DateFormat GMTDateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	private static Gson gson = null;
 
 	public static boolean StringEquals(String val1, String val2) {
 		if (val1 == null) {

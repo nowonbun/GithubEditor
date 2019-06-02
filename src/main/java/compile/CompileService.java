@@ -15,6 +15,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
+
+import com.google.gson.Gson;
+
+import bean.ListBean;
 import bean.MenuBean;
 import common.FactoryDao;
 import common.PropertyMap;
@@ -90,10 +96,14 @@ public class CompileService {
 			String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 			String listTemp = PropertyMap.getInstance().getTemplateFile("list");
 			String postTemp = PropertyMap.getInstance().getTemplateFile("post");
-			// index.html
-			createFile(path + File.separator + "index.html", mainTemp);
+
 			String title = PropertyMap.getInstance().getProperty("config", "title");
 			String menu = createMenu();
+			mainTemp = replaceTagForTemplate(mainTemp, "TITLE", title);
+			mainTemp = replaceTagForTemplate(mainTemp, "MENU", menu);
+
+			// index.html
+			createFile(path + File.separator + "index.html", mainTemp);
 
 			// list.html
 			List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
@@ -102,10 +112,24 @@ public class CompileService {
 					return;
 				}
 				String template = replaceCategory(category, listTemp);
-				replaceTagForTemplate(template, "TITLE", title + " :: " + getCategoryName(category));
-				replaceTagForTemplate(template, "MENU", menu);
-				replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
+				template = replaceTagForTemplate(template, "TITLE", title + " :: " + getCategoryName(category));
+				template = replaceTagForTemplate(template, "MENU", menu);
+				template = replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
 				createFile(path + File.separator + category.getUniqcode() + ".html", template);
+				
+				List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
+				List<ListBean> list = new ArrayList<>();
+				for(Post post : postsOfCategory) {
+					ListBean bean = new ListBean();
+					bean.setIdx(post.getIdx());
+					bean.setTitle(post.getTitle());
+					bean.setTags(post.getTag());
+					bean.setSummary(Jsoup.parse(post.getContents()).text());
+					bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
+					bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
+					list.add(bean);
+				}
+				//createFile(path+ File.separator + category.getUniqcode() + ".json",Gson.)
 			});
 
 			// post.html
