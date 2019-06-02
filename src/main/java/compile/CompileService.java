@@ -9,20 +9,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
 import bean.MenuBean;
 import common.FactoryDao;
 import common.PropertyMap;
 import common.Util;
-import common.IF.LambdaExpression;
 import dao.CategoryDao;
 import dao.PostDao;
 import model.Attachment;
@@ -85,11 +81,11 @@ public class CompileService {
 			attachPath.mkdir();
 
 			setStatus(CompileStatus.copy, "The Javascript files was copied to git root", 15);
-			copyDirectory("js");
+			copyDirectoryToGitRoot("js");
 			setStatus(CompileStatus.copy, "The Css files was copied to git root", 20);
-			copyDirectory("css");
+			copyDirectoryToGitRoot("css");
 			setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
-			copyDirectory("img");
+			copyDirectoryToGitRoot("img");
 
 			String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 			String listTemp = PropertyMap.getInstance().getTemplateFile("list");
@@ -142,6 +138,12 @@ public class CompileService {
 			// sitemap
 			String sitemap = createSiteMap(posts);
 			createFile(path + File.separator + "sitemap.xml", sitemap);
+
+			String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
+			deleteFiles(httppath);
+			File http = new File(httppath);
+			http.mkdir();
+			copyDirectory(path, httppath);
 
 			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 		});
@@ -264,7 +266,28 @@ public class CompileService {
 		return "<" + tagName + ">" + data + "</" + tagName + ">";
 	}
 
-	private void copyDirectory(String dirName) {
+	private void copyDirectory(String src, String dest) {
+		File source = new File(src);
+		File destination = new File(dest);
+		if (source.isDirectory()) {
+			if (!destination.exists()) {
+				destination.mkdir();
+			}
+			File[] files = source.listFiles();
+			for (File file : files) {
+				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName());
+			}
+		}
+		if (source.isFile()) {
+			try {
+				copyFile(src, dest);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void copyDirectoryToGitRoot(String dirName) {
 		String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
 		List<File> files = getFiles(PropertyMap.getInstance().getWebRootPath() + File.separator + dirName);
 		File newDir = new File(path + File.separator + dirName);
