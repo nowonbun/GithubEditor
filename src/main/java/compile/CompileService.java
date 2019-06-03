@@ -15,11 +15,18 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import bean.ListBean;
 import bean.MenuBean;
 import common.FactoryDao;
 import common.PropertyMap;
 import common.Util;
+import dao.AttachmentDao;
 import dao.CategoryDao;
 import dao.PostDao;
 import model.Attachment;
@@ -153,8 +160,7 @@ public class CompileService {
 				template = replaceTagForTemplate(template, "CATEGORY_NAME", getCategoryName(post.getCategory()));
 				template = replaceTagForTemplate(template, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
 				template = replaceTagForTemplate(template, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
-				// contents url change
-				template = replaceTagForTemplate(template, "CONTENTS", post.getContents());
+				template = replaceTagForTemplate(template, "CONTENTS", getContetns(post));
 				template = replaceTagForTemplate(template, "TAG", post.getTag());
 				createFile(path + File.separator + post.getIdx() + ".html", template);
 			});
@@ -175,6 +181,42 @@ public class CompileService {
 
 			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 		});
+	}
+
+	private String getContetns(Post post) {
+		Document doc = Jsoup.parse(post.getContents());
+		Elements nodes = doc.select("img[data-filename],a.attachfile[data-filename]");
+		for (Element node : nodes) {
+			String attr = null;
+			if (node.tagName().equals("img")) {
+				attr = node.attr("src");
+			}
+			if (node.tagName().equals("a")) {
+				attr = node.attr("href");
+			}
+			if (!Util.StringIsEmptyOrNull(attr)) {
+				String idx = attr.replace("./getAttachFile.ajax?idx=", "");
+				idx = idx.trim();
+				try {
+					int id = Integer.parseInt(idx);
+					Attachment attachment = FactoryDao.getDao(AttachmentDao.class).select(id);
+					if (attachment != null) {
+						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_" + URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
+					} else {
+						attr = "";
+					}
+				} catch (Throwable e) {
+					attr = "";
+				}
+				if (node.tagName().equals("img")) {
+					node.attr("src", attr);
+				}
+				if (node.tagName().equals("a")) {
+					node.attr("href", attr);
+				}
+			}
+		}
+		return doc.html();
 	}
 
 	private String replaceTagForTemplate(String template, String tagName, String data) {

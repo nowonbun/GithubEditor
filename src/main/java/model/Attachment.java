@@ -24,7 +24,7 @@ public class Attachment implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Post post;
 
 	private String filename;
