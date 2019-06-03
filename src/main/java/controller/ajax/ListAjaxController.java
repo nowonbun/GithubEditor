@@ -2,16 +2,12 @@ package controller.ajax;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.jsoup.Jsoup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import bean.ListBean;
 import common.AbstractController;
 import common.FactoryDao;
@@ -43,7 +39,8 @@ public class ListAjaxController extends AbstractController {
 				bean.setIdx(post.getIdx());
 				bean.setTitle(post.getTitle());
 				bean.setTags(post.getTag());
-				bean.setSummary(Jsoup.parse(post.getContents()).text());
+				// bean.setSummary(Jsoup.parse(post.getContents()).text());
+				bean.setSummary(createDescription(post.getContents()));
 				bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
 				bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
 				ret.add(bean);
@@ -55,5 +52,28 @@ public class ListAjaxController extends AbstractController {
 		} catch (Throwable e) {
 			res.setStatus(406);
 		}
+	}
+
+	private String createDescription(String contents) {
+		contents = contents.toLowerCase();
+		int pos = contents.indexOf("<pre");
+		while (pos > -1) {
+			int epos = contents.indexOf("</pre>", pos);
+			if (epos < 0) {
+				break;
+			}
+			epos += 6;
+			String pre = contents.substring(0, pos);
+			String after = contents.substring(epos, contents.length());
+			contents = pre + System.lineSeparator() + after;
+			pos = contents.indexOf("<pre");
+		}
+		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "")
+		// + "]]>";
+		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
+		if (ret.length() > 1020) {
+			return ret.substring(0, 1020);
+		}
+		return ret;
 	}
 }

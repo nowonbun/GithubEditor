@@ -129,4 +129,12 @@ public class Util {
 		}
 		return GMTDateFormat2.format(date);
 	}
+
+	public static Gson getGson() {
+		if (Util.gson == null) {
+			Util.gson = new Gson();
+		}
+		return Util.gson;
+	}
+
 }

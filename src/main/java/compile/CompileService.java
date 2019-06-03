@@ -15,11 +15,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
-import org.jsoup.Jsoup;
-
-import com.google.gson.Gson;
-
 import bean.ListBean;
 import bean.MenuBean;
 import common.FactoryDao;
@@ -80,7 +75,7 @@ public class CompileService {
 			File file = new File(path);
 			file.mkdir();
 
-			File attachPath = new File(path + File.separator + "contetns");
+			File attachPath = new File(path + File.separator + "contents");
 			if (attachPath.exists()) {
 				deleteFiles(attachPath);
 			}
@@ -115,21 +110,23 @@ public class CompileService {
 				template = replaceTagForTemplate(template, "TITLE", title + " :: " + getCategoryName(category));
 				template = replaceTagForTemplate(template, "MENU", menu);
 				template = replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
+				template = replaceTagForTemplate(template, "JSONFILE", "./" + category.getUniqcode() + ".json");
 				createFile(path + File.separator + category.getUniqcode() + ".html", template);
-				
+
 				List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
 				List<ListBean> list = new ArrayList<>();
-				for(Post post : postsOfCategory) {
+				for (Post post : postsOfCategory) {
 					ListBean bean = new ListBean();
 					bean.setIdx(post.getIdx());
 					bean.setTitle(post.getTitle());
 					bean.setTags(post.getTag());
-					bean.setSummary(Jsoup.parse(post.getContents()).text());
+					bean.setSummary(createDescription(post.getContents()));
 					bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
 					bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
 					list.add(bean);
 				}
-				//createFile(path+ File.separator + category.getUniqcode() + ".json",Gson.)
+
+				createFile(path + File.separator + category.getUniqcode() + ".json", Util.getGson().toJson(list));
 			});
 
 			// post.html
@@ -142,16 +139,23 @@ public class CompileService {
 				postAttach.mkdir();
 				for (Attachment attach : post.getAttachments()) {
 					try {
-						createFile(
-								postAttach.getAbsoluteFile() + File.separator + attach.getIdx() + "_"
-										+ URLEncoder.encode(attach.getFilename(), StandardCharsets.UTF_8.toString()),
+						createFile(postAttach.getAbsoluteFile() + File.separator + attach.getIdx() + "_" + URLEncoder.encode(attach.getFilename(), StandardCharsets.UTF_8.toString()),
 								attach.getData());
 					} catch (Throwable e) {
 						throw new RuntimeException(e);
 					}
 				}
 				String template = replacePost(post, postTemp);
-				replaceTagForTemplate(template, "menu", menu);
+				template = replaceTagForTemplate(template, "TITLE", title + " :: " + post.getTitle());
+				template = replaceTagForTemplate(template, "MENU", menu);
+				template = replaceTagForTemplate(template, "CONTENTS_TITLE", post.getTitle());
+				template = replaceTagForTemplate(template, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
+				template = replaceTagForTemplate(template, "CATEGORY_NAME", getCategoryName(post.getCategory()));
+				template = replaceTagForTemplate(template, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
+				template = replaceTagForTemplate(template, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
+				// contents url change
+				template = replaceTagForTemplate(template, "CONTENTS", post.getContents());
+				template = replaceTagForTemplate(template, "TAG", post.getTag());
 				createFile(path + File.separator + post.getIdx() + ".html", template);
 			});
 
@@ -193,11 +197,9 @@ public class CompileService {
 		for (Post post : posts) {
 			xml.append(createTag("url", () -> {
 				StringBuffer url = new StringBuffer();
-				url.append(createTag("loc",
-						PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html"));
+				url.append(createTag("loc", PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html"));
 				url.append(createTag("lastmod", Util.convertGMT2DateFormat(post.getLastupdateddate())));
-				url.append(
-						createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
+				url.append(createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
 				url.append(createTag("priority", PropertyMap.getInstance().getProperty("config", "sitemap_priority")));
 				return url.toString();
 			}));
@@ -216,18 +218,15 @@ public class CompileService {
 			StringBuffer channel = new StringBuffer();
 			channel.append(createTag("title", PropertyMap.getInstance().getProperty("config", "rss_title")));
 			channel.append(createTag("link", PropertyMap.getInstance().getProperty("config", "rss_link")));
-			channel.append(
-					createTag("description", PropertyMap.getInstance().getProperty("config", "rss_description")));
+			channel.append(createTag("description", PropertyMap.getInstance().getProperty("config", "rss_description")));
 			channel.append(createTag("language", PropertyMap.getInstance().getProperty("config", "rss_language")));
 			channel.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
 			channel.append(createTag("generator", PropertyMap.getInstance().getProperty("config", "rss_generator")));
-			channel.append(
-					createTag("managingEditor", PropertyMap.getInstance().getProperty("config", "rss_managingEditor")));
+			channel.append(createTag("managingEditor", PropertyMap.getInstance().getProperty("config", "rss_managingEditor")));
 			channel.append(createTag("webMaster", PropertyMap.getInstance().getProperty("config", "rss_webMaster")));
 			for (Post post : posts) {
 				channel.append(createTag("item", () -> {
-					String link = PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx()
-							+ ".html";
+					String link = PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html";
 					StringBuffer item = new StringBuffer();
 					item.append(createTag("title", post.getTitle()));
 					item.append(createTag("link", link));
@@ -275,7 +274,6 @@ public class CompileService {
 			return ret.substring(0, 1020);
 		}
 		return ret;
-
 	}
 
 	private String createTag(String tagName, Callable<String> func) {
@@ -401,12 +399,10 @@ public class CompileService {
 		StringBuffer sb = new StringBuffer();
 		try {
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
-					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			for (Category c : pList) {
 				sb.append("<li class=\"\">");
-				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
-						.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
 					sb.append("<a class=\"link_item link-item-collapse\" href=\"javascript:void(0)\">");
 					sb.append(c.getName());

@@ -2,15 +2,15 @@ var _this = (function(obj) {
 	return obj
 })((function() {
 	var __ = {};
-	
+
 	__.property = {
-		page: 0,
-		count: Number($.trim($("#count").val())),
-		pageMax: Number($.trim($("#pageMax").val()))
+		page : 0,
+		count : Number($.trim($("#count").val())),
+		pageMax : Number($.trim($("#pageMax").val()))
 	}
-	
+
 	__.fn = {
-		getList: function(){
+		getList : function() {
 			_.loading.on();
 			if (__.property.count === 0) {
 				var $article = $("<article class='no-list-item'></article>");
@@ -60,8 +60,8 @@ var _this = (function(obj) {
 			});
 		}
 	}
-	
-	__.ev = function(){
+
+	__.ev = function() {
 		$(window).scroll(function() {
 			if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
 				if (__.property.page < __.property.pageMax) {
@@ -70,9 +70,9 @@ var _this = (function(obj) {
 			}
 		});
 	}
-	
-	$(__.ev)
-	$(function(){
+
+	$(__.ev);
+	$(function() {
 		__.fn.getList();
 	});
 	return {};
