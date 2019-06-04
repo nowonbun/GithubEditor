@@ -77,10 +77,11 @@ public class CompileService {
 			setStatus(CompileStatus.start, "The compiler will be start.", 1);
 			String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
 			setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
-			deleteFiles(path);
+			initGitDirectory(path);
+			// deleteFiles(path);
 			setStatus(CompileStatus.init, "The git root files will be initialize", 10);
-			File file = new File(path);
-			file.mkdir();
+			// File file = new File(path);
+			// file.mkdir();
 
 			File attachPath = new File(path + File.separator + "contents");
 			if (attachPath.exists()) {
@@ -177,7 +178,7 @@ public class CompileService {
 			deleteFiles(httppath);
 			File http = new File(httppath);
 			http.mkdir();
-			copyDirectory(path, httppath);
+			copyDirectory(path, httppath, true);
 
 			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 		});
@@ -330,7 +331,7 @@ public class CompileService {
 		return "<" + tagName + ">" + data + "</" + tagName + ">";
 	}
 
-	private void copyDirectory(String src, String dest) {
+	private void copyDirectory(String src, String dest, boolean git) {
 		File source = new File(src);
 		File destination = new File(dest);
 		if (source.isDirectory()) {
@@ -339,7 +340,10 @@ public class CompileService {
 			}
 			File[] files = source.listFiles();
 			for (File file : files) {
-				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName());
+				if (git && file.getAbsolutePath().indexOf(".git") != -1) {
+					continue;
+				}
+				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName(), false);
 			}
 		}
 		if (source.isFile()) {
@@ -421,6 +425,16 @@ public class CompileService {
 
 	private void deleteFiles(File file) {
 		deleteFiles(file.getAbsolutePath());
+	}
+
+	private void initGitDirectory(String path) {
+		File file = new File(path);
+		for (File f : file.listFiles()) {
+			if (f.getAbsolutePath().indexOf(".git") != -1) {
+				continue;
+			}
+			deleteFiles(f.getAbsolutePath());
+		}
 	}
 
 	private void deleteFiles(String path) {

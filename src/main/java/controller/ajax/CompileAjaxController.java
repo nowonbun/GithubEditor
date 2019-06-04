@@ -11,6 +11,7 @@ import bean.StatusBean;
 import common.AbstractController;
 import common.Util;
 import compile.CompileService;
+import gitsync.GitSyncService;
 
 @Controller
 public class CompileAjaxController extends AbstractController {
@@ -30,5 +31,19 @@ public class CompileAjaxController extends AbstractController {
 		CompileService.getInstance().start();
 		OKAjax(res);
 	}
+	
+	@RequestMapping(value = "/gitstatus.ajax")
+	public void gitstatus(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		StatusBean bean = new StatusBean();
+		bean.setMessage(CompileService.getInstance().getMessage());
+		bean.setTime(Util.convertDateFormat(new Date()));
+		bean.setProgress(CompileService.getInstance().getProgress());
+		returnJson(res, bean);
+	}
 
+	@RequestMapping(value = "/gitsync.ajax")
+	public void gitsync(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		GitSyncService.getInstance().start();
+		OKAjax(res);
+	}
 }

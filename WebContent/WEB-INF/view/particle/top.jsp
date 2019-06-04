@@ -51,7 +51,7 @@
 				<li onclick="location.href='./';"><span class="fa fa-home" aria-hidden="true" title="Home"></span> <span>Home</span></li>
 				<li onclick="location.href='./write.html'"><span class="fa fa-file-text-o" aria-hidden="true" title="Write"></span> <span>Write</span></li>
 				<li onclick="location.href='./compile.html'"><span class="fa fa-gears" aria-hidden="true" title="Compile"></span> <span>Compile</span></li>
-				<li><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li onclick="location.href='./gitsync.html'"><span class="fa fa-exchange" aria-hidden="true" title="..."></span> <span>Git sync</span></li>
 				<li class="menu-close"><span class="fa fa-times" aria-hidden="true" title="Close"></span> <span>Close</span></li>
 				<li class="menu-close-off"><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
 			</ul>

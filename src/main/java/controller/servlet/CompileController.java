@@ -22,4 +22,14 @@ public class CompileController extends AbstractController {
 			return error();
 		}
 	}
+	
+	@RequestMapping(value = "/gitsync.html")
+	public String gitsync(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		try {
+			setMenu(modelmap);
+			return "gitsync";
+		} catch (Throwable e) {
+			return error();
+		}
+	}
 }
