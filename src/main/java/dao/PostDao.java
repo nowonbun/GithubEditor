@@ -57,6 +57,7 @@ public class PostDao extends AbstractDao<Post> {
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Post> selectByCategoryAll(Category category) {
 		return transaction((em) -> {
 			Query query = em.createQuery(

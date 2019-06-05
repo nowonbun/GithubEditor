@@ -27,6 +27,7 @@ var _this = (function(obj) {
 						_.loading.off();
 						return;
 					}
+					$("#searchResultCount").text(data.length);
 					for (var i = 0; i < data.length; i++) {
 						var post = data[i];
 						var $article = $($(".list-article").html());

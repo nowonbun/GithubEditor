@@ -25,6 +25,24 @@ var _ = (function(obj) {
 					$icon.closest("li").find(".sub_category_list").addClass("off");
 				}
 			});
+			$(document).on("change", ".search-text", function() {
+				$val = $(this).val();
+				$(".search-text").val($val);
+			});
+			$(document).on("click", ".search-btn", function() {
+				location.href = "./search.html?query=" + $(".search-text").val();
+			});
+			var modal = document.getElementById('myModal');
+	        $("img").on("click", function () {
+	            $("#ImgModal").show();
+	            $("#ImgModal .modal-content").attr("src", this.src);
+	        });
+	        $("#ImgModal").on("click", function () {
+	            $("#ImgModal").hide();
+	        });
+	        $("#ImgModal .close").on("click", function () {
+	            $("#ImgModal").hide();
+	        });
 		},
 		loading : {
 			on : function() {

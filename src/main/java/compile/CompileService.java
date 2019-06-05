@@ -73,6 +73,9 @@ public class CompileService {
 	}
 
 	public void start() {
+		if (this.parameter.getCompileStatus() != CompileStatus.wait) {
+			return;
+		}
 		Executors.newSingleThreadExecutor().execute(() -> {
 			setStatus(CompileStatus.start, "The compiler will be start.", 1);
 			String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
@@ -99,14 +102,21 @@ public class CompileService {
 			String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 			String listTemp = PropertyMap.getInstance().getTemplateFile("list");
 			String postTemp = PropertyMap.getInstance().getTemplateFile("post");
+			String searchTemp = PropertyMap.getInstance().getTemplateFile("search");
 
 			String title = PropertyMap.getInstance().getProperty("config", "title");
 			String menu = createMenu();
 			mainTemp = replaceTagForTemplate(mainTemp, "TITLE", title);
 			mainTemp = replaceTagForTemplate(mainTemp, "MENU", menu);
 
+			searchTemp = replaceTagForTemplate(searchTemp, "TITLE", title);
+			searchTemp = replaceTagForTemplate(searchTemp, "MENU", menu);
+
 			// index.html
 			createFile(path + File.separator + "index.html", mainTemp);
+
+			// search.html
+			createFile(path + File.separator + "search.html", searchTemp);
 
 			// list.html
 			List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
@@ -180,7 +190,7 @@ public class CompileService {
 			http.mkdir();
 			copyDirectory(path, httppath, true);
 
-			setStatus(CompileStatus.wait, "This compiler was ready.", 0);
+			setStatus(CompileStatus.wait, "This compiler was ready.", 100);
 		});
 	}
 
@@ -235,8 +245,8 @@ public class CompileService {
 	private String createSiteMap(List<Post> posts) {
 		// http://www.nowonbun.com/sitemap.xml
 		StringBuffer xml = new StringBuffer();
-		xml.append("<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>");
-		xml.append("<urlset xmlns=\\\"http://www.sitemaps.org/schemas/sitemap/0.9\\\">");
+		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 		for (Post post : posts) {
 			xml.append(createTag("url", () -> {
 				StringBuffer url = new StringBuffer();
@@ -254,7 +264,7 @@ public class CompileService {
 	private String createRss(List<Post> posts) {
 		// file:///home/nowonbun/Downloads/rss
 		StringBuffer xml = new StringBuffer();
-		xml.append("<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>");
+		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append(
 				"<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
 		xml.append(createTag("channel", () -> {
