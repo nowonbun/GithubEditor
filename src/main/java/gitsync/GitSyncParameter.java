@@ -1,14 +1,31 @@
 package gitsync;
 
 public class GitSyncParameter {
-	private String Message;
+	private boolean isStart;
+	private final StringBuilder message;
+
+	public GitSyncParameter() {
+		message = new StringBuilder();
+	}
 
 	public String getMessage() {
-		return Message;
+		return this.message.toString();
 	}
 
-	public void setMessage(String message) {
-		Message = message;
+	public void addMessage(String message) {
+		this.message.append(message);
 	}
-	
+
+	public void clearMessage() {
+		this.message.setLength(0);
+	}
+
+	public boolean isStart() {
+		return isStart;
+	}
+
+	public void setStart(boolean isStart) {
+		this.isStart = isStart;
+	}
+
 }
