@@ -10,7 +10,6 @@ import java.util.Properties;
 
 public class PropertyMap {
 	private static PropertyMap singleton = null;
-	private String webContentPath = null;
 
 	public static PropertyMap getInstance() {
 		if (singleton == null) {
@@ -29,10 +28,7 @@ public class PropertyMap {
 			if (!map.containsKey(session)) {
 				Properties pro = new Properties();
 				map.put(session, pro);
-				// ClassLoader cl = Thread.currentThread().getContextClassLoader();
-				// URL url = cl.getResource(session + ".properties");
-				// try (InputStream straem = url.openStream()) {
-				File file = new File(getClassPath() + File.separator + session + ".properties");
+				File file = new File(LocalPaths.getClassPath() + File.separator + session + ".properties");
 				try (InputStream straem = new FileInputStream(file)) {
 					pro.load(straem);
 				}
@@ -55,7 +51,7 @@ public class PropertyMap {
 
 	public String getTemplateFile(String templatefileName) {
 		try {
-			File file = new File(getClassPath() + File.separator + templatefileName + ".tpl.html");
+			File file = new File(LocalPaths.getClassPath() + File.separator + templatefileName + ".tpl.html");
 			byte[] data = new byte[(int) file.length()];
 			try (InputStream straem = new FileInputStream(file)) {
 				straem.read(data, 0, data.length);
@@ -67,15 +63,4 @@ public class PropertyMap {
 		}
 	}
 
-	public void setWebRootPath(String path) {
-		this.webContentPath = path;
-	}
-
-	public String getWebRootPath() {
-		return this.webContentPath;
-	}
-
-	public String getClassPath() {
-		return getWebRootPath() + File.separator + "WEB-INF" + File.separator + "classes";
-	}
 }

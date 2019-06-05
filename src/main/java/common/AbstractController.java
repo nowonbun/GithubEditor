@@ -8,6 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 import org.springframework.ui.ModelMap;
 
 import com.google.gson.Gson;
@@ -21,7 +23,15 @@ import model.Category;
 public class AbstractController {
 
 	private Gson GSON = null;
+	private Logger logger = null;
 
+	protected Logger getLogger() {
+		if (logger == null) {
+			logger = LoggerManager.getLogger(this.getClass());
+		}
+		return logger;
+	}
+	
 	protected Cookie[] getCookies(HttpServletRequest request) {
 		return request.getCookies();
 	}

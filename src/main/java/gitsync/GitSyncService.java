@@ -10,12 +10,16 @@ import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
+
+import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
 
 public class GitSyncService {
 
 	private static GitSyncService instance = null;
+	private final Logger logger;
 
 	public static GitSyncService getInstance() {
 		if (instance == null) {
@@ -27,6 +31,7 @@ public class GitSyncService {
 	private final GitSyncParameter parameter;
 
 	private GitSyncService() {
+		logger = LoggerManager.getLogger(GitSyncService.class);
 		this.parameter = new GitSyncParameter();
 		this.parameter.setStart(false);
 	}

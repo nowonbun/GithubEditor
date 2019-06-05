@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,8 +25,10 @@ import org.jsoup.select.Elements;
 import bean.ListBean;
 import bean.MenuBean;
 import common.FactoryDao;
+import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
+import common.LocalPaths;
 import dao.AttachmentDao;
 import dao.CategoryDao;
 import dao.PostDao;
@@ -35,6 +38,7 @@ import model.Post;
 
 public class CompileService {
 	private static CompileService instance = null;
+	private final Logger logger;
 
 	public static CompileService getInstance() {
 		if (instance == null) {
@@ -44,6 +48,8 @@ public class CompileService {
 	}
 
 	private CompileService() {
+		logger = LoggerManager.getLogger(CompileService.class);
+
 		parameter = new CompileParameter();
 		parameter.setCompileStatus(CompileStatus.wait);
 		parameter.setProgress(0);
@@ -367,7 +373,7 @@ public class CompileService {
 
 	private void copyDirectoryToGitRoot(String dirName) {
 		String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
-		List<File> files = getFiles(PropertyMap.getInstance().getWebRootPath() + File.separator + dirName);
+		List<File> files = getFiles(LocalPaths.getWebRootPath() + File.separator + dirName);
 		File newDir = new File(path + File.separator + dirName);
 		if (newDir.exists()) {
 			deleteFiles(newDir);
