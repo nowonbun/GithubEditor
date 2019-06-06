@@ -15,7 +15,8 @@ import common.AbstractController;
 public class ErrorController extends AbstractController {
 	@RequestMapping(value = "/error.html", method = RequestMethod.GET)
 	public String error(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
-		modelmap.addAttribute("message", "에러가 발생했습니다.<br />관리자에게 문의해 주십시오.");
+		super.getLogger().info("error.html");
+		modelmap.addAttribute("message", " エラーが発生しました。<br />管理者にお問合わせしてください。");
 		return "error";
 	}
 }

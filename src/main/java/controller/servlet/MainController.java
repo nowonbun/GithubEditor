@@ -27,22 +27,22 @@ import model.Post;
 public class MainController extends AbstractController {
 	@RequestMapping(value = "/main.html", method = RequestMethod.GET)
 	public String main(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("main.html");
 		try {
 			setMenu(modelmap);
 			return "main";
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			return error();
 		}
 	}
 
 	private List<SelectBean> getCategorySelectList() {
 		List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-		List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
-				.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+		List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 		List<SelectBean> selectList = new ArrayList<>();
 		for (Category c : pList) {
-			List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
-					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			if (sublist.size() > 0) {
 				for (Category s : sublist) {
 					SelectBean bean = new SelectBean();
@@ -62,26 +62,30 @@ public class MainController extends AbstractController {
 
 	@RequestMapping(value = "/write.html", method = RequestMethod.GET)
 	public String write(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("write.html");
 		try {
 			setMenu(modelmap);
 			modelmap.addAttribute("categorylist", getCategorySelectList());
 			return "write";
 		} catch (Throwable e) {
-			System.out.println(e);
+			super.getLogger().error(e);
 			return error();
 		}
 	}
 
 	@RequestMapping(value = "/list.html", method = RequestMethod.GET)
 	public String list(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("list.html");
 		try {
 			setMenu(modelmap);
 			String code = req.getParameter("category");
 			if (code == null) {
+				super.getLogger().warn("The parameter of category is null.");
 				throw new RuntimeException();
 			}
 			Category category = FactoryDao.getDao(CategoryDao.class).select(code);
 			if (category == null) {
+				super.getLogger().warn("The category is null by that get the code.");
 				throw new RuntimeException();
 			}
 			String title = getCategoryName(category);
@@ -93,22 +97,25 @@ public class MainController extends AbstractController {
 			modelmap.addAttribute("category", category.getCode());
 			return "list";
 		} catch (Throwable e) {
-			System.out.println(e);
+			super.getLogger().error(e);
 			return error();
 		}
 	}
 
 	@RequestMapping(value = "/post.html", method = RequestMethod.GET)
 	public String post(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("post.html");
 		try {
 			setMenu(modelmap);
 			String idx = req.getParameter("idx");
 			if (idx == null) {
+				super.getLogger().warn("The parameter of idx is null.");
 				throw new RuntimeException();
 			}
 			int id = Integer.parseInt(idx);
 			Post post = FactoryDao.getDao(PostDao.class).select(id);
 			if (post == null) {
+				super.getLogger().warn("The post is null by that get the id.");
 				throw new RuntimeException();
 			}
 			PostBean bean = new PostBean();
@@ -129,7 +136,7 @@ public class MainController extends AbstractController {
 			modelmap.addAttribute("categorylist", getCategorySelectList());
 			return "post";
 		} catch (Throwable e) {
-			System.out.println(e);
+			super.getLogger().error(e);
 			return error();
 		}
 	}

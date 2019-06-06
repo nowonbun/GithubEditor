@@ -21,15 +21,18 @@ import model.Post;
 public class ListAjaxController extends AbstractController {
 	@RequestMapping(value = "/list.ajax")
 	public void list(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("list.ajax");
 		try {
 			String page = req.getParameter("page");
 			String code = req.getParameter("category");
 			if (Util.StringIsEmptyOrNull(page) || Util.StringIsEmptyOrNull(code)) {
+				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 			int pagenumber = Integer.parseInt(page);
 			Category category = FactoryDao.getDao(CategoryDao.class).select(code);
 			if (category == null) {
+				super.getLogger().warn("The category is null.");
 				throw new RuntimeException();
 			}
 			List<Post> posts = FactoryDao.getDao(PostDao.class).selectByCategory(category, pagenumber * 30, 30);
@@ -50,6 +53,7 @@ public class ListAjaxController extends AbstractController {
 
 			returnJson(res, ret);
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}
@@ -68,8 +72,8 @@ public class ListAjaxController extends AbstractController {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "")
-		// + "]]>";
+		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;",
+		// "")+ "]]>";
 		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
 		if (ret.length() > 1020) {
 			return ret.substring(0, 1020);

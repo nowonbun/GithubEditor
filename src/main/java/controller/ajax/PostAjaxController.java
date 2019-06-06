@@ -27,19 +27,20 @@ import org.jsoup.select.Elements;
 public class PostAjaxController extends AbstractController {
 	@RequestMapping(value = "/createPost.ajax")
 	public void createPost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("createPost.ajax");
 		try {
 			String title = req.getParameter("title");
 			String category = req.getParameter("category");
 			String contents = req.getParameter("contents");
 			String tags = req.getParameter("tags");
 			if (Util.StringIsEmptyOrNull(title) || Util.StringIsEmptyOrNull(category)) {
+				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 			Post post = new Post();
 			post.setTitle(title);
 			post.setCategory(FactoryDao.getDao(CategoryDao.class).select(category));
 
-			// Document doc = Jsoup.connect("http://jobc.tistory.com/").get();
 			Document doc = Jsoup.parse(contents);
 			Elements nodes = doc.select("img[data-filename],a.attachfile[data-filename]");
 			post.setAttachments(new ArrayList<>());
@@ -59,7 +60,7 @@ public class PostAjaxController extends AbstractController {
 						post.getAttachments().add(attachment);
 						attachment.setPost(post);
 					} catch (NumberFormatException e) {
-
+						super.getLogger().error("The attachfile index is " + idx, e);
 					}
 				}
 			}
@@ -68,29 +69,31 @@ public class PostAjaxController extends AbstractController {
 			post.setTag(tags);
 			post.setContents(contents);
 			post.setLastupdateddate(new Date());
+			super.getLogger().info("The post was created.!");
 			FactoryDao.getDao(PostDao.class).update(post);
 
 			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
 			// https://jsoup.org/cookbook/extracting-data/attributes-text-html
-
-			//
 			// https://heekim0719.tistory.com/162
 			// "<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>"
 			// (\<div[^>]+[\>])([^<]*)(\<\/div\>)
 
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}
 
 	@RequestMapping(value = "/addAttachFile.ajax")
 	public void addAttachFile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("addAttachFile.ajax");
 		try {
-			//filename encoding.
+			// filename encoding.
 			String filename = req.getParameter("filename");
 			String type = req.getParameter("type");
 			String data = req.getParameter("data");
 			if (Util.StringIsEmptyOrNull(data)) {
+				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 
@@ -104,15 +107,18 @@ public class PostAjaxController extends AbstractController {
 
 			OKAjax(res, "./getAttachFile.ajax?idx=" + attachment.getIdx());
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}
 
 	@RequestMapping(value = "/getAttachFile.ajax")
 	public void getAttachFile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("addAttachFile.ajax");
 		try {
 			String idx = req.getParameter("idx");
 			if (Util.StringIsEmptyOrNull(idx)) {
+				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 			int id = Integer.parseInt(idx);
@@ -125,12 +131,14 @@ public class PostAjaxController extends AbstractController {
 				res.getOutputStream().write(attachment.getData(), 0, attachment.getData().length);
 			}
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}
 
 	@RequestMapping(value = "/modifyPost.ajax")
 	public void modifyPost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("modifyPost.ajax");
 		try {
 			String idx = req.getParameter("idx");
 			String title = req.getParameter("title");
@@ -138,11 +146,13 @@ public class PostAjaxController extends AbstractController {
 			String contents = req.getParameter("contents");
 			String tags = req.getParameter("tags");
 			if (Util.StringIsEmptyOrNull(idx) || Util.StringIsEmptyOrNull(title) || Util.StringIsEmptyOrNull(category)) {
+				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 			int id = Integer.parseInt(idx);
 			Post post = FactoryDao.getDao(PostDao.class).select(id);
 			if (post == null) {
+				super.getLogger().warn("The post is null.");
 				throw new RuntimeException();
 			}
 			post.setTitle(title);
@@ -168,7 +178,7 @@ public class PostAjaxController extends AbstractController {
 						post.getAttachments().add(attachment);
 						attachment.setPost(post);
 					} catch (NumberFormatException e) {
-
+						super.getLogger().error("The attachfile index is " + idx, e);
 					}
 				}
 			}
@@ -176,32 +186,39 @@ public class PostAjaxController extends AbstractController {
 			post.setTag(tags);
 			post.setContents(contents);
 			post.setLastupdateddate(new Date());
+			super.getLogger().info("The post was updated.! id : " + post.getIdx());
 			FactoryDao.getDao(PostDao.class).update(post);
 
 			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}
 
 	@RequestMapping(value = "/deletePost.ajax")
 	public void deletePost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("deletePost.ajax");
 		try {
 			String idx = req.getParameter("idx");
 			if (Util.StringIsEmptyOrNull(idx)) {
+				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 			int id = Integer.parseInt(idx);
 			Post post = FactoryDao.getDao(PostDao.class).select(id);
 			if (post == null) {
+				super.getLogger().warn("The post is null.");
 				throw new RuntimeException();
 			}
 			post.setIsdeleted(true);
 			post.setLastupdateddate(new Date());
+			super.getLogger().info("The post was deleted.! id : " + post.getIdx());
 			FactoryDao.getDao(PostDao.class).update(post);
 
 			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}

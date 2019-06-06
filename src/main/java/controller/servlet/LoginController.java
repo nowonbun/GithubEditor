@@ -18,22 +18,27 @@ import common.Util;
 public class LoginController extends AbstractController {
 	@RequestMapping(value = "/index.html")
 	public String index(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("index.html");
 		try {
 			String isLogin = PropertyMap.getInstance().getProperty("config", "login");
 			if (!Util.StringIsEmptyOrNull(isLogin) && "false".equals(isLogin.toLowerCase())) {
+				super.getLogger().info("The login is pass!");
 				session.setAttribute(Define.USER_SESSION_NAME, new UserBean());
 			}
 			if (super.getCurrentUser(session) != null) {
+				super.getLogger().info("This user was already login.");
 				return redirect("main.html");
 			}
 			return "index";
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			return error();
 		}
 	}
 
 	@RequestMapping(value = "/login.html", method = RequestMethod.POST)
 	public String login(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("login.html");
 		try {
 			String pId = req.getParameter("id");
 			String pEmail = req.getParameter("email");
@@ -43,32 +48,39 @@ public class LoginController extends AbstractController {
 				UserBean user = new UserBean();
 				user.setId(pId);
 				user.setEmail(pEmail);
+				super.getLogger().warn("The login was OK.");
 				session.setAttribute(Define.USER_SESSION_NAME, user);
 				return redirect("main.html");
-			} else {
 			}
+			super.getLogger().warn("The login was failt.");
 			return redirect("loginfailed.html");
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			return error();
 		}
 	}
-	
+
 	@RequestMapping(value = "/logout.html", method = RequestMethod.GET)
 	public String logout(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("logout.html");
 		try {
 			session.setAttribute(Define.USER_SESSION_NAME, null);
+			super.getLogger().info("The user was logout.!");
 			return redirect("index.html");
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			return error();
 		}
 	}
 
 	@RequestMapping(value = "/loginfailed.html", method = RequestMethod.GET)
 	public String loginfailed(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("loginfailed.html");
 		try {
-			modelmap.addAttribute("message", "로그인에 실패하였습니다.");
+			modelmap.addAttribute("message", "ログインに失敗しました。");
 			return redirect("error.html");
 		} catch (Throwable e) {
+			super.getLogger().error(e);
 			return error();
 		}
 	}

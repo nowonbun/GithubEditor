@@ -13,6 +13,7 @@ var _this = (function(obj) {
 
 	__.ev = function() {
 		$(".compile-btn").on("click", function() {
+			_.loading.on();
 			$.ajax({
 				type : 'POST',
 				dataType : 'json',
@@ -26,6 +27,7 @@ var _this = (function(obj) {
 					toastr.error("エラーが発生しました。ログを確認してください。");
 				},
 				complete : function(jqXHR, textStatus) {
+					_.loading.off();
 				}
 			});
 		});

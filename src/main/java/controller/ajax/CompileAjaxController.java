@@ -18,32 +18,56 @@ public class CompileAjaxController extends AbstractController {
 
 	@RequestMapping(value = "/status.ajax")
 	public void status(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
-		StatusBean bean = new StatusBean();
-		bean.setStatus(CompileService.getInstance().getStatusToInt());
-		bean.setMessage(CompileService.getInstance().getMessage());
-		bean.setTime(Util.convertDateFormat(new Date()));
-		bean.setProgress(CompileService.getInstance().getProgress());
-		returnJson(res, bean);
+		super.getLogger().info("status.ajax");
+		try {
+			StatusBean bean = new StatusBean();
+			bean.setStatus(CompileService.getInstance().getStatusToInt());
+			bean.setMessage(CompileService.getInstance().getMessage());
+			bean.setTime(Util.convertDateFormat(new Date()));
+			bean.setProgress(CompileService.getInstance().getProgress());
+			returnJson(res, bean);
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			res.setStatus(406);
+		}
 	}
 
 	@RequestMapping(value = "/compile.ajax")
 	public void compile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
-		CompileService.getInstance().start();
-		OKAjax(res);
+		super.getLogger().info("compile.ajax");
+		try {
+			CompileService.getInstance().start();
+			OKAjax(res);
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			res.setStatus(406);
+		}
 	}
-	
+
 	@RequestMapping(value = "/gitstatus.ajax")
 	public void gitstatus(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
-		StatusBean bean = new StatusBean();
-		bean.setMessage(CompileService.getInstance().getMessage());
-		bean.setTime(Util.convertDateFormat(new Date()));
-		bean.setProgress(CompileService.getInstance().getProgress());
-		returnJson(res, bean);
+		super.getLogger().info("gitstatus.ajax");
+		try {
+			StatusBean bean = new StatusBean();
+			bean.setMessage(CompileService.getInstance().getMessage());
+			bean.setTime(Util.convertDateFormat(new Date()));
+			bean.setProgress(CompileService.getInstance().getProgress());
+			returnJson(res, bean);
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			res.setStatus(406);
+		}
 	}
 
 	@RequestMapping(value = "/gitsync.ajax")
 	public void gitsync(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
-		GitSyncService.getInstance().start();
-		OKAjax(res);
+		super.getLogger().info("gitsync.ajax");
+		try {
+			GitSyncService.getInstance().start();
+			OKAjax(res);
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			res.setStatus(406);
+		}
 	}
 }

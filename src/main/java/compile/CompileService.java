@@ -49,7 +49,7 @@ public class CompileService {
 
 	private CompileService() {
 		logger = LoggerManager.getLogger(CompileService.class);
-
+		logger.info("The compileService class was created.");
 		parameter = new CompileParameter();
 		parameter.setCompileStatus(CompileStatus.wait);
 		parameter.setProgress(0);
@@ -63,6 +63,7 @@ public class CompileService {
 			this.parameter.setCompileStatus(status);
 			this.parameter.setMessage(message);
 			this.parameter.setProgress(progress);
+			logger.info("status: " + status.toString() + " message : " + message + " progress : " + progress);
 		}
 	}
 
@@ -80,123 +81,134 @@ public class CompileService {
 
 	public void start() {
 		if (this.parameter.getCompileStatus() != CompileStatus.wait) {
+			logger.info("The compile was already start!");
 			return;
 		}
+		logger.info("The compile is start!");
 		Executors.newSingleThreadExecutor().execute(() -> {
-			setStatus(CompileStatus.start, "The compiler will be start.", 1);
-			String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
-			setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
-			initGitDirectory(path);
-			// deleteFiles(path);
-			setStatus(CompileStatus.init, "The git root files will be initialize", 10);
-			// File file = new File(path);
-			// file.mkdir();
+			try {
+				setStatus(CompileStatus.start, "The compiler will be start.", 1);
+				String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
+				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
+				initGitDirectory(path);
+				setStatus(CompileStatus.init, "The git root files will be initialize", 10);
 
-			File attachPath = new File(path + File.separator + "contents");
-			if (attachPath.exists()) {
-				deleteFiles(attachPath);
-			}
-			attachPath.mkdir();
-
-			setStatus(CompileStatus.copy, "The Javascript files was copied to git root", 15);
-			copyDirectoryToGitRoot("js");
-			setStatus(CompileStatus.copy, "The Css files was copied to git root", 20);
-			copyDirectoryToGitRoot("css");
-			setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
-			copyDirectoryToGitRoot("img");
-
-			String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
-			String listTemp = PropertyMap.getInstance().getTemplateFile("list");
-			String postTemp = PropertyMap.getInstance().getTemplateFile("post");
-			String searchTemp = PropertyMap.getInstance().getTemplateFile("search");
-
-			String title = PropertyMap.getInstance().getProperty("config", "title");
-			String menu = createMenu();
-			mainTemp = replaceTagForTemplate(mainTemp, "TITLE", title);
-			mainTemp = replaceTagForTemplate(mainTemp, "MENU", menu);
-
-			searchTemp = replaceTagForTemplate(searchTemp, "TITLE", title);
-			searchTemp = replaceTagForTemplate(searchTemp, "MENU", menu);
-
-			// index.html
-			createFile(path + File.separator + "index.html", mainTemp);
-
-			// search.html
-			createFile(path + File.separator + "search.html", searchTemp);
-
-			// list.html
-			List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
-			categorys.parallelStream().forEach(category -> {
-				if (category.getCategories().size() > 0) {
-					return;
+				File attachPath = new File(path + File.separator + "contents");
+				if (attachPath.exists()) {
+					deleteFiles(attachPath);
 				}
-				String template = replaceCategory(category, listTemp);
-				template = replaceTagForTemplate(template, "TITLE", title + " :: " + getCategoryName(category));
-				template = replaceTagForTemplate(template, "MENU", menu);
-				template = replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
-				template = replaceTagForTemplate(template, "JSONFILE", "./" + category.getUniqcode() + ".json");
-				createFile(path + File.separator + category.getUniqcode() + ".html", template);
+				attachPath.mkdir();
 
-				List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
-				List<ListBean> list = new ArrayList<>();
-				for (Post post : postsOfCategory) {
-					ListBean bean = new ListBean();
-					bean.setIdx(post.getIdx());
-					bean.setTitle(post.getTitle());
-					bean.setTags(post.getTag());
-					bean.setSummary(createDescription(post.getContents()));
-					bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
-					bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
-					list.add(bean);
-				}
+				setStatus(CompileStatus.copy, "The Javascript files was copied to git root", 15);
+				copyDirectoryToGitRoot("js");
+				setStatus(CompileStatus.copy, "The Css files was copied to git root", 20);
+				copyDirectoryToGitRoot("css");
+				setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
+				copyDirectoryToGitRoot("img");
 
-				createFile(path + File.separator + category.getUniqcode() + ".json", Util.getGson().toJson(list));
-			});
+				String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
+				String listTemp = PropertyMap.getInstance().getTemplateFile("list");
+				String postTemp = PropertyMap.getInstance().getTemplateFile("post");
+				String searchTemp = PropertyMap.getInstance().getTemplateFile("search");
 
-			// post.html
-			List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
-			posts.parallelStream().forEach(post -> {
-				File postAttach = new File(attachPath.getAbsolutePath() + File.separator + post.getIdx());
-				if (postAttach.exists()) {
-					deleteFiles(postAttach);
-				}
-				postAttach.mkdir();
-				for (Attachment attach : post.getAttachments()) {
-					try {
-						createFile(postAttach.getAbsoluteFile() + File.separator + attach.getIdx() + "_" + URLEncoder.encode(attach.getFilename(), StandardCharsets.UTF_8.toString()),
-								attach.getData());
-					} catch (Throwable e) {
-						throw new RuntimeException(e);
+				String title = PropertyMap.getInstance().getProperty("config", "title");
+				String menu = createMenu();
+				mainTemp = replaceTagForTemplate(mainTemp, "TITLE", title);
+				mainTemp = replaceTagForTemplate(mainTemp, "MENU", menu);
+
+				searchTemp = replaceTagForTemplate(searchTemp, "TITLE", title);
+				searchTemp = replaceTagForTemplate(searchTemp, "MENU", menu);
+
+				// index.html
+				createFile(path + File.separator + "index.html", mainTemp);
+
+				// search.html
+				createFile(path + File.separator + "search.html", searchTemp);
+
+				// list.html
+				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
+				categorys.parallelStream().forEach(category -> {
+					if (category.getCategories().size() > 0) {
+						return;
 					}
-				}
-				String template = replacePost(post, postTemp);
-				template = replaceTagForTemplate(template, "TITLE", title + " :: " + post.getTitle());
-				template = replaceTagForTemplate(template, "MENU", menu);
-				template = replaceTagForTemplate(template, "CONTENTS_TITLE", post.getTitle());
-				template = replaceTagForTemplate(template, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
-				template = replaceTagForTemplate(template, "CATEGORY_NAME", getCategoryName(post.getCategory()));
-				template = replaceTagForTemplate(template, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
-				template = replaceTagForTemplate(template, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
-				template = replaceTagForTemplate(template, "CONTENTS", getContetns(post));
-				template = replaceTagForTemplate(template, "TAG", post.getTag());
-				createFile(path + File.separator + post.getIdx() + ".html", template);
-			});
+					String template = replaceCategory(category, listTemp);
+					template = replaceTagForTemplate(template, "TITLE", title + " :: " + getCategoryName(category));
+					template = replaceTagForTemplate(template, "MENU", menu);
+					template = replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
+					template = replaceTagForTemplate(template, "JSONFILE", "./" + category.getUniqcode() + ".json");
+					createFile(path + File.separator + category.getUniqcode() + ".html", template);
 
-			// rss
-			String rss = createRss(posts);
-			createFile(path + File.separator + "rss", rss);
+					List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
+					List<ListBean> list = new ArrayList<>();
+					for (Post post : postsOfCategory) {
+						ListBean bean = new ListBean();
+						bean.setIdx(post.getIdx());
+						bean.setTitle(post.getTitle());
+						bean.setTags(post.getTag());
+						bean.setSummary(createDescription(post.getContents()));
+						bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
+						bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
+						list.add(bean);
+					}
 
-			// sitemap
-			String sitemap = createSiteMap(posts);
-			createFile(path + File.separator + "sitemap.xml", sitemap);
+					createFile(path + File.separator + category.getUniqcode() + ".json", Util.getGson().toJson(list));
+				});
 
-			String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
-			deleteFiles(httppath);
-			File http = new File(httppath);
-			http.mkdir();
-			copyDirectory(path, httppath, true);
+				// post.html
+				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
+				posts.parallelStream().forEach(post -> {
+					File postAttach = new File(attachPath.getAbsolutePath() + File.separator + post.getIdx());
+					if (postAttach.exists()) {
+						deleteFiles(postAttach);
+					}
+					postAttach.mkdir();
+					for (Attachment attach : post.getAttachments()) {
+						try {
+							createFile(postAttach.getAbsoluteFile() + File.separator + attach.getIdx() + "_" + URLEncoder.encode(attach.getFilename(), StandardCharsets.UTF_8.toString()),
+									attach.getData());
+						} catch (Throwable e) {
+							throw new RuntimeException(e);
+						}
+					}
+					String template = replacePost(post, postTemp);
+					template = replaceTagForTemplate(template, "TITLE", title + " :: " + post.getTitle());
+					template = replaceTagForTemplate(template, "MENU", menu);
+					template = replaceTagForTemplate(template, "CONTENTS_TITLE", post.getTitle());
+					template = replaceTagForTemplate(template, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
+					template = replaceTagForTemplate(template, "CATEGORY_NAME", getCategoryName(post.getCategory()));
+					template = replaceTagForTemplate(template, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
+					template = replaceTagForTemplate(template, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
+					template = replaceTagForTemplate(template, "CONTENTS", getContetns(post));
+					template = replaceTagForTemplate(template, "TAG", post.getTag());
+					createFile(path + File.separator + post.getIdx() + ".html", template);
+				});
 
-			setStatus(CompileStatus.wait, "This compiler was ready.", 100);
+				// rss
+				String rss = createRss(posts);
+				createFile(path + File.separator + "rss", rss);
+
+				// sitemap
+				String sitemap = createSiteMap(posts);
+				createFile(path + File.separator + "sitemap.xml", sitemap);
+
+				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
+				deleteFiles(httppath);
+				File http = new File(httppath);
+				http.mkdir();
+				copyDirectory(path, httppath, true);
+
+				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
+				new Thread(() -> {
+					try {
+						Thread.sleep(1000 * 10);
+					} catch (Throwable e) {
+						logger.error(e);
+					}
+					setStatus(CompileStatus.wait, "This compiler was ready.", 0);
+				}).start();
+			} catch (Throwable e) {
+				logger.error(e);
+			}
 		});
 	}
 
@@ -244,6 +256,7 @@ public class CompileService {
 		try (FileOutputStream stream = new FileOutputStream(path)) {
 			stream.write(data, 0, data.length);
 		} catch (Throwable e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -339,6 +352,7 @@ public class CompileService {
 		try {
 			return createTag(tagName, func.call());
 		} catch (Throwable e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -366,7 +380,7 @@ public class CompileService {
 			try {
 				copyFile(src, dest);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 	}
@@ -383,7 +397,7 @@ public class CompileService {
 			try {
 				copyFile(f.getAbsolutePath(), newDir.getAbsolutePath() + File.separator + f.getName());
 			} catch (Throwable e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		});
 	}
@@ -414,7 +428,7 @@ public class CompileService {
 		try (FileOutputStream output = new FileOutputStream(file)) {
 			output.write(binary, 0, binary.length);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 
@@ -502,6 +516,7 @@ public class CompileService {
 			}
 			return sb.toString();
 		} catch (Throwable e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}
 	}
