@@ -62,7 +62,7 @@
 </div>
 <div class="row">
 	<div class="col-xl-6 col-sm-8 mb-3">
-		<input type="text" class="form-control" readonly="readonly" id="status">
+		<textarea type="text" class="form-control" readonly="readonly" id="status"></textarea>
 	</div>
 </div>
 <div class="row">
@@ -72,13 +72,6 @@
 				<div class="input-group-text">Last updated time</div>
 			</div> 
 			<input id="timestamp" class="form-control" readonly="readonly">
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xl-6 col-sm-8 mb-3">
-		<div class="progress">
-			<div class="progress-bar syc-progress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 		</div>
 	</div>
 </div>

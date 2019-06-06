@@ -4,7 +4,7 @@ var _this = (function(obj) {
 	var __ = {};
 
 	__.property = {
-
+		isFinished : false
 	}
 
 	__.fn = {
@@ -17,6 +17,9 @@ var _this = (function(obj) {
 					// console.log(data);
 					if (data.status != 0) {
 						$(".complie-card").addClass("disabled");
+					} else if (data.status == 5) {
+						$(".complie-card").addClass("disabled");
+						__.property.isFinished = true;
 					} else {
 						$(".complie-card").removeClass("disabled");
 					}
@@ -24,6 +27,9 @@ var _this = (function(obj) {
 					$("#timestamp").val(data.time);
 					$(".progress .progress-bar").attr("aria-valuenow", data.progress);
 					$(".progress .progress-bar").css("width", data.progress + "%");
+					if (!__.property.isFinished) {
+						setTimeout(__.fn.status, 1000);
+					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					console.log(jqXHR);
@@ -61,7 +67,8 @@ var _this = (function(obj) {
 	$(__.ev);
 
 	$(function() {
-		setInterval(__.fn.status, 1000);
+		// setInterval(__.fn.status, 1000);
+		setTimeout(__.fn.status, 1000);
 	});
 
 	return {};

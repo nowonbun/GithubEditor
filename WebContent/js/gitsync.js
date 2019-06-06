@@ -4,11 +4,40 @@ var _this = (function(obj) {
 	var __ = {};
 
 	__.property = {
-
+		isStart : false
 	}
 
 	__.fn = {
-
+		status : function() {
+			$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				url : "./gitstatus.ajax",
+				success : function(data) {
+					// console.log(data);
+					if (data.status != 0) {
+						$(".complie-card").addClass("disabled");
+						__.property.isStart = true
+					} else {
+						if(!__.property.isStart){
+							$(".complie-card").removeClass("disabled");	
+						}
+					}
+					$("#status").val(data.message);
+					$("#timestamp").val(data.time);
+					if (!__.property.isStart || data.status != 0 ) {
+						setTimeout(__.fn.status, 1000);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(jqXHR);
+					console.log(errorThrown);
+					toastr.error("エラーが発生しました。ログを確認してください。");
+				},
+				complete : function(jqXHR, textStatus) {
+				}
+			});
+		}
 	};
 
 	__.ev = function() {
@@ -36,7 +65,8 @@ var _this = (function(obj) {
 	$(__.ev);
 
 	$(function() {
-		//setInterval(__.fn.status, 1000);
+		// setInterval(__.fn.status, 1000);
+		setTimeout(__.fn.status, 1000);
 	});
 
 	return {};

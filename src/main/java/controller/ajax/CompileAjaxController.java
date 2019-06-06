@@ -49,9 +49,9 @@ public class CompileAjaxController extends AbstractController {
 		super.getLogger().info("gitstatus.ajax");
 		try {
 			StatusBean bean = new StatusBean();
-			bean.setMessage(CompileService.getInstance().getMessage());
+			bean.setMessage(GitSyncService.getInstance().getMessage());
 			bean.setTime(Util.convertDateFormat(new Date()));
-			bean.setProgress(CompileService.getInstance().getProgress());
+			bean.setStatus(GitSyncService.getInstance().isStart() ? 1 : 0);
 			returnJson(res, bean);
 		} catch (Throwable e) {
 			super.getLogger().error(e);

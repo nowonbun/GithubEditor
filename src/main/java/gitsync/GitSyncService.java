@@ -9,9 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.concurrent.Executors;
-
 import org.apache.log4j.Logger;
-
 import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
@@ -36,12 +34,23 @@ public class GitSyncService {
 		this.parameter.setStart(false);
 	}
 
+	public String getMessage() {
+		return this.parameter.getMessage();
+	}
+
+	public boolean isStart() {
+		return this.parameter.isStart();
+	}
+
 	public void start() {
 		// https://hojak99.tistory.com/338
 		// https://www.mkyong.com/java/how-to-execute-shell-command-from-java/
 		if (this.parameter.isStart()) {
+			logger.info("The GitSync was already start!");
 			return;
 		}
+		this.parameter.setStart(true);
+		logger.info("The GitSync is start!");
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 				Process process = Runtime.getRuntime().exec("/bin/bash");
@@ -54,11 +63,11 @@ public class GitSyncService {
 						String line;
 						while ((line = reader.readLine()) != null) {
 							this.parameter.addMessage(line);
-							System.out.println(line);
+							logger.info("Bash ] " + line);
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e);
 					}
 				});
 
@@ -67,11 +76,11 @@ public class GitSyncService {
 						String line;
 						while ((line = reader.readLine()) != null) {
 							this.parameter.addMessage("Error : " + line);
-							System.out.println("Error : " + line);
+							logger.info("Bash Error] " + line);
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e);
 					}
 				});
 
@@ -90,13 +99,23 @@ public class GitSyncService {
 					writer.flush();
 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e);
 				}
-
+				new Thread(() -> {
+					try {
+						Thread.sleep(1000 * 10);
+						stdin.close();
+						stderr.close();
+						stdout.close();
+						process.destroy();
+						this.parameter.setStart(false);
+						this.parameter.clearMessage();
+					} catch (Throwable e) {
+						logger.error(e);
+					}
+				}).start();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 			}
 		});
 	}
