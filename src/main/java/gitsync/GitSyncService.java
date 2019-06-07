@@ -62,7 +62,8 @@ public class GitSyncService {
 					try (BufferedReader reader = new BufferedReader(new InputStreamReader(stdout))) {
 						String line;
 						while ((line = reader.readLine()) != null) {
-							this.parameter.addMessage(line);
+							line += "\n";
+							this.parameter.addMessage("$ " + line);
 							logger.info("Bash ] " + line);
 						}
 					} catch (IOException e) {
@@ -75,7 +76,8 @@ public class GitSyncService {
 					try (BufferedReader reader = new BufferedReader(new InputStreamReader(stderr))) {
 						String line;
 						while ((line = reader.readLine()) != null) {
-							this.parameter.addMessage("Error : " + line);
+							line += "\n";
+							this.parameter.addMessage("$ " + line);
 							logger.info("Bash Error] " + line);
 						}
 					} catch (IOException e) {

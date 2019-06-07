@@ -14,8 +14,7 @@ var _this = (function(obj) {
 				dataType : 'json',
 				url : "./gitstatus.ajax",
 				success : function(data) {
-					// console.log(data);
-					if (data.status != 0) {
+					if (data.status !== 0) {
 						$(".complie-card").addClass("disabled");
 						__.property.isStart = true
 					} else {
@@ -23,9 +22,9 @@ var _this = (function(obj) {
 							$(".complie-card").removeClass("disabled");	
 						}
 					}
-					$("#status").val(data.message);
-					$("#timestamp").val(data.time);
-					if (!__.property.isStart || data.status != 0 ) {
+					if (!(__.property.isStart && data.status === 0) ) {
+						$("#status").val(data.message);
+						$("#timestamp").val(data.time);
 						setTimeout(__.fn.status, 1000);
 					}
 				},

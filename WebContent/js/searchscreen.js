@@ -27,7 +27,7 @@ var _this = (function(obj) {
 				dataType : 'xml',
 				url : "./rss",
 				success : function(data) {
-					console.log(data);
+					//console.log(data);
 					var ret = $(data).find("item");
 					var list = [];
 					for(var i = 0; i < ret.length; i++){
@@ -51,7 +51,7 @@ var _this = (function(obj) {
 					
 					for (var i = 0; i < list.length; i++) {
 						var post = list[i];
-						console.log(post);
+						//console.log(post);
 						var $article = $($(".list-article").html());
 						$article.find(".category-column").html(post.find("category").html());
 						$article.find(".list-link").prop("href",post.find("link").html());

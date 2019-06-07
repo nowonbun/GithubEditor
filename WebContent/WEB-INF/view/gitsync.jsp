@@ -62,7 +62,7 @@
 </div>
 <div class="row">
 	<div class="col-xl-6 col-sm-8 mb-3">
-		<textarea type="text" class="form-control" readonly="readonly" id="status"></textarea>
+		<textarea type="text" class="form-control" readonly="readonly" id="status" style="height:300px;font-size:10px;"></textarea>
 	</div>
 </div>
 <div class="row">

@@ -14,12 +14,12 @@ var _this = (function(obj) {
 				dataType : 'json',
 				url : "./status.ajax",
 				success : function(data) {
-					// console.log(data);
-					if (data.status != 0) {
-						$(".complie-card").addClass("disabled");
-					} else if (data.status == 5) {
+					//console.log(data.status);
+					if (data.status === 5) {
 						$(".complie-card").addClass("disabled");
 						__.property.isFinished = true;
+					} else if (data.status !== 0) {
+						$(".complie-card").addClass("disabled");
 					} else {
 						$(".complie-card").removeClass("disabled");
 					}
