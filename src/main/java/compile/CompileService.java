@@ -9,9 +9,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -196,6 +203,23 @@ public class CompileService {
 				File http = new File(httppath);
 				http.mkdir();
 				copyDirectory(path, httppath, true);
+
+				//TODO: The check was needed.
+				try {
+					// The group own will be changed.
+					String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
+					GroupPrincipal group = FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByGroupName(groupName);
+					Files.getFileAttributeView(http.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setGroup(group);
+				} catch (Throwable e) {
+					logger.error(e);
+				}
+
+				//TODO: The check was needed.
+				try {
+					Files.createFile(http.toPath(), PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-r--r--")));
+				} catch (Throwable e) {
+					logger.error(e);
+				}
 
 				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
 				new Thread(() -> {
