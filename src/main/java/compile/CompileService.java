@@ -18,7 +18,6 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -94,24 +93,18 @@ public class CompileService {
 		logger.info("The compile is start!");
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
+				FileManager filemanager = new FileManager(PropertyMap.getInstance().getProperty("config", "gitRoot"));
 				setStatus(CompileStatus.start, "The compiler will be start.", 1);
-				String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
 				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
-				initGitDirectory(path);
+				filemanager.initGitDirectory();
 				setStatus(CompileStatus.init, "The git root files will be initialize", 10);
 
-				File attachPath = new File(path + File.separator + "contents");
-				if (attachPath.exists()) {
-					deleteFiles(attachPath);
-				}
-				attachPath.mkdir();
-
 				setStatus(CompileStatus.copy, "The Javascript files was copied to git root", 15);
-				copyDirectoryToGitRoot("js");
+				filemanager.copyDirectoryToGitRoot("js");
 				setStatus(CompileStatus.copy, "The Css files was copied to git root", 20);
-				copyDirectoryToGitRoot("css");
+				filemanager.copyDirectoryToGitRoot("css");
 				setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
-				copyDirectoryToGitRoot("img");
+				filemanager.copyDirectoryToGitRoot("img");
 
 				String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 				String listTemp = PropertyMap.getInstance().getTemplateFile("list");
@@ -127,10 +120,10 @@ public class CompileService {
 				searchTemp = replaceTagForTemplate(searchTemp, "MENU", menu);
 
 				// index.html
-				createFile(path + File.separator + "index.html", mainTemp);
+				filemanager.createFile("index.html", mainTemp);
 
 				// search.html
-				createFile(path + File.separator + "search.html", searchTemp);
+				filemanager.createFile("search.html", searchTemp);
 
 				// list.html
 				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
@@ -143,7 +136,7 @@ public class CompileService {
 					template = replaceTagForTemplate(template, "MENU", menu);
 					template = replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
 					template = replaceTagForTemplate(template, "JSONFILE", "./" + category.getUniqcode() + ".json");
-					createFile(path + File.separator + category.getUniqcode() + ".html", template);
+					filemanager.createFile(category.getUniqcode() + ".html", template);
 
 					List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
 					List<ListBean> list = new ArrayList<>();
@@ -158,25 +151,13 @@ public class CompileService {
 						list.add(bean);
 					}
 
-					createFile(path + File.separator + category.getUniqcode() + ".json", Util.getGson().toJson(list));
+					filemanager.createFile(category.getUniqcode() + ".json", Util.getGson().toJson(list));
 				});
 
 				// post.html
 				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
 				posts.parallelStream().forEach(post -> {
-					File postAttach = new File(attachPath.getAbsolutePath() + File.separator + post.getIdx());
-					if (postAttach.exists()) {
-						deleteFiles(postAttach);
-					}
-					postAttach.mkdir();
-					for (Attachment attach : post.getAttachments()) {
-						try {
-							createFile(postAttach.getAbsoluteFile() + File.separator + attach.getIdx() + "_" + URLEncoder.encode(attach.getFilename(), StandardCharsets.UTF_8.toString()),
-									attach.getData());
-						} catch (Throwable e) {
-							throw new RuntimeException(e);
-						}
-					}
+					filemanager.createAttachfiles(post.getIdx(), post.getAttachments());
 					String template = replacePost(post, postTemp);
 					template = replaceTagForTemplate(template, "TITLE", title + " :: " + post.getTitle());
 					template = replaceTagForTemplate(template, "MENU", menu);
@@ -187,39 +168,21 @@ public class CompileService {
 					template = replaceTagForTemplate(template, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
 					template = replaceTagForTemplate(template, "CONTENTS", getContetns(post));
 					template = replaceTagForTemplate(template, "TAG", post.getTag());
-					createFile(path + File.separator + post.getIdx() + ".html", template);
+					filemanager.createFile(post.getIdx() + ".html", template);
 				});
 
 				// rss
 				String rss = createRss(posts);
-				createFile(path + File.separator + "rss", rss);
+				filemanager.createFile("rss", rss);
 
 				// sitemap
 				String sitemap = createSiteMap(posts);
-				createFile(path + File.separator + "sitemap.xml", sitemap);
-
+				filemanager.createFile("sitemap.xml", sitemap);
+				
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
-				deleteFiles(httppath);
-				File http = new File(httppath);
-				http.mkdir();
-				copyDirectory(path, httppath, true);
-
-				//TODO: The check was needed.
-				try {
-					// The group own will be changed.
-					String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
-					GroupPrincipal group = FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByGroupName(groupName);
-					Files.getFileAttributeView(http.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setGroup(group);
-				} catch (Throwable e) {
-					logger.error(e);
-				}
-
-				//TODO: The check was needed.
-				try {
-					Files.createFile(http.toPath(), PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-r--r--")));
-				} catch (Throwable e) {
-					logger.error(e);
-				}
+				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
+				String permission = PropertyMap.getInstance().getProperty("config", "httpPermission");
+				filemanager.copyToHttpRoot(httppath, groupName);
 
 				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
 				new Thread(() -> {
@@ -274,15 +237,6 @@ public class CompileService {
 
 	private String replaceTagForTemplate(String template, String tagName, String data) {
 		return template.replace("#####" + tagName + "#####", data);
-	}
-
-	private void createFile(String path, byte[] data) {
-		try (FileOutputStream stream = new FileOutputStream(path)) {
-			stream.write(data, 0, data.length);
-		} catch (Throwable e) {
-			logger.error(e);
-			throw new RuntimeException(e);
-		}
 	}
 
 	private String createSiteMap(List<Post> posts) {
@@ -385,124 +339,12 @@ public class CompileService {
 		return "<" + tagName + ">" + data + "</" + tagName + ">";
 	}
 
-	private void copyDirectory(String src, String dest, boolean git) {
-		File source = new File(src);
-		File destination = new File(dest);
-		if (source.isDirectory()) {
-			if (!destination.exists()) {
-				destination.mkdir();
-			}
-			File[] files = source.listFiles();
-			for (File file : files) {
-				if (git && file.getAbsolutePath().indexOf(".git") != -1) {
-					continue;
-				}
-				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName(), false);
-			}
-		}
-		if (source.isFile()) {
-			try {
-				copyFile(src, dest);
-			} catch (Throwable e) {
-				logger.error(e);
-			}
-		}
-	}
-
-	private void copyDirectoryToGitRoot(String dirName) {
-		String path = PropertyMap.getInstance().getProperty("config", "gitRoot");
-		List<File> files = getFiles(LocalPaths.getWebRootPath() + File.separator + dirName);
-		File newDir = new File(path + File.separator + dirName);
-		if (newDir.exists()) {
-			deleteFiles(newDir);
-		}
-		newDir.mkdir();
-		files.parallelStream().forEach(f -> {
-			try {
-				copyFile(f.getAbsolutePath(), newDir.getAbsolutePath() + File.separator + f.getName());
-			} catch (Throwable e) {
-				logger.error(e);
-			}
-		});
-	}
-
-	private void copyFile(String src, String dest) throws FileNotFoundException, IOException {
-		try (InputStream inputStream = new FileInputStream(src)) {
-			try (OutputStream outputStream = new FileOutputStream(dest)) {
-				byte[] buffer = new byte[1024];
-				int length = 0;
-				while ((length = inputStream.read(buffer)) > 0) {
-					outputStream.write(buffer, 0, length);
-				}
-			}
-		}
-	}
-
 	private String replaceCategory(Category category, String template) {
 		return template;
 	}
 
 	private String replacePost(Post post, String template) {
 		return template;
-	}
-
-	private void createFile(String filename, String data) {
-		File file = new File(filename);
-		byte[] binary = data.getBytes(StandardCharsets.UTF_8);
-		try (FileOutputStream output = new FileOutputStream(file)) {
-			output.write(binary, 0, binary.length);
-		} catch (Throwable e) {
-			logger.error(e);
-		}
-	}
-
-	private List<File> getFiles(String path) {
-		return getFiles(path, null);
-	}
-
-	private List<File> getFiles(String path, List<File> list) {
-		if (list == null) {
-			list = new ArrayList<>();
-		}
-		File file = new File(path);
-
-		if (file.isDirectory()) {
-			for (File f : file.listFiles()) {
-				getFiles(f.getAbsolutePath(), list);
-			}
-		}
-		if (file.isFile()) {
-			list.add(file);
-		}
-		return list;
-	}
-
-	private void deleteFiles(File file) {
-		deleteFiles(file.getAbsolutePath());
-	}
-
-	private void initGitDirectory(String path) {
-		File file = new File(path);
-		for (File f : file.listFiles()) {
-			if (f.getAbsolutePath().indexOf(".git") != -1) {
-				continue;
-			}
-			deleteFiles(f.getAbsolutePath());
-		}
-	}
-
-	private void deleteFiles(String path) {
-		File file = new File(path);
-
-		if (file.isDirectory()) {
-			for (File f : file.listFiles()) {
-				deleteFiles(f.getAbsolutePath());
-			}
-			file.delete();
-		}
-		if (file.isFile()) {
-			file.delete();
-		}
 	}
 
 	private String createMenu() {
