@@ -17,9 +17,7 @@ import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import common.LocalPaths;
 import common.LoggerManager;
 import common.PropertyMap;
@@ -30,8 +28,8 @@ public class FileManager {
 	private String attachPath;
 	private final Logger logger;
 
-	public FileManager(String rootPath) {
-		this.rootPath = rootPath;
+	public FileManager() {
+		this.rootPath = PropertyMap.getInstance().getProperty("config", "gitRoot");
 		logger = LoggerManager.getLogger(FileManager.class);
 	}
 
@@ -134,8 +132,8 @@ public class FileManager {
 		}
 	}
 
-	public void copyToHttpRoot(String httppath, String groupName) {
-		
+	public void copyToHttpRoot(String httppath, String groupName, String permission) {
+
 		deleteFiles(httppath);
 		File http = new File(httppath);
 		http.mkdir();
@@ -143,18 +141,17 @@ public class FileManager {
 		// TODO: The check was needed.
 		try {
 			// The group own will be changed.
-			
+
 			GroupPrincipal group = FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByGroupName(groupName);
 			Files.getFileAttributeView(http.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setGroup(group);
 		} catch (Throwable e) {
 			logger.error(e);
 		}
 
-		copyDirectory(rootPath, httppath, true);
-		// setPermission(http);
+		copyDirectory(rootPath, httppath, permission, true, false);
 	}
 
-	private void copyDirectory(String src, String dest, boolean git) {
+	private void copyDirectory(String src, String dest, String permission, boolean git, boolean isSetPermission) {
 		File source = new File(src);
 		File destination = new File(dest);
 		if (source.isDirectory()) {
@@ -166,7 +163,7 @@ public class FileManager {
 				if (git && file.getAbsolutePath().indexOf(".git") != -1) {
 					continue;
 				}
-				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName(), false);
+				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName(), permission, false, true);
 			}
 		}
 		if (source.isFile()) {
@@ -176,11 +173,12 @@ public class FileManager {
 				logger.error(e);
 			}
 		}
-		try {
-			String permission = PropertyMap.getInstance().getProperty("config", "httpPermission");
-			Files.getFileAttributeView(destination.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setPermissions(PosixFilePermissions.fromString(permission));
-		} catch (Throwable e) {
-			logger.error(destination.getAbsolutePath(), e);
+		if (isSetPermission) {
+			try {
+				Files.getFileAttributeView(destination.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setPermissions(PosixFilePermissions.fromString(permission));
+			} catch (Throwable e) {
+				logger.error(destination.getAbsolutePath(), e);
+			}
 		}
 	}
 

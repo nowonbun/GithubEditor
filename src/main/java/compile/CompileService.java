@@ -1,40 +1,24 @@
 package compile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.attribute.GroupPrincipal;
-import java.nio.file.attribute.PosixFileAttributeView;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import bean.ListBean;
 import bean.MenuBean;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
-import common.LocalPaths;
 import dao.AttachmentDao;
 import dao.CategoryDao;
 import dao.PostDao;
@@ -93,7 +77,8 @@ public class CompileService {
 		logger.info("The compile is start!");
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
-				FileManager filemanager = new FileManager(PropertyMap.getInstance().getProperty("config", "gitRoot"));
+				FileManager filemanager = new FileManager();
+				TemplateManager tempmanager = new TemplateManager();
 				setStatus(CompileStatus.start, "The compiler will be start.", 1);
 				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
 				filemanager.initGitDirectory();
@@ -178,11 +163,11 @@ public class CompileService {
 				// sitemap
 				String sitemap = createSiteMap(posts);
 				filemanager.createFile("sitemap.xml", sitemap);
-				
+
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
 				String permission = PropertyMap.getInstance().getProperty("config", "httpPermission");
-				filemanager.copyToHttpRoot(httppath, groupName);
+				filemanager.copyToHttpRoot(httppath, groupName, permission);
 
 				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
 				new Thread(() -> {
