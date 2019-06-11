@@ -1,18 +1,24 @@
 package compile;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import bean.MenuBean;
 import common.FactoryDao;
-import common.LoggerManager;
 import common.PropertyMap;
+import common.Util;
+import dao.AttachmentDao;
 import dao.CategoryDao;
+import model.Attachment;
 import model.Category;
+import model.Post;
 
-public class TemplateManager {
+public class TemplateManager extends AbstractManager {
 	private String mainTemp;
 	private String listTemp;
 	private String postTemp;
@@ -20,9 +26,9 @@ public class TemplateManager {
 
 	private String title;
 	private String menu;
-	private final Logger logger;
 
 	public TemplateManager() {
+		super();
 		this.mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 		this.listTemp = PropertyMap.getInstance().getTemplateFile("list");
 		this.postTemp = PropertyMap.getInstance().getTemplateFile("post");
@@ -30,14 +36,91 @@ public class TemplateManager {
 
 		this.title = PropertyMap.getInstance().getProperty("config", "title");
 		this.menu = createMenu();
-		logger = LoggerManager.getLogger(TemplateManager.class);
+
 	}
 
-	public String getMain() {
+	public String createMainTemp() {
 		String temp = this.mainTemp;
 		temp = replaceTagForTemplate(temp, "TITLE", this.title);
 		temp = replaceTagForTemplate(temp, "MENU", this.menu);
 		return temp;
+	}
+
+	public String createSearchTemp() {
+		String temp = this.searchTemp;
+		temp = replaceTagForTemplate(temp, "TITLE", this.title);
+		temp = replaceTagForTemplate(temp, "MENU", this.menu);
+		return temp;
+	}
+
+	public String createListTemp(Category category) {
+		String temp = this.listTemp;
+		temp = replaceCategory(category, temp);
+		temp = replaceTagForTemplate(temp, "TITLE", this.title + " :: " + getCategoryName(category));
+		temp = replaceTagForTemplate(temp, "MENU", this.menu);
+		temp = replaceTagForTemplate(temp, "CATEGORYNAME", getCategoryName(category));
+		temp = replaceTagForTemplate(temp, "JSONFILE", "./" + category.getUniqcode() + ".json");
+		return temp;
+	}
+
+	public String createPostTemp(Post post) {
+		String temp = this.postTemp;
+		temp = replacePost(post, temp);
+		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
+		temp = replaceTagForTemplate(temp, "MENU", menu);
+		temp = replaceTagForTemplate(temp, "CONTENTS_TITLE", post.getTitle());
+		temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
+		temp = replaceTagForTemplate(temp, "CATEGORY_NAME", getCategoryName(post.getCategory()));
+		temp = replaceTagForTemplate(temp, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
+		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
+		temp = replaceTagForTemplate(temp, "CONTENTS", getContetns(post));
+		temp = replaceTagForTemplate(temp, "TAG", post.getTag());
+		return temp;
+	}
+
+	private String getContetns(Post post) {
+		Document doc = Jsoup.parse(post.getContents());
+		Elements nodes = doc.select("img[data-filename],a.attachfile[data-filename]");
+		for (Element node : nodes) {
+			String attr = null;
+			if (node.tagName().equals("img")) {
+				attr = node.attr("src");
+			}
+			if (node.tagName().equals("a")) {
+				attr = node.attr("href");
+			}
+			if (!Util.StringIsEmptyOrNull(attr)) {
+				String idx = attr.replace("./getAttachFile.ajax?idx=", "");
+				idx = idx.trim();
+				try {
+					int id = Integer.parseInt(idx);
+					Attachment attachment = FactoryDao.getDao(AttachmentDao.class).select(id);
+					if (attachment != null) {
+						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_" + URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
+					} else {
+						attr = "";
+					}
+				} catch (Throwable e) {
+					attr = "";
+				}
+				if (node.tagName().equals("img")) {
+					node.attr("src", attr);
+				}
+				if (node.tagName().equals("a")) {
+					node.attr("href", attr);
+				}
+			}
+		}
+		return doc.html();
+	}
+
+	// TODO: ???
+	private String replaceCategory(Category category, String template) {
+		return template;
+	}
+
+	private String replacePost(Post post, String template) {
+		return template;
 	}
 
 	private String replaceTagForTemplate(String template, String tagName, String data) {
@@ -79,7 +162,7 @@ public class TemplateManager {
 			}
 			return sb.toString();
 		} catch (Throwable e) {
-			logger.error(e);
+			getLogger().error(e);
 			throw new RuntimeException(e);
 		}
 	}

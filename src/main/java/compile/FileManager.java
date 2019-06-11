@@ -23,14 +23,13 @@ import common.LoggerManager;
 import common.PropertyMap;
 import model.Attachment;
 
-public class FileManager {
+public class FileManager extends AbstractManager {
 	private String rootPath;
 	private String attachPath;
-	private final Logger logger;
 
 	public FileManager() {
+		super();
 		this.rootPath = PropertyMap.getInstance().getProperty("config", "gitRoot");
-		logger = LoggerManager.getLogger(FileManager.class);
 	}
 
 	public void initGitDirectory() {
@@ -78,7 +77,7 @@ public class FileManager {
 			try {
 				copyFile(f, newDir.getAbsolutePath() + File.separator + f.getName());
 			} catch (Throwable e) {
-				logger.error(e);
+				getLogger().error(e);
 			}
 		});
 	}
@@ -108,7 +107,7 @@ public class FileManager {
 		try (FileOutputStream stream = new FileOutputStream(path)) {
 			stream.write(data, 0, data.length);
 		} catch (Throwable e) {
-			logger.error(e);
+			getLogger().error(e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -145,7 +144,7 @@ public class FileManager {
 			GroupPrincipal group = FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByGroupName(groupName);
 			Files.getFileAttributeView(http.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setGroup(group);
 		} catch (Throwable e) {
-			logger.error(e);
+			getLogger().error(e);
 		}
 
 		copyDirectory(rootPath, httppath, permission, true, false);
@@ -170,14 +169,14 @@ public class FileManager {
 			try {
 				copyFile(src, dest);
 			} catch (Throwable e) {
-				logger.error(e);
+				getLogger().error(e);
 			}
 		}
 		if (isSetPermission) {
 			try {
 				Files.getFileAttributeView(destination.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setPermissions(PosixFilePermissions.fromString(permission));
 			} catch (Throwable e) {
-				logger.error(destination.getAbsolutePath(), e);
+				getLogger().error(destination.getAbsolutePath(), e);
 			}
 		}
 	}

@@ -77,8 +77,12 @@ public class CompileService {
 		logger.info("The compile is start!");
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
+				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
+
 				FileManager filemanager = new FileManager();
 				TemplateManager tempmanager = new TemplateManager();
+				RssManager rssmanager = new RssManager(posts);
+				SitemapManager sitemapmanager = new SitemapManager(posts);
 				setStatus(CompileStatus.start, "The compiler will be start.", 1);
 				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
 				filemanager.initGitDirectory();
@@ -91,24 +95,11 @@ public class CompileService {
 				setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
 				filemanager.copyDirectoryToGitRoot("img");
 
-				String mainTemp = PropertyMap.getInstance().getTemplateFile("main");
-				String listTemp = PropertyMap.getInstance().getTemplateFile("list");
-				String postTemp = PropertyMap.getInstance().getTemplateFile("post");
-				String searchTemp = PropertyMap.getInstance().getTemplateFile("search");
-
-				String title = PropertyMap.getInstance().getProperty("config", "title");
-				String menu = createMenu();
-				mainTemp = replaceTagForTemplate(mainTemp, "TITLE", title);
-				mainTemp = replaceTagForTemplate(mainTemp, "MENU", menu);
-
-				searchTemp = replaceTagForTemplate(searchTemp, "TITLE", title);
-				searchTemp = replaceTagForTemplate(searchTemp, "MENU", menu);
-
 				// index.html
-				filemanager.createFile("index.html", mainTemp);
+				filemanager.createFile("index.html", tempmanager.createMainTemp());
 
 				// search.html
-				filemanager.createFile("search.html", searchTemp);
+				filemanager.createFile("search.html", tempmanager.createSearchTemp());
 
 				// list.html
 				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
@@ -116,12 +107,7 @@ public class CompileService {
 					if (category.getCategories().size() > 0) {
 						return;
 					}
-					String template = replaceCategory(category, listTemp);
-					template = replaceTagForTemplate(template, "TITLE", title + " :: " + getCategoryName(category));
-					template = replaceTagForTemplate(template, "MENU", menu);
-					template = replaceTagForTemplate(template, "CATEGORYNAME", getCategoryName(category));
-					template = replaceTagForTemplate(template, "JSONFILE", "./" + category.getUniqcode() + ".json");
-					filemanager.createFile(category.getUniqcode() + ".html", template);
+					filemanager.createFile(category.getUniqcode() + ".html", tempmanager.createListTemp(category));
 
 					List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
 					List<ListBean> list = new ArrayList<>();
@@ -140,29 +126,16 @@ public class CompileService {
 				});
 
 				// post.html
-				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
 				posts.parallelStream().forEach(post -> {
 					filemanager.createAttachfiles(post.getIdx(), post.getAttachments());
-					String template = replacePost(post, postTemp);
-					template = replaceTagForTemplate(template, "TITLE", title + " :: " + post.getTitle());
-					template = replaceTagForTemplate(template, "MENU", menu);
-					template = replaceTagForTemplate(template, "CONTENTS_TITLE", post.getTitle());
-					template = replaceTagForTemplate(template, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
-					template = replaceTagForTemplate(template, "CATEGORY_NAME", getCategoryName(post.getCategory()));
-					template = replaceTagForTemplate(template, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
-					template = replaceTagForTemplate(template, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
-					template = replaceTagForTemplate(template, "CONTENTS", getContetns(post));
-					template = replaceTagForTemplate(template, "TAG", post.getTag());
-					filemanager.createFile(post.getIdx() + ".html", template);
+					filemanager.createFile(post.getIdx() + ".html", tempmanager.createPostTemp(post));
 				});
 
 				// rss
-				String rss = createRss(posts);
-				filemanager.createFile("rss", rss);
+				filemanager.createFile("rss", rssmanager.build());
 
 				// sitemap
-				String sitemap = createSiteMap(posts);
-				filemanager.createFile("sitemap.xml", sitemap);
+				filemanager.createFile("sitemap.xml", sitemapmanager.build());
 
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
@@ -184,108 +157,8 @@ public class CompileService {
 		});
 	}
 
-	private String getContetns(Post post) {
-		Document doc = Jsoup.parse(post.getContents());
-		Elements nodes = doc.select("img[data-filename],a.attachfile[data-filename]");
-		for (Element node : nodes) {
-			String attr = null;
-			if (node.tagName().equals("img")) {
-				attr = node.attr("src");
-			}
-			if (node.tagName().equals("a")) {
-				attr = node.attr("href");
-			}
-			if (!Util.StringIsEmptyOrNull(attr)) {
-				String idx = attr.replace("./getAttachFile.ajax?idx=", "");
-				idx = idx.trim();
-				try {
-					int id = Integer.parseInt(idx);
-					Attachment attachment = FactoryDao.getDao(AttachmentDao.class).select(id);
-					if (attachment != null) {
-						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_" + URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
-					} else {
-						attr = "";
-					}
-				} catch (Throwable e) {
-					attr = "";
-				}
-				if (node.tagName().equals("img")) {
-					node.attr("src", attr);
-				}
-				if (node.tagName().equals("a")) {
-					node.attr("href", attr);
-				}
-			}
-		}
-		return doc.html();
-	}
-
 	private String replaceTagForTemplate(String template, String tagName, String data) {
 		return template.replace("#####" + tagName + "#####", data);
-	}
-
-	private String createSiteMap(List<Post> posts) {
-		// http://www.nowonbun.com/sitemap.xml
-		StringBuffer xml = new StringBuffer();
-		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
-		for (Post post : posts) {
-			xml.append(createTag("url", () -> {
-				StringBuffer url = new StringBuffer();
-				url.append(createTag("loc", PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html"));
-				url.append(createTag("lastmod", Util.convertGMT2DateFormat(post.getLastupdateddate())));
-				url.append(createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
-				url.append(createTag("priority", PropertyMap.getInstance().getProperty("config", "sitemap_priority")));
-				return url.toString();
-			}));
-		}
-		xml.append("</urlset>");
-		return xml.toString();
-	}
-
-	private String createRss(List<Post> posts) {
-		// file:///home/nowonbun/Downloads/rss
-		StringBuffer xml = new StringBuffer();
-		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xml.append(
-				"<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
-		xml.append(createTag("channel", () -> {
-			StringBuffer channel = new StringBuffer();
-			channel.append(createTag("title", PropertyMap.getInstance().getProperty("config", "rss_title")));
-			channel.append(createTag("link", PropertyMap.getInstance().getProperty("config", "rss_link")));
-			channel.append(createTag("description", PropertyMap.getInstance().getProperty("config", "rss_description")));
-			channel.append(createTag("language", PropertyMap.getInstance().getProperty("config", "rss_language")));
-			channel.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
-			channel.append(createTag("generator", PropertyMap.getInstance().getProperty("config", "rss_generator")));
-			channel.append(createTag("managingEditor", PropertyMap.getInstance().getProperty("config", "rss_managingEditor")));
-			channel.append(createTag("webMaster", PropertyMap.getInstance().getProperty("config", "rss_webMaster")));
-			for (Post post : posts) {
-				channel.append(createTag("item", () -> {
-					String link = PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html";
-					StringBuffer item = new StringBuffer();
-					item.append(createTag("title", post.getTitle()));
-					item.append(createTag("link", link));
-					item.append(createTag("description", createDescription(post.getContents())));
-					item.append(createTag("category", getCategoryName(post.getCategory())));
-					item.append(createTag("author", PropertyMap.getInstance().getProperty("config", "rss_author")));
-					item.append(createTag("guid", link));
-					item.append(createTag("pubDate", Util.convertGMTDateFormat(post.getLastupdateddate())));
-					return item.toString();
-				}));
-			}
-			return channel.toString();
-		}));
-		xml.append("</rss>");
-		return xml.toString();
-	}
-
-	private String getCategoryName(Category category) {
-		String name = "";
-		if (category.getCategory() != null) {
-			name += getCategoryName(category.getCategory()) + " / ";
-		}
-		name += category.getName();
-		return name;
 	}
 
 	private String createDescription(String contents) {
@@ -309,27 +182,6 @@ public class CompileService {
 			return ret.substring(0, 1020);
 		}
 		return ret;
-	}
-
-	private String createTag(String tagName, Callable<String> func) {
-		try {
-			return createTag(tagName, func.call());
-		} catch (Throwable e) {
-			logger.error(e);
-			throw new RuntimeException(e);
-		}
-	}
-
-	private String createTag(String tagName, String data) {
-		return "<" + tagName + ">" + data + "</" + tagName + ">";
-	}
-
-	private String replaceCategory(Category category, String template) {
-		return template;
-	}
-
-	private String replacePost(Post post, String template) {
-		return template;
 	}
 
 	private String createMenu() {
