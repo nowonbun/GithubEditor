@@ -1,28 +1,16 @@
 package compile;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import bean.ListBean;
-import bean.MenuBean;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
-import dao.AttachmentDao;
 import dao.CategoryDao;
 import dao.PostDao;
-import model.Attachment;
 import model.Category;
 import model.Post;
 
@@ -139,8 +127,9 @@ public class CompileService {
 
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
-				String permission = PropertyMap.getInstance().getProperty("config", "httpPermission");
-				filemanager.copyToHttpRoot(httppath, groupName, permission);
+				String filepermission = PropertyMap.getInstance().getProperty("config", "httpFilePermission");
+				String dirpermission = PropertyMap.getInstance().getProperty("config", "httpDirPermisstion");
+				filemanager.copyToHttpRoot(httppath, groupName, filepermission, dirpermission);
 
 				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
 				new Thread(() -> {
@@ -155,10 +144,6 @@ public class CompileService {
 				logger.error(e);
 			}
 		});
-	}
-
-	private String replaceTagForTemplate(String template, String tagName, String data) {
-		return template.replace("#####" + tagName + "#####", data);
 	}
 
 	private String createDescription(String contents) {
@@ -184,43 +169,4 @@ public class CompileService {
 		return ret;
 	}
 
-	private String createMenu() {
-		StringBuffer sb = new StringBuffer();
-		try {
-			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
-			for (Category c : pList) {
-				sb.append("<li class=\"\">");
-				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
-				if (sublist.size() > 0) {
-					sb.append("<a class=\"link_item link-item-collapse\" href=\"javascript:void(0)\">");
-					sb.append(c.getName());
-					sb.append("<span class=\"fa fa-chevron-down pull-right\"></span></a>");
-					sb.append("<ul class=\"sub_category_list off\">");
-					for (Category sub : sublist) {
-						sb.append("<li class=\"\"><a class=\"link_sub_item\" href=\"");
-						sb.append(sub.getUniqcode() + ".html");
-						sb.append("\">");
-						sb.append(sub.getName());
-						sb.append("</a></li>");
-					}
-					sb.append("</ul>");
-				} else {
-					sb.append("<a class=\"link_item link-item-collapse\" href=\"");
-					sb.append(c.getUniqcode() + ".html");
-					sb.append("\">");
-					sb.append(c.getName());
-					sb.append("</a>");
-				}
-				MenuBean bean = new MenuBean();
-				bean.setUrl("list.html?category=" + c.getCode());
-				bean.setText(c.getName());
-				sb.append("</li>");
-			}
-			return sb.toString();
-		} catch (Throwable e) {
-			logger.error(e);
-			throw new RuntimeException(e);
-		}
-	}
 }

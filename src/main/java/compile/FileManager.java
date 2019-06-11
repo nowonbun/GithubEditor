@@ -17,9 +17,7 @@ import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 import common.LocalPaths;
-import common.LoggerManager;
 import common.PropertyMap;
 import model.Attachment;
 
@@ -131,7 +129,7 @@ public class FileManager extends AbstractManager {
 		}
 	}
 
-	public void copyToHttpRoot(String httppath, String groupName, String permission) {
+	public void copyToHttpRoot(String httppath, String groupName, String filepermission, String dirpermission) {
 
 		deleteFiles(httppath);
 		File http = new File(httppath);
@@ -147,22 +145,29 @@ public class FileManager extends AbstractManager {
 			getLogger().error(e);
 		}
 
-		copyDirectory(rootPath, httppath, permission, true, false);
+		copyDirectory(rootPath, httppath, filepermission, dirpermission, true, false);
 	}
 
-	private void copyDirectory(String src, String dest, String permission, boolean git, boolean isSetPermission) {
+	private void copyDirectory(String src, String dest, String filepermission, String dirpermission, boolean git, boolean isSetPermission) {
 		File source = new File(src);
 		File destination = new File(dest);
 		if (source.isDirectory()) {
 			if (!destination.exists()) {
 				destination.mkdir();
 			}
+			if (isSetPermission) {
+				try {
+					Files.getFileAttributeView(destination.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setPermissions(PosixFilePermissions.fromString(dirpermission));
+				} catch (Throwable e) {
+					getLogger().error(destination.getAbsolutePath(), e);
+				}
+			}
 			File[] files = source.listFiles();
 			for (File file : files) {
 				if (git && file.getAbsolutePath().indexOf(".git") != -1) {
 					continue;
 				}
-				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName(), permission, false, true);
+				copyDirectory(src + File.separator + file.getName(), dest + File.separator + file.getName(), filepermission, dirpermission, false, true);
 			}
 		}
 		if (source.isFile()) {
@@ -171,12 +176,12 @@ public class FileManager extends AbstractManager {
 			} catch (Throwable e) {
 				getLogger().error(e);
 			}
-		}
-		if (isSetPermission) {
-			try {
-				Files.getFileAttributeView(destination.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setPermissions(PosixFilePermissions.fromString(permission));
-			} catch (Throwable e) {
-				getLogger().error(destination.getAbsolutePath(), e);
+			if (isSetPermission) {
+				try {
+					Files.getFileAttributeView(destination.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setPermissions(PosixFilePermissions.fromString(filepermission));
+				} catch (Throwable e) {
+					getLogger().error(destination.getAbsolutePath(), e);
+				}
 			}
 		}
 	}

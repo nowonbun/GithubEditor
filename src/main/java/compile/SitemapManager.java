@@ -8,9 +8,15 @@ import model.Post;
 
 public class SitemapManager extends AbstractManager {
 	private List<Post> posts;
+	private String locRoot;
+	private String changefred;
+	private String priority;
 
 	public SitemapManager(List<Post> posts) {
 		this.posts = posts;
+		this.locRoot = PropertyMap.getInstance().getProperty("config", "host_name");
+		this.changefred = PropertyMap.getInstance().getProperty("config", "sitemap_changefred");
+		this.priority = PropertyMap.getInstance().getProperty("config", "sitemap_priority");
 	}
 
 	public String build() {
@@ -21,10 +27,10 @@ public class SitemapManager extends AbstractManager {
 		for (Post post : posts) {
 			xml.append(createTag("url", () -> {
 				StringBuffer url = new StringBuffer();
-				url.append(createTag("loc", PropertyMap.getInstance().getProperty("config", "host_name") + "/" + post.getIdx() + ".html"));
+				url.append(createTag("loc", this.locRoot + "/" + post.getIdx() + ".html"));
 				url.append(createTag("lastmod", Util.convertGMT2DateFormat(post.getLastupdateddate())));
-				url.append(createTag("changefred", PropertyMap.getInstance().getProperty("config", "sitemap_changefred")));
-				url.append(createTag("priority", PropertyMap.getInstance().getProperty("config", "sitemap_priority")));
+				url.append(createTag("changefred", this.changefred));
+				url.append(createTag("priority", this.priority));
 				return url.toString();
 			}));
 		}
