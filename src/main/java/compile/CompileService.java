@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
+import org.jsoup.Connection.Base;
+
 import bean.ListBean;
 import common.FactoryDao;
 import common.LoggerManager;
@@ -14,7 +16,7 @@ import dao.PostDao;
 import model.Category;
 import model.Post;
 
-public class CompileService {
+public class CompileService extends AbstractManager {
 	private static CompileService instance = null;
 	private final Logger logger;
 
@@ -85,28 +87,11 @@ public class CompileService {
 
 				// index.html
 				filemanager.createFile("index.html", tempmanager.createMainTemp());
-
-				// search.html
-				/*filemanager.createFile("search.html", tempmanager.createSearchTemp());*/
 				List<ListBean> totalList = new LinkedList<>();
 				posts.forEach(post -> {
 					totalList.add(convertPost(post));
 				});
 				filemanager.createFile("list.json", Util.getGson().toJson(totalList));
-
-				// list.html
-				/*List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
-				categorys.parallelStream().forEach(category -> {
-					if (category.getCategories().size() > 0) {
-						return;
-					}
-					filemanager.createFile(category.getUniqcode() + ".html", tempmanager.createListTemp(category));
-					List<ListBean> list = new LinkedList<>();
-					posts.stream().filter(x -> Util.StringEquals(x.getCategory().getCode(), category.getCode())).forEach(post -> {
-						list.add(convertPost(post));
-					});
-					filemanager.createFile(category.getUniqcode() + ".json", Util.getGson().toJson(list));
-				});*/
 
 				// post.html
 				posts.parallelStream().forEach(post -> {
@@ -149,28 +134,9 @@ public class CompileService {
 		bean.setSummary(createDescription(post.getContents()));
 		bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
 		bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
+		bean.setCategoryCode(post.getCategory().getCode());
+		bean.setCategoryName(super.getCategoryName(post.getCategory()));
+
 		return bean;
 	}
-
-	private String createDescription(String contents) {
-		contents = contents.toLowerCase();
-		int pos = contents.indexOf("<pre");
-		while (pos > -1) {
-			int epos = contents.indexOf("</pre>", pos);
-			if (epos < 0) {
-				break;
-			}
-			epos += 6;
-			String pre = contents.substring(0, pos);
-			String after = contents.substring(epos, contents.length());
-			contents = pre + System.lineSeparator() + after;
-			pos = contents.indexOf("<pre");
-		}
-		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
-		if (ret.length() > 1020) {
-			return ret.substring(0, 1020);
-		}
-		return ret;
-	}
-
 }

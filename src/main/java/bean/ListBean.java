@@ -7,6 +7,8 @@ public class ListBean {
 	private String tags;
 	private String createddate;
 	private String lastupdateddate;
+	private String categoryCode;
+	private String categoryName;
 
 	public int getIdx() {
 		return idx;
@@ -54,6 +56,22 @@ public class ListBean {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public String getCategoryCode() {
+		return categoryCode;
+	}
+
+	public void setCategoryCode(String categoryCode) {
+		this.categoryCode = categoryCode;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 }

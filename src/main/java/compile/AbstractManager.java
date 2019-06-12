@@ -10,7 +10,7 @@ import model.Category;
 public class AbstractManager {
 	private final Logger logger;
 
-	public AbstractManager() {
+	protected AbstractManager() {
 		this.logger = LoggerManager.getLogger(this.getClass());
 	}
 

@@ -135,7 +135,7 @@ public class TemplateManager extends AbstractManager {
 				sb.append("<li class=\"\">");
 				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
-					sb.append("<a class=\"link_item link-item-collapse\" href=\"javascript:void(0)\">");
+					sb.append("<a class=\"link_item link-item-collapse category-item\" href=\"javascript:void(0)\">");
 					sb.append(c.getName());
 					sb.append("<span class=\"fa fa-chevron-down pull-right\"></span></a>");
 					sb.append("<ul class=\"sub_category_list off\">");

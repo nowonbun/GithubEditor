@@ -13,32 +13,45 @@ var _this = (function(obj) {
 			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
 			return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
-		getCategoryName : function(code){
-			
+		getCategoryName : function(code) {
+            var $item = $(".category-item[data-code="+code+"]");
+            var name = $item.text();
+            //SUDO: this
+            return name;
 		},
 		getList : function() {
 			var category = __.fn.getParameterByName('category');
 			var query = __.fn.getParameterByName('query');
-			$("#searchTitle").text(query);
-			if (query == null) {
-				toastr.error("検索条件がありません。");
-				return;
-			}
+			if (query === null && category === null) {
+				$(".searchList").hide();
+			} else if(category !== null){
+                var categoryname = __.fn.getCategoryName(category);
+                $(".searchList h3 span").text(categoryname);
+            }
 			_.loading.on();
 			$.ajax({
 				type : 'GET',
 				dataType : 'json',
-				url : "./main.json",
+				url : "./list.json",
 				success : function(data) {
 					// console.log(data);
 					// var ret = $(data).find("item");
 					// console.log(data);
 					var list = [];
 					for (var i = 0; i < data.length; i++) {
-						if (data[i].title.toUpperCase().indexOf(query.toUpperCase()) > -1) {
-							list.push(data[i]);
-						} else if (data[i].tags.toUpperCase().indexOf(query.toUpperCase()) > -1) {
-							list.push(data[i]);
+                        var node = data[i];
+						if (query !== null) {
+							if (node.title.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+								list.push(node);
+							} else if (node.tags.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+								list.push(node);
+							}
+						} else if (category !== null) {
+                            if(node.categoryCode === category){
+                                list.push(node);
+                            }
+						} else {
+							list.push(node);
 						}
 					}
 					$("#searchResultCount").text(list.length);
