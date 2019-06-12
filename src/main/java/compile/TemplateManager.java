@@ -46,22 +46,21 @@ public class TemplateManager extends AbstractManager {
 		return temp;
 	}
 
-	public String createSearchTemp() {
-		String temp = this.searchTemp;
-		temp = replaceTagForTemplate(temp, "TITLE", this.title);
-		temp = replaceTagForTemplate(temp, "MENU", this.menu);
-		return temp;
-	}
+	/*
+	 * public String createSearchTemp() { String temp = this.searchTemp; temp =
+	 * replaceTagForTemplate(temp, "TITLE", this.title); temp =
+	 * replaceTagForTemplate(temp, "MENU", this.menu); return temp; }
+	 */
 
-	public String createListTemp(Category category) {
-		String temp = this.listTemp;
-		temp = replaceCategory(category, temp);
-		temp = replaceTagForTemplate(temp, "TITLE", this.title + " :: " + getCategoryName(category));
-		temp = replaceTagForTemplate(temp, "MENU", this.menu);
-		temp = replaceTagForTemplate(temp, "CATEGORYNAME", getCategoryName(category));
-		temp = replaceTagForTemplate(temp, "JSONFILE", "./" + category.getUniqcode() + ".json");
-		return temp;
-	}
+	/*
+	 * public String createListTemp(Category category) { String temp =
+	 * this.listTemp; temp = replaceCategory(category, temp); temp =
+	 * replaceTagForTemplate(temp, "TITLE", this.title + " :: " +
+	 * getCategoryName(category)); temp = replaceTagForTemplate(temp, "MENU",
+	 * this.menu); temp = replaceTagForTemplate(temp, "CATEGORYNAME",
+	 * getCategoryName(category)); temp = replaceTagForTemplate(temp, "JSONFILE",
+	 * "./" + category.getUniqcode() + ".json"); return temp; }
+	 */
 
 	public String createPostTemp(Post post) {
 		String temp = this.postTemp;
@@ -141,16 +140,22 @@ public class TemplateManager extends AbstractManager {
 					sb.append("<span class=\"fa fa-chevron-down pull-right\"></span></a>");
 					sb.append("<ul class=\"sub_category_list off\">");
 					for (Category sub : sublist) {
-						sb.append("<li class=\"\"><a class=\"link_sub_item\" href=\"");
-						sb.append(sub.getUniqcode() + ".html");
+						sb.append("<li class=\"\"><a class=\"link_sub_item category-item\" data-code=\"");
+						sb.append(sub.getCode());
+						sb.append("\" href=\"");
+						// sb.append(sub.getUniqcode() + ".html");
+						sb.append("./?category=" + sub.getCode());
 						sb.append("\">");
 						sb.append(sub.getName());
 						sb.append("</a></li>");
 					}
 					sb.append("</ul>");
 				} else {
-					sb.append("<a class=\"link_item link-item-collapse\" href=\"");
-					sb.append(c.getUniqcode() + ".html");
+					sb.append("<a class=\"link_item link-item-collapse category-item\" data-code=\"");
+					sb.append(c.getCode());
+					sb.append("\" href=\"");
+					//sb.append(c.getUniqcode() + ".html");
+					sb.append("./?category=" + c.getCode());
 					sb.append("\">");
 					sb.append(c.getName());
 					sb.append("</a>");

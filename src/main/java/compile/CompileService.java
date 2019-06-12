@@ -1,6 +1,6 @@
 package compile;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
@@ -87,31 +87,26 @@ public class CompileService {
 				filemanager.createFile("index.html", tempmanager.createMainTemp());
 
 				// search.html
-				filemanager.createFile("search.html", tempmanager.createSearchTemp());
+				/*filemanager.createFile("search.html", tempmanager.createSearchTemp());*/
+				List<ListBean> totalList = new LinkedList<>();
+				posts.forEach(post -> {
+					totalList.add(convertPost(post));
+				});
+				filemanager.createFile("list.json", Util.getGson().toJson(totalList));
 
 				// list.html
-				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
+				/*List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
 				categorys.parallelStream().forEach(category -> {
 					if (category.getCategories().size() > 0) {
 						return;
 					}
 					filemanager.createFile(category.getUniqcode() + ".html", tempmanager.createListTemp(category));
-
-					List<Post> postsOfCategory = FactoryDao.getDao(PostDao.class).selectByCategoryAll(category);
-					List<ListBean> list = new ArrayList<>();
-					for (Post post : postsOfCategory) {
-						ListBean bean = new ListBean();
-						bean.setIdx(post.getIdx());
-						bean.setTitle(post.getTitle());
-						bean.setTags(post.getTag());
-						bean.setSummary(createDescription(post.getContents()));
-						bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
-						bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
-						list.add(bean);
-					}
-
+					List<ListBean> list = new LinkedList<>();
+					posts.stream().filter(x -> Util.StringEquals(x.getCategory().getCode(), category.getCode())).forEach(post -> {
+						list.add(convertPost(post));
+					});
 					filemanager.createFile(category.getUniqcode() + ".json", Util.getGson().toJson(list));
-				});
+				});*/
 
 				// post.html
 				posts.parallelStream().forEach(post -> {
@@ -146,6 +141,17 @@ public class CompileService {
 		});
 	}
 
+	private ListBean convertPost(Post post) {
+		ListBean bean = new ListBean();
+		bean.setIdx(post.getIdx());
+		bean.setTitle(post.getTitle());
+		bean.setTags(post.getTag());
+		bean.setSummary(createDescription(post.getContents()));
+		bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
+		bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
+		return bean;
+	}
+
 	private String createDescription(String contents) {
 		contents = contents.toLowerCase();
 		int pos = contents.indexOf("<pre");
@@ -160,8 +166,6 @@ public class CompileService {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "")
-		// + "]]>";
 		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
 		if (ret.length() > 1020) {
 			return ret.substring(0, 1020);

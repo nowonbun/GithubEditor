@@ -137,7 +137,7 @@ h5.side-header {
 	/*box-shadow: 0px 2px 8px;*/
 }
 aside.leftside .side-search{
-	display:none;
+	/*display:none;*/
 }
 div.side-list{
 	min-height: 250px;

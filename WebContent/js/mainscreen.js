@@ -4,35 +4,41 @@ var _this = (function(obj) {
 	var __ = {};
 
 	__.property = {
-		
+
 	}
 
 	__.fn = {
-		getParameterByName: function (name) {
+		getParameterByName : function(name) {
 			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-				results = regex.exec(location.search);
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
 			return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
+		getCategoryName : function(code){
+			
+		},
 		getList : function() {
+			var category = __.fn.getParameterByName('category');
 			var query = __.fn.getParameterByName('query');
 			$("#searchTitle").text(query);
-			if(query == null){
+			if (query == null) {
 				toastr.error("検索条件がありません。");
 				return;
 			}
 			_.loading.on();
 			$.ajax({
 				type : 'GET',
-				dataType : 'xml',
-				url : "./rss",
+				dataType : 'json',
+				url : "./main.json",
 				success : function(data) {
-					//console.log(data);
-					var ret = $(data).find("item");
+					// console.log(data);
+					// var ret = $(data).find("item");
+					// console.log(data);
 					var list = [];
-					for(var i = 0; i < ret.length; i++){
-						if($(ret[i]).find("title").text().toUpperCase().indexOf(query.toUpperCase()) > -1){
-							list.push($(ret[i]));
+					for (var i = 0; i < data.length; i++) {
+						if (data[i].title.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+							list.push(data[i]);
+						} else if (data[i].tags.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+							list.push(data[i]);
 						}
 					}
 					$("#searchResultCount").text(list.length);
@@ -48,16 +54,19 @@ var _this = (function(obj) {
 						_.loading.off();
 						return;
 					}
-					
+
 					for (var i = 0; i < list.length; i++) {
 						var post = list[i];
-						//console.log(post);
+						// console.log(post);
 						var $article = $($(".list-article").html());
-						$article.find(".category-column").html(post.find("category").html());
-						$article.find(".list-link").prop("href",post.find("link").html());
-						$article.find(".ci-link").html(post.find("title").html());
-						$article.find(".list-summary").html(post.find("description").html());
-						$article.find(".date-column.update-date").html(post.find("pubDate").html());
+						$article.find(".list-link").prop("href", "./" + post.idx + ".html");
+						$article.find(".ci-link").html(post.title);
+						if (post.tags !== undefined && post.tags !== null) {
+							$article.find(".tag-column").text(post.tags);
+						}
+						$article.find(".list-summary").text(post.summary);
+						$article.find(".date-column.create-date").text(post.createddate);
+						$article.find(".date-column.update-date").text(post.lastupdateddate);
 						$(".list-area").append($article);
 					}
 					_.loading.off();
