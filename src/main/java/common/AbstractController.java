@@ -31,7 +31,7 @@ public class AbstractController {
 		}
 		return logger;
 	}
-	
+
 	protected Cookie[] getCookies(HttpServletRequest request) {
 		return request.getCookies();
 	}
@@ -108,21 +108,21 @@ public class AbstractController {
 	protected void setMenu(ModelMap modelmap) {
 		try {
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
-					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			List<MenuBean> selectList = new ArrayList<>();
 			for (Category c : pList) {
 				MenuBean bean = new MenuBean();
 				bean.setUrl("list.html?category=" + c.getCode());
 				bean.setText(c.getName());
-				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
-						.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+				bean.setCategoryCode(c.getCode());
+				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
 					bean.setSubMenu(new ArrayList<>());
 					for (Category sub : sublist) {
 						MenuBean subBean = new MenuBean();
 						subBean.setUrl("list.html?category=" + sub.getCode());
 						subBean.setText(sub.getName());
+						subBean.setCategoryCode(sub.getCode());
 						bean.getSubMenu().add(subBean);
 					}
 				}

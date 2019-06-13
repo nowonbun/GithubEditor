@@ -5,6 +5,7 @@ import java.util.List;
 public class MenuBean {
 	private String url;
 	private String text;
+	private String categoryCode;
 	private List<MenuBean> subMenu;
 
 	public String getUrl() {
@@ -29,6 +30,14 @@ public class MenuBean {
 
 	public void setSubMenu(List<MenuBean> subMenu) {
 		this.subMenu = subMenu;
+	}
+
+	public String getCategoryCode() {
+		return categoryCode;
+	}
+
+	public void setCategoryCode(String categoryCode) {
+		this.categoryCode = categoryCode;
 	}
 
 }

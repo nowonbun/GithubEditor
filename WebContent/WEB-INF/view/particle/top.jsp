@@ -71,12 +71,12 @@
 						</c:when>
 						<c:otherwise>
 							<li class="">
-								<a class="link_item link-item-collapse" href="javascript:void(0)"> ${item.text}
+								<a class="link_item link-item-collapse" href="javascript:void(0)" data-code="${item.categoryCode }"> ${item.text}
 									<span class="fa fa-chevron-down pull-right"></span>
 								</a>
 								<ul class="sub_category_list off">
 									<c:forEach items="${item.subMenu}" var="sub">
-										<li class=""><a class="link_sub_item" href="${sub.url }">${sub.text}</a></li>
+										<li class=""><a class="link_sub_item" href="${sub.url }" data-code="${sub.categoryCode }">${sub.text}</a></li>
 									</c:forEach>
 								</ul>
 							</li>

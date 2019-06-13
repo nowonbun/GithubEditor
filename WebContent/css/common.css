@@ -150,6 +150,9 @@ div.side-list a {
 div.side-list a:hover {
 	color: #81a9db;
 }
+div.side-list a.active {
+	color: #81a9db;
+}
 
 div.side-list ul {
 	list-style: none;

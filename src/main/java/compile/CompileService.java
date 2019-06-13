@@ -4,16 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
-import org.jsoup.Connection.Base;
-
 import bean.ListBean;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
-import dao.CategoryDao;
 import dao.PostDao;
-import model.Category;
 import model.Post;
 
 public class CompileService extends AbstractManager {

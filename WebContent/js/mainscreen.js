@@ -15,9 +15,13 @@ var _this = (function(obj) {
 		},
 		getCategoryName : function(code) {
             var $item = $(".category-item[data-code="+code+"]");
-            var name = $item.text();
-            //SUDO: this
-            return name;
+            $item.addClass("active");
+            var $parent = $item.closest("ul.sub_category_list");
+            if($parent.length > 0){
+                $parent.prev().trigger("click");
+                return $parent.prev().text() + ' / ' + $item.text();
+            }
+            return $item.text();
 		},
 		getList : function() {
 			var category = __.fn.getParameterByName('category');

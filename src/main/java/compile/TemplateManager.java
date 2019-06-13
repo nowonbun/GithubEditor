@@ -20,9 +20,7 @@ import model.Post;
 
 public class TemplateManager extends AbstractManager {
 	private String mainTemp;
-	private String listTemp;
 	private String postTemp;
-	private String searchTemp;
 
 	private String title;
 	private String menu;
@@ -30,9 +28,7 @@ public class TemplateManager extends AbstractManager {
 	public TemplateManager() {
 		super();
 		this.mainTemp = PropertyMap.getInstance().getTemplateFile("main");
-		this.listTemp = PropertyMap.getInstance().getTemplateFile("list");
 		this.postTemp = PropertyMap.getInstance().getTemplateFile("post");
-		this.searchTemp = PropertyMap.getInstance().getTemplateFile("search");
 
 		this.title = PropertyMap.getInstance().getProperty("config", "title");
 		this.menu = createMenu();
@@ -46,25 +42,8 @@ public class TemplateManager extends AbstractManager {
 		return temp;
 	}
 
-	/*
-	 * public String createSearchTemp() { String temp = this.searchTemp; temp =
-	 * replaceTagForTemplate(temp, "TITLE", this.title); temp =
-	 * replaceTagForTemplate(temp, "MENU", this.menu); return temp; }
-	 */
-
-	/*
-	 * public String createListTemp(Category category) { String temp =
-	 * this.listTemp; temp = replaceCategory(category, temp); temp =
-	 * replaceTagForTemplate(temp, "TITLE", this.title + " :: " +
-	 * getCategoryName(category)); temp = replaceTagForTemplate(temp, "MENU",
-	 * this.menu); temp = replaceTagForTemplate(temp, "CATEGORYNAME",
-	 * getCategoryName(category)); temp = replaceTagForTemplate(temp, "JSONFILE",
-	 * "./" + category.getUniqcode() + ".json"); return temp; }
-	 */
-
 	public String createPostTemp(Post post) {
 		String temp = this.postTemp;
-		temp = replacePost(post, temp);
 		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
 		temp = replaceTagForTemplate(temp, "MENU", menu);
 		temp = replaceTagForTemplate(temp, "CONTENTS_TITLE", post.getTitle());
@@ -113,15 +92,6 @@ public class TemplateManager extends AbstractManager {
 		return doc.html();
 	}
 
-	// TODO: ???
-	private String replaceCategory(Category category, String template) {
-		return template;
-	}
-
-	private String replacePost(Post post, String template) {
-		return template;
-	}
-
 	private String replaceTagForTemplate(String template, String tagName, String data) {
 		return template.replace("#####" + tagName + "#####", data);
 	}
@@ -154,7 +124,7 @@ public class TemplateManager extends AbstractManager {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" data-code=\"");
 					sb.append(c.getCode());
 					sb.append("\" href=\"");
-					//sb.append(c.getUniqcode() + ".html");
+					// sb.append(c.getUniqcode() + ".html");
 					sb.append("./?category=" + c.getCode());
 					sb.append("\">");
 					sb.append(c.getName());
