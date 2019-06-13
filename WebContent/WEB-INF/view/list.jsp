@@ -22,6 +22,7 @@
 					<p class="list-summary"></p>
 				</a>
 				<div class="list-meta ie-dotum">
+					<p><a href="" class="p-category ci-color"></a></p>
 					<p><span class="timeago ff-h dt-published tag-column"></span></p> 
 					<p>
 						<span class="data-column-label">作成日付 :</span>

@@ -252,6 +252,13 @@ article>div.searchListEntity>div.list-body a.list-link:hover>h5 {
 .data-column-label, .date-column, .tag-column {
 	font-size: 0.70rem;
 }
+.p-category{
+	font-size: 0.7rem;
+	font-weight: bold;
+}
+.p-category:hover{
+	color:#81a9db!important;
+}
 
 .list-meta p {
 	margin-bottom: 5px;

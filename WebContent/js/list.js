@@ -10,6 +10,15 @@ var _this = (function(obj) {
 	}
 
 	__.fn = {
+		selectList: function(){
+			var code = $("#category").val();
+			var $item = $(".category-item[data-code="+code+"]");
+            $item.addClass("active");
+            var $parent = $item.closest("ul.sub_category_list");
+            if($parent.length > 0){
+                $parent.prev().trigger("click");
+            }
+		},
 		getList : function() {
 			_.loading.on();
 			if (__.property.count === 0) {
@@ -41,6 +50,7 @@ var _this = (function(obj) {
 						if (post.tags !== undefined && post.tags !== null) {
 							$article.find(".tag-column").text(post.tags);
 						}
+						$article.find(".p-category").text(post.categoryName);
 						$article.find(".list-summary").text(post.summary);
 						$article.find(".date-column.create-date").text(post.createddate);
 						$article.find(".date-column.update-date").text(post.lastupdateddate);
@@ -74,6 +84,7 @@ var _this = (function(obj) {
 	$(__.ev);
 	$(function() {
 		__.fn.getList();
+		__.fn.selectList();
 	});
 	return {};
 })());

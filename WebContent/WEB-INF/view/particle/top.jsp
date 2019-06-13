@@ -66,17 +66,17 @@
 					<c:choose>
 					    <c:when test="${empty item.subMenu}">
 						    <li class="">
-								<a class="link_item link-item-collapse" href="${item.url}">${item.text}</a>
+								<a class="link_item link-item-collapse category-item" href="${item.url}" data-code="${item.categoryCode }">${item.text}</a>
 							</li>
 						</c:when>
 						<c:otherwise>
 							<li class="">
-								<a class="link_item link-item-collapse" href="javascript:void(0)" data-code="${item.categoryCode }"> ${item.text}
+								<a class="link_item link-item-collapse category-item" href="javascript:void(0)" data-code="${item.categoryCode }"> ${item.text}
 									<span class="fa fa-chevron-down pull-right"></span>
 								</a>
 								<ul class="sub_category_list off">
 									<c:forEach items="${item.subMenu}" var="sub">
-										<li class=""><a class="link_sub_item" href="${sub.url }" data-code="${sub.categoryCode }">${sub.text}</a></li>
+										<li class=""><a class="link_sub_item category-item" href="${sub.url }" data-code="${sub.categoryCode }">${sub.text}</a></li>
 									</c:forEach>
 								</ul>
 							</li>

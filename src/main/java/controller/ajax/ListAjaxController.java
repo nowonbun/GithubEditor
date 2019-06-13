@@ -42,6 +42,8 @@ public class ListAjaxController extends AbstractController {
 				bean.setIdx(post.getIdx());
 				bean.setTitle(post.getTitle());
 				bean.setTags(post.getTag());
+				bean.setCategoryCode(post.getCategory().getCode());
+				bean.setCategoryName(getCategoryName(post.getCategory()));
 				// bean.setSummary(Jsoup.parse(post.getContents()).text());
 				bean.setSummary(createDescription(post.getContents()));
 				bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
@@ -72,12 +74,19 @@ public class ListAjaxController extends AbstractController {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;",
-		// "")+ "]]>";
 		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
 		if (ret.length() > 1020) {
 			return ret.substring(0, 1020);
 		}
 		return ret;
+	}
+
+	protected String getCategoryName(Category category) {
+		String name = "";
+		if (category.getCategory() != null) {
+			name += getCategoryName(category.getCategory()) + " / ";
+		}
+		name += category.getName();
+		return name;
 	}
 }
