@@ -259,6 +259,9 @@ article>div.searchListEntity>div.list-body a.list-link:hover>h5 {
 .p-category:hover{
 	color:#81a9db!important;
 }
+.p-tag:hover{
+	color:#81a9db!important;
+}
 
 .list-meta p {
 	margin-bottom: 5px;

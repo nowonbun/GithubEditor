@@ -31,6 +31,8 @@ var _this = (function(obj) {
 			} else if(category !== null){
                 var categoryname = __.fn.getCategoryName(category);
                 $(".searchList h3 span").text(categoryname);
+            } else if (query !== null){
+                $(".searchList h3 span").text(query);
             }
 			_.loading.on();
 			$.ajax({
@@ -79,11 +81,26 @@ var _this = (function(obj) {
 						$article.find(".list-link").prop("href", "./" + post.idx + ".html");
 						$article.find(".ci-link").html(post.title);
 						if (post.tags !== undefined && post.tags !== null) {
-							$article.find(".tag-column").text(post.tags);
+                            $article.find(".tag-column").html("");
+                            var taglist = post.tags.split(',');
+                            for(var j=0;j<taglist.length;j++){
+                                if(taglist[j][0] === '#'){
+                                	var taglink = $("<a class='p-tag'></a>").prop("href","./?query="+taglist[j].substring(1,taglist[j].length));
+                                    taglink = taglink.text(taglist[j]);
+                                    $article.find(".tag-column").append(taglink);
+                                } else {
+                                    $article.find(".tag-column").append(taglist[j]);
+                                }
+                                $article.find(".tag-column").append(",");
+                            }
+                            var tagColumn = $article.find(".tag-column").html();
+                            $article.find(".tag-column").html(tagColumn.substring(0,tagColumn.length-1));
 						}
 						$article.find(".list-summary").text(post.summary);
 						$article.find(".date-column.create-date").text(post.createddate);
 						$article.find(".date-column.update-date").text(post.lastupdateddate);
+						$article.find(".p-category").text(post.categoryName);
+                        $article.find(".p-category").prop("href", "/?category="+post.categoryCode);
 						$(".list-area").append($article);
 					}
 					_.loading.off();
