@@ -319,7 +319,8 @@ article.entry.post {
 
 article.entry.post p{
 	margin-bottom: 0px;
-	font-size: 0.9rem;
+	font-size: 1rem;
+	line-height:25px;
 }
 
 article.entry.post #article_contents{

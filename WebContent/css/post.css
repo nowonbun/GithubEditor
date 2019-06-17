@@ -1,0 +1,26 @@
+@charset "UTF-8";
+.titleArea h1{
+	border: 1px solid silver;
+    background-color: rgba(192, 192, 192, 0.38);
+    padding: 10px;
+    font-weight: bold;
+    font-size: 24px;
+    margin: 20px 0px;
+    text-align: left;
+}
+article h2 > b{
+	border: 1px solid silver;
+    display: block;
+    padding: 10px;
+    font-size: 20px;
+    background: #f5f5f5;
+}
+article h2 > b > span{
+	border-left: 5px solid black;
+    padding-left: 10px;
+}
+.hljs-ln-numbers .hljs-ln-line,
+.hljs-ln-code .hljs-ln-line {
+	font-size:11px;
+	line-height:12px;
+}

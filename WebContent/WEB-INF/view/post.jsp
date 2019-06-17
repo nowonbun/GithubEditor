@@ -3,6 +3,7 @@
 <jsp:include page="./particle/top.jsp"></jsp:include>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
 <link rel="stylesheet" href="./css/highlight.init.css" >
+<link rel="stylesheet" href="./css/post.css">
 <div class="modal attachment-dialog" tabindex="-1" role="dialog" aria-label="Insert Image" aria-modal="true" style="display: none;">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -47,7 +48,7 @@
 <article class="entry post">
 	<div class="titleArea">
 		<div class="title" id="article_title">
-			<h3 id="titleTxt">${post.title }</h3>
+			<h1 id="titleTxt">${post.title }</h1>
 		</div>
 		<hr class="titileHr">
 		<div class="categoryArea">
