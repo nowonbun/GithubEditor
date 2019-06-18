@@ -2,9 +2,9 @@
 <jsp:include page="./particle/top.jsp"></jsp:include>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 list-area-panel">
 	<div class="searchList">
-		<h3>
+		<h1>
 			<span>${title}</span> 検索結果
-		</h3>
+		</h1>
 		<p>検索件数 : ${count}　件</p>
 	</div>
 	<div class="list-area"></div>

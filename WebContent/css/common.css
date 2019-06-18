@@ -23,8 +23,8 @@ body {
 	background: #FFF;
 	box-shadow: 1px 1px 2px;
 	padding-top: 10px;
-    padding-bottom: 10px;
-	min-height: calc( 100vh - 50px);
+	padding-bottom: 10px;
+	min-height: calc(100vh - 50px);
 }
 
 /*header*/
@@ -136,12 +136,16 @@ h5.side-header {
 	padding: 10px;
 	/*box-shadow: 0px 2px 8px;*/
 }
-aside.leftside .side-search{
+
+aside.leftside .side-search {
 	/*display:none;*/
+	
 }
-div.side-list{
+
+div.side-list {
 	min-height: 250px;
 }
+
 div.side-list a {
 	text-decoration: none;
 	color: #000;
@@ -150,6 +154,7 @@ div.side-list a {
 div.side-list a:hover {
 	color: #81a9db;
 }
+
 div.side-list a.active {
 	color: #81a9db;
 }
@@ -192,24 +197,27 @@ div.searchList {
 	border-bottom: 2px solid #ccc;
 }
 
-div.searchList h3>span {
+div.searchList h1 {
 	font-size: 25px;
+}
+
+div.searchList h1>span {
 	color: #81a9db;
 }
 
-div.searchList h3>span:before {
+div.searchList h1>span:before {
 	content: "\201C";
 	color: #81a9db;
 	font-size: 25px;
 }
 
-div.searchList h3>span:after {
+div.searchList h1>span:after {
 	content: "\201D";
 	color: #81a9db;
 	font-size: 25px;
 }
 
-article>div.no-result{
+article>div.no-result {
 	margin-top: 100px;
 }
 
@@ -252,15 +260,18 @@ article>div.searchListEntity>div.list-body a.list-link:hover>h5 {
 .data-column-label, .date-column, .tag-column {
 	font-size: 0.70rem;
 }
-.p-category{
+
+.p-category {
 	font-size: 0.7rem;
 	font-weight: bold;
 }
-.p-category:hover{
-	color:#81a9db!important;
+
+.p-category:hover {
+	color: #81a9db !important;
 }
-.p-tag:hover{
-	color:#81a9db!important;
+
+.p-tag:hover {
+	color: #81a9db !important;
 }
 
 .list-meta p {
@@ -272,29 +283,29 @@ article>div.searchListEntity>div.list-body a.list-link:hover>h5 {
 	margin-bottom: 0px;
 }
 
-article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
-    font-size: 0.85rem;
-    color: #000;
-    /* min-height: 80px; */
-    white-space: normal;
-    line-height: 1.2;
-    height: 3.6em;
-    /* white-space: nowrap; */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-    word-wrap: break-word;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    word-break: break-all;
+article>div.searchListEntity>div.list-body a.list-link>p.list-summary {
+	font-size: 0.85rem;
+	color: #000;
+	/* min-height: 80px; */
+	white-space: normal;
+	line-height: 1.2;
+	height: 3.6em;
+	/* white-space: nowrap; */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+	word-wrap: break-word;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	word-break: break-all;
 }
 
 /*Small devices (landscape phones, 576px and up)*/
 @media screen and (max-width: 576px) {
 	.container-fluid {
-	    padding-right: 5px;
-	    padding-left: 5px;
+		padding-right: 5px;
+		padding-left: 5px;
 	}
 	.container-fluid {
 		padding: 5px;
@@ -307,14 +318,41 @@ article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
 /*Medium devices (tablets, 768px and up)*/
 @media screen and (max-width: 768px) {
 	.container-fluid {
-	    padding-right: 5px;
-	    padding-left: 5px;
+		padding-right: 5px;
+		padding-left: 5px;
 	}
 	.container-fluid {
 		padding: 5px;
 	}
 	.list-area-panel {
 		padding: 0px;
+	}
+	div.searchList h1 {
+		font-size: 1.2rem;
+	}
+	div.searchList p {
+		font-size: 0.9rem;
+		margin-bottom: 10px;
+	}
+	article>div.searchListEntity {
+	    padding: 0px 10px;
+	}
+	article>div.searchListEntity>div.list-body a.list-link>h5 {
+		font-size: 1.1rem;
+		margin-top: 10px;
+		margin-bottom: 5px;
+	}
+	article>div.searchListEntity>div.list-body a.list-link>p.list-summary {
+		font-size: 0.7rem;
+		line-height: 1.8;
+		height: 5.4em;
+		margin-bottom: 10px;
+	}
+	.p-category {
+	    font-size: 0.6rem;
+	}
+	.data-column-label, .date-column, .tag-column {
+	    font-size: 0.60rem;
 	}
 }
 
@@ -330,7 +368,7 @@ article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
 
 /*Extra large devices (large desktops, 1200px and up)*/
 @media screen and ( min-width : 1200px) {
-	body{
+	body {
 		padding-top: 25px;
 	}
 	.menu-toggle {
@@ -343,7 +381,7 @@ article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
 		display: block;
 		/*top: 70px;*/
 		height: calc(100vh);
-		left: calc((100vw /2) - 615px);
+		left: calc(( 100vw/ 2) - 615px);
 	}
 	.menu-close {
 		display: none;
@@ -354,7 +392,7 @@ article > div.searchListEntity > div.list-body a.list-link > p.list-summary {
 	.navbar {
 		display: none;
 	}
-	aside.leftside .side-search{
-		display:block;
+	aside.leftside .side-search {
+		display: block;
 	}
 }

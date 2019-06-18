@@ -82,14 +82,52 @@ img:hover {
 	transition: 0.3s;
 }
 
-.close.img-type:not (:disabled ):not (.disabled ) {
-	cursor: pointer;
-}
+.close
+.img-type
+:not
+ 
+(
+:disabled
+ 
+)
+:not
+ 
+(
+.disabled
+ 
+)
+{
+cursor
+:
+ 
+pointer
+;
 
-.close.img-type:not (:disabled ):not (.disabled ) {
-	cursor: pointer;
-}
 
+}
+.close
+.img-type
+:not
+ 
+(
+:disabled
+ 
+)
+:not
+ 
+(
+.disabled
+ 
+)
+{
+cursor
+:
+ 
+pointer
+;
+
+
+}
 .titleArea h1 {
 	border: 1px solid silver;
 	background-color: rgba(192, 192, 192, 0.38);
@@ -126,5 +164,37 @@ article h2>b>span {
 	main div.article {
 		/* font-size: 1.5rem; */
 		font-size: 1.2rem;
+	}
+	article.entry.post p {
+		font-size: 0.7rem;
+		line-height: 20px;
+	}
+	.titleArea h1 {
+		padding: 10px;
+		font-size: 1.2rem;
+		margin: 10px 0px;
+	}
+	.categoryArea {
+		font-size: 0.6rem;
+	}
+	article h2>b {
+		padding: 5px;
+		font-size: 20px;
+	}
+	.code-title {
+		font-size: 0.6rem;
+	}
+	.hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
+		font-size: 0.6rem;
+		line-height: 10px;
+	}
+	.hljs-ln-code .hljs-ln-line {
+		margin-left: 5px;
+	}
+	.hljs-ln-numbers .hljs-ln-line {
+		margin-right: 5px;
+	}
+	.data-column-label, .date-column, .tag-column {
+		font-size: 0.60rem;
 	}
 }
