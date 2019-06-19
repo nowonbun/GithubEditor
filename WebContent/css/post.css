@@ -160,6 +160,11 @@ article h2>b>span {
 	padding: 3px;
 }
 
+/*기존 소스뷰 삭제*/
+div textarea[name=code]{
+	display:none;
+}
+
 @media screen and (max-width: 768px) {
 	main div.article {
 		/* font-size: 1.5rem; */
@@ -186,7 +191,7 @@ article h2>b>span {
 	}
 	.hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
 		font-size: 0.55rem;
-		line-height: 10px;
+		line-height: 15px;
 	}
 	.hljs-ln-code .hljs-ln-line {
 		margin-left: 5px;
