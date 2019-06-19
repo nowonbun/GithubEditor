@@ -1,4 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:include page="./particle/top.jsp"></jsp:include>
-hello world
+作成前
 <jsp:include page="./particle/bottom.jsp"></jsp:include>

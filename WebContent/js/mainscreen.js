@@ -30,9 +30,9 @@ var _this = (function(obj) {
 				$(".searchList").hide();
 			} else if(category !== null){
                 var categoryname = __.fn.getCategoryName(category);
-                $(".searchList h3 span").text(categoryname);
+                $(".searchList h1 span").text(categoryname);
             } else if (query !== null){
-                $(".searchList h3 span").text(query);
+                $(".searchList h1 span").text(query);
             }
 			_.loading.on();
 			$.ajax({

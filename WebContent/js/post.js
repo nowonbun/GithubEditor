@@ -214,7 +214,7 @@ var _this = (function(obj) {
 			reader.readAsDataURL(file);
 		});
 		$("pre code.hljs").each(function () {
-            $(this).before($("<div class='code-title'></div>").append($("<i class='fa fa-minus-square code-collapse' style='margin-right:10px;'></i>"))
+            $(this).before($("<div class='code-title'></div>").append($("<i class='fa fa-minus-square code-collapse'></i>"))
                 .append("&nbsp;[Source view]&nbsp;" + $(this).data("type")));
             $(this).parent().addClass("code-view");
         });

@@ -300,6 +300,13 @@ article>div.searchListEntity>div.list-body a.list-link>p.list-summary {
 	-webkit-box-orient: vertical;
 	word-break: break-all;
 }
+footer{
+    max-width: 900px;
+    text-align: right;
+    font-size: 0.7rem;
+	margin-left: auto;
+    margin-right: auto;
+}
 
 /*Small devices (landscape phones, 576px and up)*/
 @media screen and (max-width: 576px) {
@@ -354,6 +361,9 @@ article>div.searchListEntity>div.list-body a.list-link>p.list-summary {
 	.data-column-label, .date-column, .tag-column {
 	    font-size: 0.60rem;
 	}
+	footer{
+		font-size: 0.5rem;
+	}
 }
 
 /*Large devices (desktops, 992px and up)*/
@@ -374,7 +384,8 @@ article>div.searchListEntity>div.list-body a.list-link>p.list-summary {
 	.menu-toggle {
 		display: none;
 	}
-	.main-container {
+	.main-container,
+	footer {
 		margin-left: calc(( 100vw - 1200px) / 2 + 300px);
 	}
 	aside.leftside {
