@@ -25,17 +25,27 @@ public class ListAjaxController extends AbstractController {
 		try {
 			String page = req.getParameter("page");
 			String code = req.getParameter("category");
-			if (Util.StringIsEmptyOrNull(page) || Util.StringIsEmptyOrNull(code)) {
+			String query = req.getParameter("query");
+			if (Util.StringIsEmptyOrNull(page)) {
 				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
 			int pagenumber = Integer.parseInt(page);
-			Category category = FactoryDao.getDao(CategoryDao.class).select(code);
-			if (category == null) {
-				super.getLogger().warn("The category is null.");
+			List<Post> posts = null;
+			if (!Util.StringIsEmptyOrNull(code)) {
+				Category category = FactoryDao.getDao(CategoryDao.class).select(code);
+				if (category == null) {
+					super.getLogger().warn("The category is null.");
+					throw new RuntimeException();
+				}
+				posts = FactoryDao.getDao(PostDao.class).selectByCategory(category, pagenumber * 30, 30);
+			} else if (!Util.StringIsEmptyOrNull(query)) {
+				posts = FactoryDao.getDao(PostDao.class).selectByTitleLike(query, pagenumber * 30, 30);
+			}
+			if (posts == null) {
+				super.getLogger().warn("The posts is null.");
 				throw new RuntimeException();
 			}
-			List<Post> posts = FactoryDao.getDao(PostDao.class).selectByCategory(category, pagenumber * 30, 30);
 			List<ListBean> ret = new ArrayList<>();
 			for (Post post : posts) {
 				ListBean bean = new ListBean();

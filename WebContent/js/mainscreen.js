@@ -85,7 +85,7 @@ var _this = (function(obj) {
                             var taglist = post.tags.split(',');
                             for(var j=0;j<taglist.length;j++){
                                 if(taglist[j][0] === '#'){
-                                	var taglink = $("<a class='p-tag'></a>").prop("href","./?query="+taglist[j].substring(1,taglist[j].length));
+                                	var taglink = $("<a class='p-tag'></a>").prop("href","./?query="+encodeURIComponent(taglist[j].substring(1,taglist[j].length)));
                                     taglink = taglink.text(taglist[j]);
                                     $article.find(".tag-column").append(taglink);
                                 } else {

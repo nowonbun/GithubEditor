@@ -47,7 +47,8 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
 		temp = replaceTagForTemplate(temp, "MENU", menu);
 		temp = replaceTagForTemplate(temp, "CONTENTS_TITLE", post.getTitle());
-		temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
+		//temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
+		temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./?category=" + post.getCategory().getCode());
 		temp = replaceTagForTemplate(temp, "CATEGORY_NAME", getCategoryName(post.getCategory()));
 		temp = replaceTagForTemplate(temp, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
 		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));

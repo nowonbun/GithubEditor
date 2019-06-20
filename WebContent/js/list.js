@@ -12,12 +12,17 @@ var _this = (function(obj) {
 	__.fn = {
 		selectList: function(){
 			var code = $("#category").val();
-			var $item = $(".category-item[data-code="+code+"]");
-            $item.addClass("active");
-            var $parent = $item.closest("ul.sub_category_list");
-            if($parent.length > 0){
-                $parent.prev().trigger("click");
-            }
+			var query =$("#query").val();
+			if($.trim(code) !== ""){
+				var $item = $(".category-item[data-code="+code+"]");
+	            $item.addClass("active");
+	            var $parent = $item.closest("ul.sub_category_list");
+	            if($parent.length > 0){
+	                $parent.prev().trigger("click");
+	            }
+			} else if($.trim(query) !== ""){
+				$(".search-text").val($.trim(query));
+			}
 		},
 		getList : function() {
 			_.loading.on();
@@ -38,7 +43,8 @@ var _this = (function(obj) {
 				dataType : 'json',
 				data : {
 					page : __.property.page,
-					category : $("#category").val()
+					category : $("#category").val(),
+					query : $("#query").val()
 				},
 				url : "./list.ajax",
 				success : function(data) {
@@ -48,7 +54,20 @@ var _this = (function(obj) {
 						$article.find(".list-link").prop("href", "./post.html?idx=" + post.idx);
 						$article.find(".ci-link").html(post.title);
 						if (post.tags !== undefined && post.tags !== null) {
-							$article.find(".tag-column").text(post.tags);
+                            $article.find(".tag-column").html("");
+                            var taglist = post.tags.split(',');
+                            for(var j=0;j<taglist.length;j++){
+                                if(taglist[j][0] === '#'){
+                                	var taglink = $("<a class='p-tag'></a>").prop("href","./search.html?query="+encodeURIComponent(taglist[j].substring(1,taglist[j].length)));
+                                    taglink = taglink.text(taglist[j]);
+                                    $article.find(".tag-column").append(taglink);
+                                } else {
+                                    $article.find(".tag-column").append(taglist[j]);
+                                }
+                                $article.find(".tag-column").append(",");
+                            }
+                            var tagColumn = $article.find(".tag-column").html();
+                            $article.find(".tag-column").html(tagColumn.substring(0,tagColumn.length-1));
 						}
 						$article.find(".p-category").text(post.categoryName);
 						$article.find(".list-summary").text(post.summary);

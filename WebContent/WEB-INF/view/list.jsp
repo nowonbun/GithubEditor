@@ -10,7 +10,8 @@
 	<div class="list-area"></div>
 	<input type="hidden" id="category" value="${category}"> 
 	<input type="hidden" id="pageMax" value="${pageMax}">
-	<input type="hidden" id="count" value="${count}"> 
+	<input type="hidden" id="count" value="${count}">
+	<input type="hidden" id="query" value="${query}">  
 </div>
 <template class="list-article">
 <article class="list-item">

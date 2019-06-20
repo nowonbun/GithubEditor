@@ -30,7 +30,10 @@ var _ = (function(obj) {
 				$(".search-text").val($val);
 			});
 			$(document).on("click", ".search-btn", function() {
-				location.href = "./search.html?query=" + $(".search-text").val();
+				location.href = "./?query=" + encodeURIComponent($(".search-text").val());
+			});
+			$(document).on("click", ".search-btn2", function() {
+				location.href = "./search.html?query=" + encodeURIComponent($(".search-text").val());
 			});
 			var modal = document.getElementById('myModal');
 	        $("img").on("click", function () {

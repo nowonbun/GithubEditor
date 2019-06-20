@@ -57,8 +57,8 @@
 			</ul>
 		</div>
 		<div class="form-inline my-2 my-lg-0 search-custom side-search" style="padding: 5px;">
-			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width:65%">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			<input class="form-control mr-sm-2 search-text" type="search" placeholder="Search" aria-label="Search" style="width:65%">
+			<button class="btn btn-outline-success my-2 my-sm-0 search-btn2" type="submit">Search</button>
 		</div>
 		<div class="side-list">
 			<ul class="side-nav">

@@ -101,6 +101,30 @@ public class MainController extends AbstractController {
 			return error();
 		}
 	}
+	@RequestMapping(value = "/search.html", method = RequestMethod.GET)
+	public String search(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("search.html");
+		try {
+			setMenu(modelmap);
+			String query = req.getParameter("query");
+			if (query == null) {
+				super.getLogger().warn("The parameter of query is null.");
+				throw new RuntimeException();
+			}
+			String title = query;
+			long count = FactoryDao.getDao(PostDao.class).getCountByTitleLike(query);
+			
+
+			modelmap.addAttribute("title", title);
+			modelmap.addAttribute("count", count);
+			modelmap.addAttribute("pageMax", (int) (count / 30) + 1);
+			modelmap.addAttribute("query", query);
+			return "list";
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			return error();
+		}
+	}
 
 	@RequestMapping(value = "/post.html", method = RequestMethod.GET)
 	public String post(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
