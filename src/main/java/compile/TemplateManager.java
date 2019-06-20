@@ -1,5 +1,6 @@
 package compile;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -47,13 +48,37 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
 		temp = replaceTagForTemplate(temp, "MENU", menu);
 		temp = replaceTagForTemplate(temp, "CONTENTS_TITLE", post.getTitle());
-		//temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" + post.getCategory().getUniqcode() + ".html");
+		// temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" +
+		// post.getCategory().getUniqcode() + ".html");
 		temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./?category=" + post.getCategory().getCode());
 		temp = replaceTagForTemplate(temp, "CATEGORY_NAME", getCategoryName(post.getCategory()));
 		temp = replaceTagForTemplate(temp, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
 		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
 		temp = replaceTagForTemplate(temp, "CONTENTS", getContetns(post));
-		temp = replaceTagForTemplate(temp, "TAG", post.getTag());
+		try {
+			if (!Util.StringIsEmptyOrNull(post.getTag())) {
+				StringBuffer sb = new StringBuffer();
+				String[] tags = post.getTag().split(",");
+				for (String tag : tags) {
+					if (sb.length() > 0) {
+						sb.append(",");
+					}
+					if (tag.indexOf("#") == 0) {
+						sb.append("<a href=./?query=" + URLEncoder.encode(tag.substring(1), "UTF-8") + ">");
+						sb.append(tag);
+						sb.append("</a>");
+					} else {
+						sb.append(tag);
+					}
+				}
+				temp = replaceTagForTemplate(temp, "TAG", sb.toString());
+			} else {
+				temp = replaceTagForTemplate(temp, "TAG", "");
+			}
+		} catch (UnsupportedEncodingException e) {
+			temp = replaceTagForTemplate(temp, "TAG", "");
+			getLogger().error(e);
+		}
 		return temp;
 	}
 

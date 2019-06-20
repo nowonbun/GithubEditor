@@ -1,5 +1,6 @@
 package controller.servlet;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -153,7 +154,26 @@ public class MainController extends AbstractController {
 				bean.setLastUpdateDate(Util.convertDateFormat(post.getLastupdateddate()));
 			}
 			bean.setTitle(post.getTitle());
-			bean.setTags(post.getTag());
+			
+			if(!Util.StringIsEmptyOrNull(post.getTag())) {
+				StringBuffer sb = new StringBuffer();
+				String[] tags = post.getTag().split(",");
+				for(String tag : tags) {
+					if(sb.length() > 0) {
+						sb.append(",");
+					}
+					if(tag.indexOf("#") == 0) {
+						sb.append("<a href=./search.html?query="+URLEncoder.encode(tag.substring(1), "UTF-8") +">");
+						sb.append(tag);
+						sb.append("</a>");
+					} else {
+						sb.append(tag);
+					}
+				}
+				bean.setTags(sb.toString());
+			}
+			
+			//bean.setTags(post.getTag());
 			bean.setContents(post.getContents());
 			modelmap.addAttribute("post", bean);
 			modelmap.addAttribute("data", getGson().toJson(bean));
