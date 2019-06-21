@@ -22,6 +22,7 @@ import model.Post;
 public class TemplateManager extends AbstractManager {
 	private String mainTemp;
 	private String postTemp;
+	private String searchTemp;
 
 	private String title;
 	private String menu;
@@ -30,6 +31,7 @@ public class TemplateManager extends AbstractManager {
 		super();
 		this.mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 		this.postTemp = PropertyMap.getInstance().getTemplateFile("post");
+		this.searchTemp = PropertyMap.getInstance().getTemplateFile("search");
 
 		this.title = PropertyMap.getInstance().getProperty("config", "title");
 		this.menu = createMenu();
@@ -41,6 +43,78 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "TITLE", this.title);
 		temp = replaceTagForTemplate(temp, "MENU", this.menu);
 		return temp;
+	}
+
+	public String createSearchTemp(List<Post> posts) {
+		String temp = this.searchTemp;
+		temp = replaceTagForTemplate(temp, "TITLE", this.title);
+		temp = replaceTagForTemplate(temp, "MENU", this.menu);
+
+		StringBuffer sb = new StringBuffer();
+		for (Post post : posts) {
+			sb = createSearchItem(sb, post);
+		}
+		//TODO: The javascript must be created.
+		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		return temp;
+	}
+
+	private StringBuffer createSearchItem(StringBuffer sb, Post post) {
+		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\">");
+		sb.append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
+		sb.append("<div class=\"list-body\" style=\"width: 100%;\">");
+		sb.append("<div class=\"flexbox\">");
+		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\">");
+		sb.append("<h5 class=\"list-head ie-nanum ci-link\">" + post.getTitle() + "</h5>");
+		sb.append("<p class=\"list-summary\">" + createDescription(post.getContents()) + "</p>");
+		sb.append("</a>");
+		sb.append("<div class=\"list-meta ie-dotum\">");
+		sb.append("<p>");
+		sb.append("<a href=\"./search.html?category=" + post.getCategory().getCode() + "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>");
+		sb.append("</p>");
+		sb.append("<p>");
+		sb.append("<span class=\"timeago ff-h dt-published tag-column\">" + convertTag(post.getTag()) + "</span>");
+		sb.append("</p>");
+		sb.append("<p>");
+		sb.append("<span class=\"data-column-label\">作成日付 :</span>");
+		sb.append("<span class=\"timeago ff-h dt-published date-column create-date\">" + Util.convertDateFormat(post.getCreateddate()) + "</span>");
+		sb.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ");
+		sb.append("<span class=\"data-column-label\">修正日付	:</span>");
+		sb.append("<span class=\"timeago ff-h dt-published date-column update-date\">" + Util.convertDateFormat(post.getLastupdateddate()) + "</span>");
+		sb.append("</p>");
+		sb.append("</div>");
+		sb.append("</div>");
+		sb.append("</div>");
+		sb.append("</div>");
+		sb.append("</article>");
+		return sb;
+	}
+
+	private String convertTag(String tagcode) {
+		try {
+			if (!Util.StringIsEmptyOrNull(tagcode)) {
+				StringBuffer sb = new StringBuffer();
+				String[] tags = tagcode.split(",");
+				for (String tag : tags) {
+					if (sb.length() > 0) {
+						sb.append(",");
+					}
+					if (tag.indexOf("#") == 0) {
+						sb.append("<a href=./?query=" + URLEncoder.encode(tag.substring(1), "UTF-8") + ">");
+						sb.append(tag);
+						sb.append("</a>");
+					} else {
+						sb.append(tag);
+					}
+				}
+				return sb.toString();
+			} else {
+				return "";
+			}
+		} catch (UnsupportedEncodingException e) {
+			getLogger().error(e);
+			return "";
+		}
 	}
 
 	public String createPostTemp(Post post) {
@@ -55,30 +129,7 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
 		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
 		temp = replaceTagForTemplate(temp, "CONTENTS", getContetns(post));
-		try {
-			if (!Util.StringIsEmptyOrNull(post.getTag())) {
-				StringBuffer sb = new StringBuffer();
-				String[] tags = post.getTag().split(",");
-				for (String tag : tags) {
-					if (sb.length() > 0) {
-						sb.append(",");
-					}
-					if (tag.indexOf("#") == 0) {
-						sb.append("<a href=./?query=" + URLEncoder.encode(tag.substring(1), "UTF-8") + ">");
-						sb.append(tag);
-						sb.append("</a>");
-					} else {
-						sb.append(tag);
-					}
-				}
-				temp = replaceTagForTemplate(temp, "TAG", sb.toString());
-			} else {
-				temp = replaceTagForTemplate(temp, "TAG", "");
-			}
-		} catch (UnsupportedEncodingException e) {
-			temp = replaceTagForTemplate(temp, "TAG", "");
-			getLogger().error(e);
-		}
+		temp = replaceTagForTemplate(temp, "TAG", convertTag(post.getTag()));
 		return temp;
 	}
 

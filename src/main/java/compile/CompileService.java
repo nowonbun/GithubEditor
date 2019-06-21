@@ -82,12 +82,14 @@ public class CompileService extends AbstractManager {
 				filemanager.copyDirectoryToGitRoot("img");
 
 				// index.html
-				filemanager.createFile("index.html", tempmanager.createMainTemp());
+				/*filemanager.createFile("index.html", tempmanager.createMainTemp());
 				List<ListBean> totalList = new LinkedList<>();
 				posts.forEach(post -> {
 					totalList.add(convertPost(post));
 				});
-				filemanager.createFile("list.json", Util.getGson().toJson(totalList));
+				filemanager.createFile("list.json", Util.getGson().toJson(totalList));*/
+				filemanager.createFile("index.html", tempmanager.createSearchTemp(posts));
+				filemanager.createFile("search.html", tempmanager.createSearchTemp(posts));
 
 				// post.html
 				posts.parallelStream().forEach(post -> {
