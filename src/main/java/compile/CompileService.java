@@ -89,7 +89,7 @@ public class CompileService extends AbstractManager {
 				});
 				filemanager.createFile("list.json", Util.getGson().toJson(totalList));*/
 				filemanager.createFile("index.html", tempmanager.createSearchTemp(posts));
-				filemanager.createFile("search.html", tempmanager.createSearchTemp(posts));
+				//filemanager.createFile("search.html", tempmanager.createSearchTemp(posts));
 
 				// post.html
 				posts.parallelStream().forEach(post -> {
