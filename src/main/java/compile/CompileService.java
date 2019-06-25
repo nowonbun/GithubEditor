@@ -1,14 +1,11 @@
 package compile;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
-import bean.ListBean;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
-import common.Util;
 import dao.PostDao;
 import model.Post;
 
@@ -81,15 +78,7 @@ public class CompileService extends AbstractManager {
 				setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
 				filemanager.copyDirectoryToGitRoot("img");
 
-				// index.html
-				/*filemanager.createFile("index.html", tempmanager.createMainTemp());
-				List<ListBean> totalList = new LinkedList<>();
-				posts.forEach(post -> {
-					totalList.add(convertPost(post));
-				});
-				filemanager.createFile("list.json", Util.getGson().toJson(totalList));*/
 				filemanager.createFile("index.html", tempmanager.createSearchTemp(posts));
-				//filemanager.createFile("search.html", tempmanager.createSearchTemp(posts));
 
 				// post.html
 				posts.parallelStream().forEach(post -> {
@@ -122,19 +111,5 @@ public class CompileService extends AbstractManager {
 				logger.error(e);
 			}
 		});
-	}
-
-	private ListBean convertPost(Post post) {
-		ListBean bean = new ListBean();
-		bean.setIdx(post.getIdx());
-		bean.setTitle(post.getTitle());
-		bean.setTags(post.getTag());
-		bean.setSummary(createDescription(post.getContents()));
-		bean.setCreateddate(Util.convertDateFormat(post.getCreateddate()));
-		bean.setLastupdateddate(Util.convertDateFormat(post.getLastupdateddate()));
-		bean.setCategoryCode(post.getCategory().getCode());
-		bean.setCategoryName(super.getCategoryName(post.getCategory()));
-
-		return bean;
 	}
 }

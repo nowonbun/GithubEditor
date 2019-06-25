@@ -184,8 +184,8 @@ public class TemplateManager extends AbstractManager {
 				if (sublist.size() > 0) {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" href=\"javascript:void(0)\">");
 					sb.append(c.getName());
-					sb.append("<span class=\"fa fa-chevron-down pull-right\"></span></a>");
-					sb.append("<ul class=\"sub_category_list off\">");
+					sb.append("<span class=\"fa fa-chevron-up pull-right\"></span></a>");
+					sb.append("<ul class=\"sub_category_list\">");
 					for (Category sub : sublist) {
 						sb.append("<li class=\"\"><a class=\"link_sub_item category-item\" data-code=\"");
 						sb.append(sub.getCode());

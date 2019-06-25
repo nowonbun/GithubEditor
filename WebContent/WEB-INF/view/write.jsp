@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="./particle/top.jsp"></jsp:include>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+<link rel="stylesheet" href="./css/highlight.init.css" >
+<link rel="stylesheet" href="./css/post.css">
 <div class="modal attachment-dialog" tabindex="-1" role="dialog" aria-label="Insert Image" aria-modal="true" style="display: none;">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -48,4 +51,8 @@
 	</div>
 </article>
 <script type="text/javascript" src="./js/write.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+<script src="./js/highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
 <jsp:include page="./particle/bottom.jsp"></jsp:include>

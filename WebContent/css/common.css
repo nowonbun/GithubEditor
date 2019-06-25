@@ -168,23 +168,28 @@ div.side-list>ul.side-nav>li>a {
 	height: 40px;
 	display: block;
 	border-bottom: 1px solid #bdc3c7;
-	margin: 10px;
+	/*margin: 10px;*/
+	margin: 5px;
 	padding: 5px;
 	padding-top: 12px;
 	padding-bottom: 3px;
-	font-size: 20px;
+	/*font-size: 20px;*/
+	font-size: 17px;
 	text-decoration: none;
+}
+div.side-list>ul.side-nav>li>a>span.fa{
+	margin-top: 4px;
 }
 
 div.side-list>ul.side-nav>li>ul>li>a {
 	height: 30px;
 	display: block;
-	margin: 5px;
+	margin: 2px;
 	margin-left: 30px;
 	padding: 5px;
 	padding-top: 7px;
 	padding-bottom: 3px;
-	font-size: 15px;
+	font-size: 13px;
 }
 
 div.attachfile {
