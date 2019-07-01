@@ -29,7 +29,7 @@ public class SitemapManager extends AbstractManager {
 				StringBuffer url = new StringBuffer();
 				url.append(createTag("loc", this.locRoot + "/" + post.getIdx() + ".html"));
 				url.append(createTag("lastmod", Util.convertGMT2DateFormat(post.getLastupdateddate())));
-				url.append(createTag("changefred", this.changefred));
+				url.append(createTag("changefreq", this.changefred));
 				url.append(createTag("priority", this.priority));
 				return url.toString();
 			}));

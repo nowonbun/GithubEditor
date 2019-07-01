@@ -18,7 +18,7 @@ var _this = (function(obj) {
 			$item.addClass("active");
 			var $parent = $item.closest("ul.sub_category_list");
 			if ($parent.length > 0) {
-				$parent.prev().trigger("click");
+				//$parent.prev().trigger("click");
 				return $parent.prev().text() + ' / ' + $item.text();
 			}
 			return $item.text();
