@@ -91,6 +91,7 @@ public class CompileService extends AbstractManager {
 
 				// sitemap
 				filemanager.createFile("sitemap.xml", sitemapmanager.build());
+				filemanager.createFile("CNAME", "www.nowonbun.com");
 
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
