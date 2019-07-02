@@ -1,7 +1,8 @@
 @charset "UTF-8";
 
 code {
-    border: 5px solid #9280ff;
+    /*border: 5px solid #9280ff;*/
+	border: 2px solid #e9e9e9;
 }
 
 .hljs-ln-numbers {
@@ -67,9 +68,11 @@ code {
 	margin-right: 10px;
 }
 .code-title{
-	background-color: #9280ff;
-	padding-left: 10px;
-	padding-top: 5px;
-	color: white;
-	font-weight: 800;
+    /* background-color: #9280ff; */
+    background-color: #e9e9e9;
+    padding-left: 10px;
+    padding-top: 5px;
+    /* color: white; */
+    color: black;
+    font-weight: 800;
 }
