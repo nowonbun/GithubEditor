@@ -47,9 +47,9 @@ code {
         font-size: 7pt;
     }
 }
-code {
+/*code {
 	border: 5px solid #9280ff;
-}
+}*/
 .hljs-ln-numbers {
 	text-align: right;
 	border-right: 1px solid #ccc;
