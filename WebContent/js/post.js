@@ -12,8 +12,8 @@ var _this = (function(obj) {
 			$("#article_title").html($("<input type='text' class='form-control' id='title_txt' placeholder='title'>").val(__.property.originalData.title));
 			$(".categoryArea").html($($("#categoryAreaTemplate").html()).prop("id", "category_sel"));
 			var tags = "";
-			if (originalData.tags !== undefined) {
-				tags = line.property.originalData.tags;
+			if (__.property.originalData.tags !== undefined) {
+				tags = __.property.originalData.tags;
 			}
 			$("#article_tag").html($("<input type='text' class='form-control' id='tag_txt' placeholder='tag'>").val(tags));
 			var node_height = $(window).height() - 400;
@@ -213,7 +213,7 @@ var _this = (function(obj) {
 			}
 			reader.readAsDataURL(file);
 		});
-		$("pre code.hljs").each(function () {
+		/*$("pre code.hljs").each(function () {
             $(this).before($("<div class='code-title'></div>").append($("<i class='fa fa-minus-square code-collapse'></i>"))
                 .append("&nbsp;[Source view]&nbsp;" + $(this).data("type")));
             $(this).parent().addClass("code-view");
@@ -230,7 +230,7 @@ var _this = (function(obj) {
                 $i.addClass("fa-plus-square");
                 $this.parent().addClass("code-view-disabled");
             }
-        });
+        });*/
 	}
 	$(__.ev);
 	return {}

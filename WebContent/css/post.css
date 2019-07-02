@@ -29,7 +29,7 @@ article.entry.post {
 
 article.entry.post p {
 	margin-bottom: 0px;
-	font-size: 1rem;
+	font-size: 0.8rem;
 	line-height: 25px;
 }
 
@@ -57,14 +57,14 @@ img {
 	border-radius: 5px;
 	cursor: pointer;
 	box-shadow: 1px 2px 4px;
-	margin-top:10px;
-	margin-bottom:10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 div.table-responsive {
 	margin-top: 10px;
-    margin-bottom: 10px;
-    box-shadow: 1px 2px 4px;
+	margin-bottom: 10px;
+	box-shadow: 1px 2px 4px;
 }
 
 img:hover {
@@ -90,12 +90,12 @@ img:hover {
 	transition: 0.3s;
 }
 
-.close.img-type:not(:disabled):not(.disabled) {
-	cursor:pointer;
+.close.img-type:not (:disabled ):not (.disabled ) {
+	cursor: pointer;
 }
 
-.close.img-type:not(:disabled):not(.disabled) {
-	cursor:pointer;
+.close.img-type:not (:disabled ):not (.disabled ) {
+	cursor: pointer;
 }
 
 .titleArea h1 {
@@ -131,15 +131,25 @@ article h2>b>span {
 }
 
 /*기존 소스뷰 삭제*/
-div textarea[name=code]{
-	display:none;
+div textarea[name=code] {
+	display: none;
 }
 
-pre.code-view{
-    margin-top: 10px;
-    margin-bottom: 10px;	
-    padding: 0px;
-    box-shadow: 1px 2px 4px;
+pre.code-view {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 0px;
+	box-shadow: 1px 2px 4px;
+}
+
+div.table-responsive td, div.table-responsive th {
+	padding: 10px;
+	vertical-align: middle;
+}
+
+div.table-responsive ul {
+	margin-bottom: 0px;
+	padding-inline-start: 20px;
 }
 
 @media screen and (max-width: 768px) {
@@ -150,6 +160,9 @@ pre.code-view{
 	article.entry.post p {
 		font-size: 0.7rem;
 		line-height: 20px;
+	}
+	div.table-responsive {
+		font-size: 0.7rem;
 	}
 	.titleArea h1 {
 		padding: 10px;
