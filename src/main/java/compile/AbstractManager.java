@@ -32,9 +32,8 @@ public class AbstractManager {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		// return "<![CDATA[" + contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "")
-		// + "]]>";
-		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "");
+
+		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "").replace("\n", "");
 		if (ret.length() > 1020) {
 			return ret.substring(0, 1020);
 		}
