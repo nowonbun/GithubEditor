@@ -29,7 +29,7 @@ article.entry.post {
 
 article.entry.post p {
 	margin-bottom: 0px;
-	font-size: 0.8rem;
+	font-size: 1rem;
 	line-height: 25px;
 }
 
@@ -123,7 +123,7 @@ article h2>b>span {
 
 .hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
 	font-size: 11px;
-	line-height: 12px;
+	line-height: 15px;
 }
 
 .hljs {
@@ -145,7 +145,7 @@ pre.code-view {
 div.table-responsive td, div.table-responsive th {
 	padding: 10px;
 	vertical-align: middle;
-	font-size:0.8rem;
+	font-size:1rem;
 }
 
 div.table-responsive ul {
