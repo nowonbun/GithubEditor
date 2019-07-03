@@ -145,6 +145,7 @@ pre.code-view {
 div.table-responsive td, div.table-responsive th {
 	padding: 10px;
 	vertical-align: middle;
+	font-size:0.8rem;
 }
 
 div.table-responsive ul {
