@@ -93,6 +93,19 @@ public class CompileService extends AbstractManager {
 				filemanager.createFile("sitemap.xml", sitemapmanager.build());
 				filemanager.createFile("CNAME", "www.nowonbun.com");
 
+				//robots.txt
+				StringBuffer sb = new StringBuffer();
+				sb.append("User-agent: *");
+				sb.append("\r\n");
+				sb.append("Allow: /");
+				sb.append("\r\n");
+				sb.append("\r\n");
+
+				String hostname = PropertyMap.getInstance().getProperty("config", "host_name");
+				sb.append("Sitemap: " + hostname + "/sitemap.xml");
+
+				filemanager.createFile("robots.txt", sb.toString());
+
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
 				String filepermission = PropertyMap.getInstance().getProperty("config", "httpFilePermission");
