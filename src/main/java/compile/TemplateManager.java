@@ -27,6 +27,11 @@ public class TemplateManager extends AbstractManager {
 	private String title;
 	private String menu;
 
+	private String rssWebMaster;
+	private String hostname;
+
+	private String imageurl;
+
 	public TemplateManager() {
 		super();
 		this.mainTemp = PropertyMap.getInstance().getTemplateFile("main");
@@ -36,6 +41,10 @@ public class TemplateManager extends AbstractManager {
 		this.title = PropertyMap.getInstance().getProperty("config", "title");
 		this.menu = createMenu();
 
+		this.rssWebMaster = PropertyMap.getInstance().getProperty("config", "rss_webMaster");
+		this.hostname = PropertyMap.getInstance().getProperty("config", "host_name");
+
+		this.imageurl = PropertyMap.getInstance().getProperty("config", "imageurl");
 	}
 
 	public String createMainTemp() {
@@ -54,7 +63,7 @@ public class TemplateManager extends AbstractManager {
 		for (Post post : posts) {
 			sb = createSearchItem(sb, post);
 		}
-		//TODO: The javascript must be created.
+		// TODO: The javascript must be created.
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
 		return temp;
 	}
@@ -130,6 +139,11 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
 		temp = replaceTagForTemplate(temp, "CONTENTS", getContetns(post));
 		temp = replaceTagForTemplate(temp, "TAG", convertTag(post.getTag()));
+
+		temp = replaceTagForTemplate(temp, "DESCRIPTION", "<![CDATA[" + createDescription(post.getContents()) + "]]>");
+		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname);
+		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 		return temp;
 	}
 
