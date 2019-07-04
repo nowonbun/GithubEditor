@@ -123,7 +123,7 @@ article h2>b>span {
 
 .hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
 	font-size: 0.8rem;
-	line-height: 15px;
+	line-height: 17px;
 }
 
 .hljs {
@@ -143,14 +143,18 @@ pre.code-view {
 }
 
 div.table-responsive td, div.table-responsive th {
-	padding: 10px;
+	padding: 5px;
 	vertical-align: middle;
-	font-size:0.9rem;
+	font-size:0.8rem;
 }
 
 div.table-responsive ul {
 	margin-bottom: 0px;
 	padding-inline-start: 20px;
+}
+
+.table{
+	margin:0px;
 }
 
 @media screen and (max-width: 768px) {
@@ -165,6 +169,9 @@ div.table-responsive ul {
 	div.table-responsive {
 		font-size: 0.7rem;
 	}
+	div.table-responsive td, div.table-responsive th{
+		font-size: 0.55rem;
+	}
 	.titleArea h1 {
 		padding: 10px;
 		font-size: 1.2rem;
@@ -175,7 +182,7 @@ div.table-responsive ul {
 	}
 	article h2>b {
 		padding: 5px;
-		font-size: 20px;
+		font-size: 1.0rem;
 	}
 	.code-title {
 		font-size: 0.6rem;

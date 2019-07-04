@@ -16,10 +16,10 @@ var _this = (function(obj) {
 			if($.trim(code) !== ""){
 				var $item = $(".category-item[data-code="+code+"]");
 	            $item.addClass("active");
-	            var $parent = $item.closest("ul.sub_category_list");
+	            /*var $parent = $item.closest("ul.sub_category_list");
 	            if($parent.length > 0){
 	                $parent.prev().trigger("click");
-	            }
+	            }*/
 			} else if($.trim(query) !== ""){
 				$(".search-text").val($.trim(query));
 			}

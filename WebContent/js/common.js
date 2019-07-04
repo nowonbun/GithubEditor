@@ -8,10 +8,12 @@ var _ = (function(obj) {
 				$this = $(this);
 				$("aside.leftside").toggleClass("on");
 				$("section.menu-back-layout").toggleClass("off");
+				$("body").toggleClass("mobile-fixed");
 			});
 			$(".menu-close").on("click", function() {
 				$("aside.leftside").removeClass("on");
 				$("section.menu-back-layout").addClass("off");
+				$("body").removeClass("mobile-fixed");
 			});
 			$(document).on("click", ".link-item-collapse", function() {
 				var $icon = $(this).find("span.fa");

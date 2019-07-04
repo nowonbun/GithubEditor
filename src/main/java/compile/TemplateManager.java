@@ -58,6 +58,9 @@ public class TemplateManager extends AbstractManager {
 		String temp = this.searchTemp;
 		temp = replaceTagForTemplate(temp, "TITLE", this.title);
 		temp = replaceTagForTemplate(temp, "MENU", this.menu);
+		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname);
+		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 
 		StringBuffer sb = new StringBuffer();
 		for (Post post : posts) {
