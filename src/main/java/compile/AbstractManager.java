@@ -33,7 +33,7 @@ public class AbstractManager {
 			pos = contents.indexOf("<pre");
 		}
 
-		String ret = contents.replaceAll("<[^>]*>", "").replace("&nbsp;", "").replace("\n", "");
+		String ret = contents.replaceAll("<[^>]*>", "").replace("&", "&amp;").replace("&nbsp;", "").replace("\n", "").replace("\"", "&quot;").replace("'", "&apos;").replace("<", "&lt;").replace(">", "&gt;");
 		if (ret.length() > 1020) {
 			return ret.substring(0, 1020);
 		}
