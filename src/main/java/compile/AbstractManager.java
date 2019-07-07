@@ -32,8 +32,16 @@ public class AbstractManager {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
+		String html = contents.replaceAll("<[^>]*>", "");
+		html = html.replace("&", "&amp;");
+		html = html.replace("&nbsp;", "");
+		html = html.replace("\n", "");
+		html = html.replace("\"", "&quot;");
+		html = html.replace("'", "&apos;");
+		html = html.replace("<", "&lt;");
+		html = html.replace(">", "&gt;");
 
-		String ret = contents.replaceAll("<[^>]*>", "").replace("&", "&amp;").replace("&nbsp;", "").replace("\n", "").replace("\"", "&quot;").replace("'", "&apos;").replace("<", "&lt;").replace(">", "&gt;");
+		String ret = html;
 		if (ret.length() > 1020) {
 			return ret.substring(0, 1020);
 		}

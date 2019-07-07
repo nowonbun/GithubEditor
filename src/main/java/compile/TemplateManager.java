@@ -66,7 +66,6 @@ public class TemplateManager extends AbstractManager {
 		for (Post post : posts) {
 			sb = createSearchItem(sb, post);
 		}
-		// TODO: The javascript must be created.
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
 		return temp;
 	}
@@ -218,7 +217,6 @@ public class TemplateManager extends AbstractManager {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" data-code=\"");
 					sb.append(c.getCode());
 					sb.append("\" href=\"");
-					// sb.append(c.getUniqcode() + ".html");
 					sb.append("./?category=" + c.getCode());
 					sb.append("\">");
 					sb.append(c.getName());

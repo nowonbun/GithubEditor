@@ -135,10 +135,8 @@ public class FileManager extends AbstractManager {
 		File http = new File(httppath);
 		http.mkdir();
 
-		// TODO: The check was needed.
 		try {
 			// The group own will be changed.
-
 			GroupPrincipal group = FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByGroupName(groupName);
 			Files.getFileAttributeView(http.toPath(), PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS).setGroup(group);
 		} catch (Throwable e) {

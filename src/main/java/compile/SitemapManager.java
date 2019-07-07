@@ -20,7 +20,6 @@ public class SitemapManager extends AbstractManager {
 	}
 
 	public String build() {
-		// http://www.nowonbun.com/sitemap.xml
 		StringBuffer xml = new StringBuffer();
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
