@@ -144,7 +144,7 @@ public class TemplateManager extends AbstractManager {
 
 		temp = replaceTagForTemplate(temp, "DESCRIPTION", "<![CDATA[" + createDescription(post.getContents()) + "]]>");
 		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
-		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname);
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/" + post.getIdx() + ".html");
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 		return temp;
 	}
