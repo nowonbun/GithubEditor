@@ -68,7 +68,9 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "SEARCHTITLE", getCategoryName(category));
 
 		StringBuffer sb = new StringBuffer();
-		for (Post post : category.getPosts().stream().sorted(Comparator.comparing(x -> x.getIdx() * -1)).toArray(Post[]::new)) {
+		List<Post> posts = category.getPosts();
+		posts = posts.stream().sorted(Comparator.comparing(x -> x.getIdx() * -1)).collect(Collectors.toList());
+		for (Post post : posts) {
 			if (post.getIsdeleted()) {
 				continue;
 			}
