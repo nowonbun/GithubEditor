@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
@@ -68,8 +69,10 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "SEARCHTITLE", getCategoryName(category));
 
 		StringBuffer sb = new StringBuffer();
-		List<Post> posts = category.getPosts();
-		posts = posts.stream().sorted(Comparator.comparing(x -> x.getIdx() * -1)).collect(Collectors.toList());
+		List<Post> posts = new LinkedList<>();
+		for (Post post : category.getPosts()) {
+			posts.add(0, post);
+		}
 		for (Post post : posts) {
 			if (post.getIsdeleted()) {
 				continue;
