@@ -4,11 +4,12 @@ import java.util.Date;
 import java.util.List;
 import common.PropertyMap;
 import common.Util;
+import model.Category;
 import model.Post;
 
 public class RssManager extends AbstractManager {
 
-	private List<Post> posts;
+	private List<Category> categorys;
 	private String rssTitle;
 	private String rssLink;
 	private String rssDescription;
@@ -19,9 +20,9 @@ public class RssManager extends AbstractManager {
 	private String hostName;
 	private String rssAuthor;
 
-	public RssManager(List<Post> posts) {
+	public RssManager(List<Category> categorys) {
 		super();
-		this.posts = posts;
+		this.categorys = categorys;
 		this.rssTitle = PropertyMap.getInstance().getProperty("config", "rss_title");
 		this.rssLink = PropertyMap.getInstance().getProperty("config", "rss_link");
 		this.rssDescription = PropertyMap.getInstance().getProperty("config", "rss_description");
@@ -36,7 +37,8 @@ public class RssManager extends AbstractManager {
 	public String build() {
 		StringBuffer xml = new StringBuffer();
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xml.append("<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
+		xml.append(
+				"<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
 		xml.append(createTag("channel", () -> {
 			StringBuffer channel = new StringBuffer();
 			channel.append(createTag("title", this.rssTitle));
@@ -47,19 +49,50 @@ public class RssManager extends AbstractManager {
 			channel.append(createTag("generator", this.rssGenerator));
 			channel.append(createTag("managingEditor", this.rssManagingEditor));
 			channel.append(createTag("webMaster", this.rssWebMaster));
-			for (Post post : this.posts) {
+			channel.append(createTag("item", () -> {
+				String link = this.hostName + "/index.html";
+				StringBuffer item = new StringBuffer();
+				item.append(createTag("title", "明月の開発ストーリ"));
+				item.append(createTag("link", link));
+				item.append(createTag("description", "明月の開発ストーリ"));
+				item.append(createTag("category", "明月の開発ストーリ"));
+				item.append(createTag("author", this.rssAuthor));
+				item.append(createTag("guid", link));
+				// TODO: pubDate
+				item.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
+				return item.toString();
+			}));
+			for (Category category : this.categorys) {
 				channel.append(createTag("item", () -> {
-					String link = this.hostName + "/" + post.getIdx() + ".html";
+					String link = this.hostName + "/" + category.getUniqcode() + ".html";
 					StringBuffer item = new StringBuffer();
-					item.append(createTag("title", post.getTitle()));
+					item.append(createTag("title", getCategoryName(category)));
 					item.append(createTag("link", link));
-					item.append(createTag("description", "<![CDATA[" + createDescription(post.getContents()) + "]]>"));
-					item.append(createTag("category", getCategoryName(post.getCategory())));
+					item.append(createTag("description", getCategoryName(category)));
+					item.append(createTag("category", getCategoryName(category)));
 					item.append(createTag("author", this.rssAuthor));
 					item.append(createTag("guid", link));
-					item.append(createTag("pubDate", Util.convertGMTDateFormat(post.getLastupdateddate())));
+					// TODO: pubDate
+					item.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
 					return item.toString();
 				}));
+				for (Post post : category.getPosts()) {
+					if (post.getIsdeleted()) {
+						continue;
+					}
+					channel.append(createTag("item", () -> {
+						String link = this.hostName + "/" + post.getIdx() + ".html";
+						StringBuffer item = new StringBuffer();
+						item.append(createTag("title", post.getTitle()));
+						item.append(createTag("link", link));
+						item.append(createTag("description", "<![CDATA[" + createDescription(post.getContents()) + "]]>"));
+						item.append(createTag("category", getCategoryName(post.getCategory())));
+						item.append(createTag("author", this.rssAuthor));
+						item.append(createTag("guid", link));
+						item.append(createTag("pubDate", Util.convertGMTDateFormat(post.getLastupdateddate())));
+						return item.toString();
+					}));
+				}
 			}
 			return channel.toString();
 		}));

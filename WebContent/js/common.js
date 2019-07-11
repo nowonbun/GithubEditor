@@ -32,7 +32,7 @@ var _ = (function(obj) {
 				$(".search-text").val($val);
 			});
 			$(document).on("click", ".search-btn", function() {
-				location.href = "./?query=" + encodeURIComponent($(".search-text").val());
+				location.href = "./search.html?query=" + encodeURIComponent($(".search-text").val());
 			});
 			$(document).on("click", ".search-btn2", function() {
 				location.href = "./search.html?query=" + encodeURIComponent($(".search-text").val());

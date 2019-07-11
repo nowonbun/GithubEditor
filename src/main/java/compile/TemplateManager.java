@@ -9,7 +9,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import bean.MenuBean;
 import common.FactoryDao;
 import common.PropertyMap;
 import common.Util;
@@ -23,6 +22,8 @@ public class TemplateManager extends AbstractManager {
 	private String mainTemp;
 	private String postTemp;
 	private String searchTemp;
+	private String listTemp;
+	private String indexTemp;
 
 	private String title;
 	private String menu;
@@ -37,6 +38,8 @@ public class TemplateManager extends AbstractManager {
 		this.mainTemp = PropertyMap.getInstance().getTemplateFile("main");
 		this.postTemp = PropertyMap.getInstance().getTemplateFile("post");
 		this.searchTemp = PropertyMap.getInstance().getTemplateFile("search");
+		this.listTemp = PropertyMap.getInstance().getTemplateFile("list");
+		this.indexTemp = PropertyMap.getInstance().getTemplateFile("index");
 
 		this.title = PropertyMap.getInstance().getProperty("config", "title");
 		this.menu = createMenu();
@@ -54,12 +57,49 @@ public class TemplateManager extends AbstractManager {
 		return temp;
 	}
 
+	public String createListTemp(Category category) {
+		String temp = this.listTemp;
+		temp = replaceTagForTemplate(temp, "TITLE", this.title + ":: " + getCategoryName(category));
+		temp = replaceTagForTemplate(temp, "MENU", this.menu);
+		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/" + category.getUniqcode() + ".html");
+		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
+		temp = replaceTagForTemplate(temp, "SEARCHTITLE", getCategoryName(category));
+
+		StringBuffer sb = new StringBuffer();
+		for (Post post : category.getPosts()) {
+			if (post.getIsdeleted()) {
+				continue;
+			}
+			sb = createSearchItem(sb, post);
+		}
+		temp = replaceTagForTemplate(temp, "SEARCHCOUNT", String.valueOf(category.getPosts().size()));
+		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		return temp;
+	}
+
 	public String createSearchTemp(List<Post> posts) {
 		String temp = this.searchTemp;
 		temp = replaceTagForTemplate(temp, "TITLE", this.title);
 		temp = replaceTagForTemplate(temp, "MENU", this.menu);
 		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
-		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/");
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/search.html");
+		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
+
+		StringBuffer sb = new StringBuffer();
+		for (Post post : posts) {
+			sb = createSearchItem(sb, post);
+		}
+		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		return temp;
+	}
+
+	public String createIndexTemp(List<Post> posts) {
+		String temp = this.indexTemp;
+		temp = replaceTagForTemplate(temp, "TITLE", this.title);
+		temp = replaceTagForTemplate(temp, "MENU", this.menu);
+		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/index.html");
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 
 		StringBuffer sb = new StringBuffer();
@@ -206,8 +246,7 @@ public class TemplateManager extends AbstractManager {
 						sb.append("<li class=\"\"><a class=\"link_sub_item category-item\" data-code=\"");
 						sb.append(sub.getCode());
 						sb.append("\" href=\"");
-						// sb.append(sub.getUniqcode() + ".html");
-						sb.append("./?category=" + sub.getCode());
+						sb.append(sub.getUniqcode() + ".html");
 						sb.append("\">");
 						sb.append(sub.getName());
 						sb.append("</a></li>");
@@ -217,14 +256,11 @@ public class TemplateManager extends AbstractManager {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" data-code=\"");
 					sb.append(c.getCode());
 					sb.append("\" href=\"");
-					sb.append("./?category=" + c.getCode());
+					sb.append(c.getUniqcode() + ".html");
 					sb.append("\">");
 					sb.append(c.getName());
 					sb.append("</a>");
 				}
-				MenuBean bean = new MenuBean();
-				bean.setUrl("list.html?category=" + c.getCode());
-				bean.setText(c.getName());
 				sb.append("</li>");
 			}
 			return sb.toString();

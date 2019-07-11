@@ -6,8 +6,10 @@ import org.apache.log4j.Logger;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
+import dao.CategoryDao;
 import dao.PostDao;
 import model.Post;
+import model.Category;
 
 public class CompileService extends AbstractManager {
 	private static CompileService instance = null;
@@ -60,12 +62,13 @@ public class CompileService extends AbstractManager {
 		logger.info("The compile is start!");
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
+				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
 				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
 
 				FileManager filemanager = new FileManager();
 				TemplateManager tempmanager = new TemplateManager();
-				RssManager rssmanager = new RssManager(posts);
-				SitemapManager sitemapmanager = new SitemapManager(posts);
+				RssManager rssmanager = new RssManager(categorys);
+				SitemapManager sitemapmanager = new SitemapManager(categorys);
 				setStatus(CompileStatus.start, "The compiler will be start.", 1);
 				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
 				filemanager.initGitDirectory();
@@ -77,8 +80,15 @@ public class CompileService extends AbstractManager {
 				filemanager.copyDirectoryToGitRoot("css");
 				setStatus(CompileStatus.copy, "The Image files was copied to git root", 25);
 				filemanager.copyDirectoryToGitRoot("img");
+				// main
+				filemanager.createFile("index.html", tempmanager.createIndexTemp(posts));
 
-				filemanager.createFile("index.html", tempmanager.createSearchTemp(posts));
+				filemanager.createFile("search.html", tempmanager.createSearchTemp(posts));
+
+				// list
+				categorys.parallelStream().forEach(category -> {
+					filemanager.createFile(category.getUniqcode() + ".html", tempmanager.createListTemp(category));
+				});
 
 				// post.html
 				posts.parallelStream().forEach(post -> {
@@ -93,7 +103,7 @@ public class CompileService extends AbstractManager {
 				filemanager.createFile("sitemap.xml", sitemapmanager.build());
 				filemanager.createFile("CNAME", "www.nowonbun.com");
 
-				//robots.txt
+				// robots.txt
 				StringBuffer sb = new StringBuffer();
 				sb.append("User-agent: *");
 				sb.append("\r\n");
