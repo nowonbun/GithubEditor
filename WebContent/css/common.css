@@ -275,6 +275,10 @@ article>div.searchListEntity>div.list-body a.list-link:hover>h5 {
 	color: #81a9db !important;
 }
 
+.tag-column a:hover{
+	color: #81a9db !important;
+}
+
 .p-tag:hover {
 	color: #81a9db !important;
 }

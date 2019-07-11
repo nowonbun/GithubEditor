@@ -3,7 +3,6 @@ package compile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +20,6 @@ import model.Category;
 import model.Post;
 
 public class TemplateManager extends AbstractManager {
-	private String mainTemp;
 	private String postTemp;
 	private String searchTemp;
 	private String listTemp;
@@ -35,9 +33,11 @@ public class TemplateManager extends AbstractManager {
 
 	private String imageurl;
 
+	private String twitter;
+
 	public TemplateManager() {
 		super();
-		this.mainTemp = PropertyMap.getInstance().getTemplateFile("main");
+		
 		this.postTemp = PropertyMap.getInstance().getTemplateFile("post");
 		this.searchTemp = PropertyMap.getInstance().getTemplateFile("search");
 		this.listTemp = PropertyMap.getInstance().getTemplateFile("list");
@@ -50,13 +50,7 @@ public class TemplateManager extends AbstractManager {
 		this.hostname = PropertyMap.getInstance().getProperty("config", "host_name");
 
 		this.imageurl = PropertyMap.getInstance().getProperty("config", "imageurl");
-	}
-
-	public String createMainTemp() {
-		String temp = this.mainTemp;
-		temp = replaceTagForTemplate(temp, "TITLE", this.title);
-		temp = replaceTagForTemplate(temp, "MENU", this.menu);
-		return temp;
+		this.twitter = PropertyMap.getInstance().getProperty("config", "twitter");
 	}
 
 	public String createListTemp(Category category) {
@@ -67,6 +61,8 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/" + category.getUniqcode() + ".html");
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 		temp = replaceTagForTemplate(temp, "SEARCHTITLE", getCategoryName(category));
+		temp = replaceTagForTemplate(temp, "TWITTER", this.twitter);
+		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 
 		StringBuffer sb = new StringBuffer();
 		List<Post> posts = new LinkedList<>();
@@ -91,6 +87,8 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
 		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/search.html");
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
+		temp = replaceTagForTemplate(temp, "TWITTER", this.twitter);
+		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 
 		StringBuffer sb = new StringBuffer();
 		for (Post post : posts) {
@@ -107,12 +105,37 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
 		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/index.html");
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
+		temp = replaceTagForTemplate(temp, "TWITTER", this.twitter);
+		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 
 		StringBuffer sb = new StringBuffer();
 		for (Post post : posts) {
 			sb = createSearchItem(sb, post);
 		}
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		return temp;
+	}
+
+	public String createPostTemp(Post post) {
+		String temp = this.postTemp;
+		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
+		temp = replaceTagForTemplate(temp, "MENU", menu);
+		temp = replaceTagForTemplate(temp, "CONTENTS_TITLE", post.getTitle());
+		// temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" +
+		// post.getCategory().getUniqcode() + ".html");
+		temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./?category=" + post.getCategory().getCode());
+		temp = replaceTagForTemplate(temp, "CATEGORY_NAME", getCategoryName(post.getCategory()));
+		temp = replaceTagForTemplate(temp, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
+		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
+		temp = replaceTagForTemplate(temp, "CONTENTS", getContetns(post));
+		temp = replaceTagForTemplate(temp, "TAG", convertTag(post.getTag()));
+
+		temp = replaceTagForTemplate(temp, "DESCRIPTION", "<![CDATA[" + createDescription(post.getContents()) + "]]>");
+		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
+		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/" + post.getIdx() + ".html");
+		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
+		temp = replaceTagForTemplate(temp, "TWITTER", this.twitter);
+		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 		return temp;
 	}
 
@@ -172,27 +195,6 @@ public class TemplateManager extends AbstractManager {
 			getLogger().error(e);
 			return "";
 		}
-	}
-
-	public String createPostTemp(Post post) {
-		String temp = this.postTemp;
-		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
-		temp = replaceTagForTemplate(temp, "MENU", menu);
-		temp = replaceTagForTemplate(temp, "CONTENTS_TITLE", post.getTitle());
-		// temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./" +
-		// post.getCategory().getUniqcode() + ".html");
-		temp = replaceTagForTemplate(temp, "CATEGORY_LINK", "./?category=" + post.getCategory().getCode());
-		temp = replaceTagForTemplate(temp, "CATEGORY_NAME", getCategoryName(post.getCategory()));
-		temp = replaceTagForTemplate(temp, "CREATED_DATE", Util.convertDateFormat(post.getCreateddate()));
-		temp = replaceTagForTemplate(temp, "LAST_UPDATED_DATE", Util.convertDateFormat(post.getLastupdateddate()));
-		temp = replaceTagForTemplate(temp, "CONTENTS", getContetns(post));
-		temp = replaceTagForTemplate(temp, "TAG", convertTag(post.getTag()));
-
-		temp = replaceTagForTemplate(temp, "DESCRIPTION", "<![CDATA[" + createDescription(post.getContents()) + "]]>");
-		temp = replaceTagForTemplate(temp, "AUTHOR", this.rssWebMaster);
-		temp = replaceTagForTemplate(temp, "CANONICAL", this.hostname + "/" + post.getIdx() + ".html");
-		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
-		return temp;
 	}
 
 	private String getContetns(Post post) {
