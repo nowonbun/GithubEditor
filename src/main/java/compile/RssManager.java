@@ -2,6 +2,8 @@ package compile;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import common.PropertyMap;
 import common.Util;
 import model.Category;
@@ -37,8 +39,7 @@ public class RssManager extends AbstractManager {
 	public String build() {
 		StringBuffer xml = new StringBuffer();
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xml.append(
-				"<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
+		xml.append("<rss version=\"2.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:taxo=\"http://purl.org/rss/1.0/modules/taxonomy/\" xmlns:activity=\"http://activitystrea.ms/spec/1.0/\" >");
 		xml.append(createTag("channel", () -> {
 			StringBuffer channel = new StringBuffer();
 			channel.append(createTag("title", this.rssTitle));
@@ -63,6 +64,11 @@ public class RssManager extends AbstractManager {
 				return item.toString();
 			}));
 			for (Category category : this.categorys) {
+				long count = this.categorys.stream().filter(x -> x.getCategory() == category).count();
+				if (count > 0) {
+					continue;
+				}
+
 				channel.append(createTag("item", () -> {
 					String link = this.hostName + "/" + category.getUniqcode() + ".html";
 					StringBuffer item = new StringBuffer();

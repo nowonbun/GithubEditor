@@ -34,6 +34,10 @@ public class SitemapManager extends AbstractManager {
 			return url.toString();
 		}));
 		for (Category category : categorys) {
+			long count = this.categorys.stream().filter(x -> x.getCategory() == category).count();
+			if (count > 0) {
+				continue;
+			}
 			xml.append(createTag("url", () -> {
 				StringBuffer url = new StringBuffer();
 				url.append(createTag("loc", this.locRoot + "/" + category.getUniqcode() + ".html"));
