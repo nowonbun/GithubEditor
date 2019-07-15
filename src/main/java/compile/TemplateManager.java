@@ -230,7 +230,7 @@ public class TemplateManager extends AbstractManager {
 				}
 			}
 		}
-		return doc.html();
+		return doc.html().replace("<html>\r\n <head></head>\r\n <body>", "").replace("</body>\r\n</html>", "");
 	}
 
 	private String replaceTagForTemplate(String template, String tagName, String data) {
