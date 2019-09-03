@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
+import common.Util;
 import dao.CategoryDao;
 import dao.PostDao;
 import model.Post;
@@ -93,7 +94,7 @@ public class CompileService extends AbstractManager {
 				// post.html
 				posts.parallelStream().forEach(post -> {
 					filemanager.createAttachfiles(post.getIdx(), post.getAttachments());
-					filemanager.createFile(post.getIdx() + ".html", tempmanager.createPostTemp(post));
+					filemanager.createFile(post.getIdx() + ".html", tempmanager.createPostTemp(post, posts));
 				});
 
 				// rss
@@ -115,13 +116,14 @@ public class CompileService extends AbstractManager {
 				sb.append("Sitemap: " + hostname + "/sitemap.xml");
 
 				filemanager.createFile("robots.txt", sb.toString());
-
+				String gitroot = PropertyMap.getInstance().getProperty("config", "gitRoot");
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
 				String filepermission = PropertyMap.getInstance().getProperty("config", "httpFilePermission");
 				String dirpermission = PropertyMap.getInstance().getProperty("config", "httpDirPermisstion");
-				filemanager.copyToHttpRoot(httppath, groupName, filepermission, dirpermission);
-
+				if (!Util.StringEquals(httppath, gitroot)) {
+					filemanager.copyToHttpRoot(httppath, groupName, filepermission, dirpermission);
+				}
 				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
 				new Thread(() -> {
 					try {

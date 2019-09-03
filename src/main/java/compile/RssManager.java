@@ -66,7 +66,6 @@ public class RssManager extends AbstractManager {
 				if (count > 0) {
 					continue;
 				}
-
 				channel.append(createTag("item", () -> {
 					String link = this.hostName + "/" + category.getUniqcode() + ".html";
 					StringBuffer item = new StringBuffer();

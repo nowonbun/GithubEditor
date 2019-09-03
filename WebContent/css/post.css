@@ -106,6 +106,7 @@ img:hover {
 	font-size: 1.5rem;
 	margin: 20px 0px;
 	text-align: left;
+	box-shadow: 1px 2px 4px;
 }
 
 article h2>b {
@@ -157,6 +158,36 @@ div.table-responsive ul {
 	margin:0px;
 }
 
+/*20190903*/
+.recently-post,.other-category{
+	border: 1px solid #ededed;
+    box-shadow: 1px 2px 4px;
+    padding: 10px;
+    margin-top: 15px;
+}
+.recently-post .list-title, .other-category .list-title{
+	font-size: 0.8rem;
+	border-bottom: 1px solid #ededed;
+    padding-bottom: 5px;
+}
+.recently-post .list-title a, .other-category .list-title a{
+	text-decoration: none;
+}
+.recently-post ul,.other-category ul{
+	list-style: none;
+    padding-left: 10px;
+    font-size: 0.7rem;
+    line-height: 1.2rem;
+    margin-top: 5px;
+	margin-bottom: 5px;
+}
+.recently-post ul a,.other-category ul a{
+	text-decoration: none;
+}
+.recently-post ul span,.other-category ul span{
+	float: right;
+}
+
 @media screen and (max-width: 768px) {
 	main div.article {
 		/* font-size: 1.5rem; */
@@ -200,4 +231,42 @@ div.table-responsive ul {
 	.data-column-label, .date-column, .tag-column {
 		font-size: 0.60rem;
 	}
+	/*20190903*/
+	.recently-post .list-title, .other-category .list-title{
+		font-size: 0.6rem;
+	}
+	.recently-post ul,.other-category ul{
+	    font-size: 0.5rem;
+	    line-height: 1.0rem;
+	}
+}
+
+/*****************
+* adsens
+******************/
+.adsens_responsive { 
+	margin-top: 20px;
+    margin-bottom: 20px;
+    /*box-shadow: 2px 4px 4px;*/
+}
+.adsens_responsive { 
+	width: 320px; 
+	height: 100px; 
+}
+@media(min-width: 500px) { 
+	.adsens_responsive { 
+		width: 468px; 
+		height: 60px; 
+	} 
+}
+@media(min-width: 800px) { 
+	.adsens_responsive { 
+		width: 728px; 
+		height: 90px; 
+	} 
+}
+@media(min-width: 1200px) { 
+	.adsens_responsive { 
+		width: 970px; height: 90px; 
+	} 
 }

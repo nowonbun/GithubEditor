@@ -165,13 +165,15 @@ div.side-list ul {
 }
 
 div.side-list>ul.side-nav>li>a {
-	height: 40px;
+	/*height: 40px;*/
+	height:35px;
 	display: block;
 	border-bottom: 1px solid #bdc3c7;
 	/*margin: 10px;*/
 	margin: 5px;
 	padding: 5px;
-	padding-top: 12px;
+	/*padding-top: 12px;*/
+	padding-top: 8px;
 	padding-bottom: 3px;
 	/*font-size: 20px;*/
 	font-size: 17px;

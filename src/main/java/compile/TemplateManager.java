@@ -34,10 +34,11 @@ public class TemplateManager extends AbstractManager {
 	private String imageurl;
 
 	private String twitter;
+	private int categorycount;
 
 	public TemplateManager() {
 		super();
-		
+
 		this.postTemp = PropertyMap.getInstance().getTemplateFile("post");
 		this.searchTemp = PropertyMap.getInstance().getTemplateFile("search");
 		this.listTemp = PropertyMap.getInstance().getTemplateFile("list");
@@ -51,6 +52,7 @@ public class TemplateManager extends AbstractManager {
 
 		this.imageurl = PropertyMap.getInstance().getProperty("config", "imageurl");
 		this.twitter = PropertyMap.getInstance().getProperty("config", "twitter");
+		this.categorycount = PropertyMap.getInstance().getPropertyInt("config", "categorycount");
 	}
 
 	public String createListTemp(Category category) {
@@ -116,7 +118,7 @@ public class TemplateManager extends AbstractManager {
 		return temp;
 	}
 
-	public String createPostTemp(Post post) {
+	public String createPostTemp(Post post, List<Post> posts) {
 		String temp = this.postTemp;
 		temp = replaceTagForTemplate(temp, "TITLE", title + " :: " + post.getTitle());
 		temp = replaceTagForTemplate(temp, "MENU", menu);
@@ -136,7 +138,30 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 		temp = replaceTagForTemplate(temp, "TWITTER", this.twitter);
 		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
+		temp = replaceTagForTemplate(temp, "OTHERCATEGORY", getOtherCategory(post, posts));
+		temp = replaceTagForTemplate(temp, "RECENTLYCATEGORY", getRecentlyPost(posts));
 		return temp;
+	}
+
+	private String getOtherCategory(Post post, List<Post> posts) {
+		List<Post> sortedPosts = posts.stream().filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode())).collect(Collectors.toList());
+		return getRecentlyPost(sortedPosts);
+	}
+
+	private String getRecentlyPost(List<Post> posts) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<ul>");
+		for (int i = 0; i < posts.size() && i < this.categorycount; i++) {
+			Post post = posts.get(i);
+			sb.append("<li>");
+			sb.append("<a href='");
+			sb.append(this.hostname + "/" + post.getIdx() + ".html");
+			sb.append("'>").append(post.getTitle()).append("</a>");
+			sb.append("<span>").append(Util.convertDateFormat(post.getCreateddate())).append("</span>");
+			sb.append("</li>");
+		}
+		sb.append("</ul>");
+		return sb.toString();
 	}
 
 	private StringBuffer createSearchItem(StringBuffer sb, Post post) {
@@ -230,7 +255,16 @@ public class TemplateManager extends AbstractManager {
 				}
 			}
 		}
-		return doc.html().replace("<html>\r\n <head></head>\r\n <body>", "").replace("</body>\r\n</html>", "");
+		String html = doc.html();
+		html = html.replace("<html>", "");
+		html = html.replace("<head>", "");
+		html = html.replace("</head>", "");
+		html = html.replace("<body>", "");
+		html = html.replace("</body>", "");
+		html = html.replace("</html>", "");
+		return html;
+		// return doc.html().replace("<html>\r\n <head></head>\r\n <body>",
+		// "").replace("</body>\r\n</html>", "");
 	}
 
 	private String replaceTagForTemplate(String template, String tagName, String data) {
