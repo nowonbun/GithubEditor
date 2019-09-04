@@ -410,7 +410,7 @@ footer{
 	}
 	.main-container,
 	footer {
-		margin-left: calc(( 100vw - 1240px) / 2 + 300px);
+		margin-left: calc(( 100vw - 1200px) / 2 + 300px);
 	}
 	aside.leftside {
 		display: block;
