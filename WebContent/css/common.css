@@ -417,6 +417,7 @@ footer{
 		/*top: 70px;*/
 		height: calc(100vh);
 		left: calc(( 100vw/ 2) - 615px);
+		position: absolute!important;
 	}
 	.menu-close {
 		display: none;
