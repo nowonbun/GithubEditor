@@ -401,7 +401,7 @@ footer{
 }*/
 
 /*Extra large devices (large desktops, 1200px and up)*/
-@media screen and ( min-width : 1200px) {
+@media screen and ( min-width : 1240px) {
 	body {
 		padding-top: 25px;
 	}
@@ -410,12 +410,13 @@ footer{
 	}
 	.main-container,
 	footer {
-		margin-left: calc(( 100vw - 1200px) / 2 + 300px);
+		margin-left: calc(( 100vw - 1240px) / 2 + 300px);
 	}
 	aside.leftside {
 		display: block;
 		/*top: 70px;*/
-		height: calc(100vh);
+		/*height: calc(100vh);*/
+		height: 120%;
 		left: calc(( 100vw/ 2) - 615px);
 		position: absolute!important;
 	}
