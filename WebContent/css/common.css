@@ -416,7 +416,7 @@ footer{
 		display: block;
 		top: 25px;
 		/*height: calc(100vh);*/
-		height: 120%;
+		height: 1500px;
 		left: calc(( 100vw/ 2) - 615px);
 		position: absolute!important;
 	}
