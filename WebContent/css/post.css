@@ -38,7 +38,10 @@ article.entry.post #article_contents {
 	/*min-height:300px;*/
 	/*height: calc(100vh - 300px);*/
 }
-
+article.entry.post blockquote {
+    font-size: 15.5px;
+    padding: 5px 10px;
+}
 .categoryArea {
 	font-size: 0.7rem;
 }
@@ -180,6 +183,9 @@ div.table-responsive ul {
     line-height: 1.2rem;
     margin-top: 5px;
 	margin-bottom: 5px;
+}
+.recently-post ul li,.other-category ul li{
+	display: flow-root;
 }
 .recently-post ul a,.other-category ul a{
 	text-decoration: none;
