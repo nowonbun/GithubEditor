@@ -109,13 +109,14 @@ public class CompileService extends AbstractManager {
 				sb.append("User-agent: *");
 				sb.append("\r\n");
 				sb.append("Allow: /");
-				sb.append("\r\n");
-				sb.append("\r\n");
+				//sb.append("\r\n");
+				//sb.append("\r\n");
 
-				String hostname = PropertyMap.getInstance().getProperty("config", "host_name");
-				sb.append("Sitemap: " + hostname + "/sitemap.xml");
+				/*String hostname = PropertyMap.getInstance().getProperty("config", "host_name");
+				sb.append("Sitemap: " + hostname + "/sitemap.xml");*/
 
 				filemanager.createFile("robots.txt", sb.toString());
+				filemanager.createFile("robot.txt", sb.toString());
 				String gitroot = PropertyMap.getInstance().getProperty("config", "gitRoot");
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
