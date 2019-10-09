@@ -2,277 +2,282 @@
 
 /*post*/
 #title_txt {
-	font-size: 25px;
-	height: 40px;
+    font-size: 25px;
+    height: 40px;
 }
 
 #tag_txt {
-	font-size: 18px;
-	height: 34px;
+    font-size: 18px;
+    height: 34px;
 }
 
 div.titleArea {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 select#category_sel {
-	height: 34px;
+    height: 34px;
 }
 
 article.entry.post {
-	/* font-size: 18px; */
-	font-size: 1rem;
-	/* overflow-wrap: break-word; */
-	word-wrap: break-word;
-	word-break: break-all;
+    /* font-size: 18px; */
+    font-size: 1rem;
+    /* overflow-wrap: break-word; */
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 article.entry.post p {
-	margin-bottom: 0px;
-	font-size: 0.9rem;
-	line-height: 25px;
+    margin-bottom: 0px;
+    font-size: 0.9rem;
+    line-height: 25px;
 }
 
 article.entry.post #article_contents {
-	min-height: calc(100vh - 300px);
-	/*min-height:300px;*/
-	/*height: calc(100vh - 300px);*/
+    min-height: calc(100vh - 300px);
+    /*min-height:300px;*/
+    /*height: calc(100vh - 300px);*/
 }
 article.entry.post blockquote {
     font-size: 15.5px;
     padding: 5px 10px;
 }
 .categoryArea {
-	font-size: 0.7rem;
+    font-size: 0.7rem;
 }
 
 #searchResultCount {
-	margin-left: 10px;
-	margin-right: 5px;
+    margin-left: 10px;
+    margin-right: 5px;
 }
 
 #category-column {
-	font-size: 0.8rem;
+    font-size: 0.8rem;
 }
 
 img {
-	max-width: 100%;
-	border-radius: 5px;
-	cursor: pointer;
-	box-shadow: 1px 2px 4px;
-	margin-top: 10px;
-	margin-bottom: 10px;
+    max-width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 1px 2px 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 div.table-responsive {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	box-shadow: 1px 2px 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 1px 2px 4px;
 }
 
 img:hover {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 
 .modal {
-	padding-top: 100px;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgb(0, 0, 0);
-	background-color: rgba(0, 0, 0, 0.9);
+    padding-top: 100px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 .close.img-type {
-	position: absolute;
-	top: 15px;
-	right: 35px;
-	color: #f1f1f1;
-	font-size: 40px;
-	font-weight: bold;
-	transition: 0.3s;
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
 .close.img-type:not (:disabled ):not (.disabled ) {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .close.img-type:not (:disabled ):not (.disabled ) {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .titleArea h1 {
-	border: 1px solid silver;
-	background-color: rgba(192, 192, 192, 0.38);
-	padding: 10px;
-	font-weight: bold;
-	font-size: 1.5rem;
-	margin: 20px 0px;
-	text-align: left;
-	box-shadow: 1px 2px 4px;
+    border: 1px solid silver;
+    background-color: rgba(192, 192, 192, 0.38);
+    padding: 10px;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 20px 0px;
+    text-align: left;
+    box-shadow: 1px 2px 4px;
 }
 
 article h2>b {
-	border: 1px solid silver;
-	display: block;
-	padding: 10px;
-	font-size: 20px;
-	background: #f5f5f5;
+    border: 1px solid silver;
+    display: block;
+    padding: 10px;
+    font-size: 20px;
+    background: #f5f5f5;
 }
 
 article h2>b>span {
-	border-left: 5px solid black;
-	padding-left: 10px;
+    border-left: 5px solid black;
+    padding-left: 10px;
 }
 
 .hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
-	font-size: 0.8rem;
-	line-height: 17px;
+    font-size: 0.8rem;
+    line-height: 17px;
 }
 
 .hljs {
-	padding: 3px;
+    padding: 3px;
 }
 
 /*기존 소스뷰 삭제*/
 div textarea[name=code] {
-	display: none;
+    display: none;
 }
 
 pre.code-view {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	padding: 0px;
-	box-shadow: 1px 2px 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0px;
+    box-shadow: 1px 2px 4px;
 }
 
 div.table-responsive td, div.table-responsive th {
-	padding: 5px;
-	vertical-align: middle;
-	font-size:0.8rem;
+    padding: 5px;
+    vertical-align: middle;
+    font-size:0.8rem;
 }
 
 div.table-responsive ul {
-	margin-bottom: 0px;
-	padding-inline-start: 20px;
+    margin-bottom: 0px;
+    padding-inline-start: 20px;
 }
 
 .table{
-	margin:0px;
+    margin:0px;
 }
 
 /*20190903*/
 .recently-post,.other-category{
-	border: 1px solid #ededed;
+    border: 1px solid #ededed;
     box-shadow: 1px 2px 4px;
     padding: 10px;
     margin-top: 15px;
 }
 .recently-post .list-title, .other-category .list-title{
-	font-size: 0.8rem;
-	border-bottom: 1px solid #ededed;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #ededed;
     padding-bottom: 5px;
 }
 .recently-post .list-title a, .other-category .list-title a{
-	text-decoration: none;
+    text-decoration: none;
 }
 .recently-post ul,.other-category ul{
-	list-style: none;
+    list-style: none;
     padding-left: 10px;
     font-size: 0.7rem;
     line-height: 1.2rem;
     margin-top: 5px;
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 .recently-post ul li,.other-category ul li{
-	display: flow-root;
+    display: flow-root;
 }
 .recently-post ul a,.other-category ul a{
-	text-decoration: none;
+    text-decoration: none;
+    max-width: calc(100% - 110px);
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 }
 .recently-post ul span,.other-category ul span{
-	float: right;
+    float: right;
 }
-
 @media screen and (max-width: 768px) {
-	main div.article {
-		/* font-size: 1.5rem; */
-		font-size: 1.2rem;
-	}
-	article.entry.post p {
-		font-size: 0.7rem;
-		line-height: 20px;
-	}
-	div.table-responsive {
-		font-size: 0.7rem;
-	}
-	div.table-responsive td, div.table-responsive th{
-		font-size: 0.55rem;
-	}
-	.titleArea h1 {
-		padding: 10px;
-		font-size: 1.2rem;
-		margin: 10px 0px;
-	}
-	.categoryArea {
-		font-size: 0.6rem;
-	}
-	article h2>b {
-		padding: 5px;
-		font-size: 1.0rem;
-	}
-	.code-title {
-		font-size: 0.6rem;
-	}
-	.hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
-		font-size: 0.55rem;
-		line-height: 15px;
-	}
-	.hljs-ln-code .hljs-ln-line {
-		margin-left: 5px;
-	}
-	.hljs-ln-numbers .hljs-ln-line {
-		margin-right: 5px;
-	}
-	.data-column-label, .date-column, .tag-column {
-		font-size: 0.60rem;
-	}
-	/*20190903*/
-	.recently-post .list-title, .other-category .list-title{
-		font-size: 0.6rem;
-	}
-	.recently-post ul,.other-category ul{
-	    font-size: 0.5rem;
-	    line-height: 1.0rem;
-	}
+    main div.article {
+        /* font-size: 1.5rem; */
+        font-size: 1.2rem;
+    }
+    article.entry.post p {
+        font-size: 0.7rem;
+        line-height: 20px;
+    }
+    div.table-responsive {
+        font-size: 0.7rem;
+    }
+    div.table-responsive td, div.table-responsive th{
+        font-size: 0.55rem;
+    }
+    .titleArea h1 {
+        padding: 10px;
+        font-size: 1.2rem;
+        margin: 10px 0px;
+    }
+    .categoryArea {
+        font-size: 0.6rem;
+    }
+    article h2>b {
+        padding: 5px;
+        font-size: 1.0rem;
+    }
+    .code-title {
+        font-size: 0.6rem;
+    }
+    .hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
+        font-size: 0.55rem;
+        line-height: 15px;
+    }
+    .hljs-ln-code .hljs-ln-line {
+        margin-left: 5px;
+    }
+    .hljs-ln-numbers .hljs-ln-line {
+        margin-right: 5px;
+    }
+    .data-column-label, .date-column, .tag-column {
+        font-size: 0.60rem;
+    }
+    /*20190903*/
+    .recently-post .list-title, .other-category .list-title{
+        /*font-size: 0.6rem;*/
+    }
+    .recently-post ul,.other-category ul{
+        /*font-size: 0.5rem;*/
+        /*line-height: 1.0rem;*/
+    }
 }
 
 /*****************
 * adsens
 ******************/
 .adsens_responsive { 
-	margin-top: 20px;
+    margin-top: 20px;
     margin-bottom: 20px;
     /*box-shadow: 2px 4px 4px;*/
 }
 .adsens_responsive { 
-	width: 320px; 
-	height: 100px; 
+    width: 320px; 
+    height: 100px; 
 }
 @media(min-width: 500px) { 
-	.adsens_responsive { 
-		width: 468px; 
-		height: 60px; 
-	} 
+    .adsens_responsive { 
+        width: 468px; 
+        height: 60px; 
+    } 
 }
 @media(min-width: 800px) { 
-	.adsens_responsive { 
-		width: 728px; 
-		height: 90px; 
-	} 
+    .adsens_responsive { 
+        width: 728px; 
+        height: 90px; 
+    } 
 }
 /*@media(min-width: 1200px) { 
-	.adsens_responsive { 
-		width: 970px; height: 90px; 
-	} 
+    .adsens_responsive { 
+        width: 970px; height: 90px; 
+    } 
 }*/
