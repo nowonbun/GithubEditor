@@ -99,13 +99,13 @@ public class GitSyncService {
 					writer.write("git commit -a -m '" + Util.convertDateFormat(new Date()) + "'");
 					writer.write("\n");
 					writer.flush();
-					writer.write("git push");
+					writer.write("git push origin master");
 					writer.write("\n");
 					writer.flush();
 					writer.write("git commit --allow-empty -m \"Trigger rebuild\"");
 					writer.write("\n");
 					writer.flush();
-					writer.write("git push");
+					writer.write("git push origin master");
 					writer.write("\n");
 					writer.flush();
 
