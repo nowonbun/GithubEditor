@@ -15,6 +15,7 @@ import common.PropertyMap;
 import common.Util;
 import dao.AttachmentDao;
 import dao.CategoryDao;
+import dao.PostDao;
 import model.Attachment;
 import model.Category;
 import model.Post;
@@ -204,8 +205,9 @@ public class TemplateManager extends AbstractManager {
 					if (sb.length() > 0) {
 						sb.append(",");
 					}
+					tag = tag.trim();
 					if (tag.indexOf("#") == 0) {
-						sb.append("<a href=./?query=" + URLEncoder.encode(tag.substring(1), "UTF-8") + ">");
+						sb.append("<a href=./search.html?query=" + URLEncoder.encode(tag.substring(1), "UTF-8") + ">");
 						sb.append(tag);
 						sb.append("</a>");
 					} else {
@@ -282,6 +284,13 @@ public class TemplateManager extends AbstractManager {
 				if (sublist.size() > 0) {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" href=\"javascript:void(0)\">");
 					sb.append(c.getName());
+					int categoryCount = 0;
+					for(Category sub: sublist) {
+						categoryCount += (int)FactoryDao.getDao(PostDao.class).getCountByCategory(sub);
+					}
+					sb.append("<span class=\"category-item-count\">(");
+					sb.append(categoryCount + (int)FactoryDao.getDao(PostDao.class).getCountByCategory(c));
+					sb.append(")</span>");
 					sb.append("<span class=\"fa fa-chevron-up pull-right\"></span></a>");
 					sb.append("<ul class=\"sub_category_list\">");
 					for (Category sub : sublist) {
@@ -291,6 +300,9 @@ public class TemplateManager extends AbstractManager {
 						sb.append(sub.getUniqcode() + ".html");
 						sb.append("\">");
 						sb.append(sub.getName());
+						sb.append("<span class=\"category-item-count\">(");
+						sb.append((int)FactoryDao.getDao(PostDao.class).getCountByCategory(sub));
+						sb.append(")</span>");
 						sb.append("</a></li>");
 					}
 					sb.append("</ul>");
@@ -301,6 +313,9 @@ public class TemplateManager extends AbstractManager {
 					sb.append(c.getUniqcode() + ".html");
 					sb.append("\">");
 					sb.append(c.getName());
+					sb.append("<span class=\"category-item-count\">(");
+					sb.append((int)FactoryDao.getDao(PostDao.class).getCountByCategory(c));
+					sb.append(")</span>");
 					sb.append("</a>");
 				}
 				sb.append("</li>");

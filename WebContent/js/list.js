@@ -56,13 +56,15 @@ var _this = (function(obj) {
 						if (post.tags !== undefined && post.tags !== null) {
                             $article.find(".tag-column").html("");
                             var taglist = post.tags.split(',');
+                            console.log(taglist);
                             for(var j=0;j<taglist.length;j++){
-                                if(taglist[j][0] === '#'){
+                            	var tagData = $.trim(taglist[j]);
+                                if(tagData[0] === '#'){
                                 	var taglink = $("<a class='p-tag'></a>").prop("href","./search.html?query="+encodeURIComponent(taglist[j].substring(1,taglist[j].length)));
                                     taglink = taglink.text(taglist[j]);
                                     $article.find(".tag-column").append(taglink);
                                 } else {
-                                    $article.find(".tag-column").append(taglist[j]);
+                                    $article.find(".tag-column").append(tagData[j]);
                                 }
                                 $article.find(".tag-column").append(",");
                             }

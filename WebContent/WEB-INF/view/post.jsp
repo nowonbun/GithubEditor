@@ -80,7 +80,7 @@
 		</select>
 	</div>
 </div>
-<script type="text/javascript" src="./js/post.js"></script>
+<script type="text/javascript" src="./js/post.js" charset="utf-8"></script>
 <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
 <script src="./js/highlightjs-line-numbers.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>

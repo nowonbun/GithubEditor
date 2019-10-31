@@ -193,6 +193,10 @@ div.side-list>ul.side-nav>li>ul>li>a {
 	padding-bottom: 3px;
 	font-size: 13px;
 }
+.category-item-count{
+	margin-left: 5px;
+    font-size: 75%;
+}
 
 div.attachfile {
 	display: inline-block;
@@ -416,7 +420,8 @@ footer{
 		display: block;
 		top: 25px;
 		/*height: calc(100vh);*/
-		height: 1500px;
+		/*height: 1500px;*/
+		height:1100px;
 		left: calc(( 100vw/ 2) - 615px);
 		position: absolute!important;
 	}

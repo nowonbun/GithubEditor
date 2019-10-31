@@ -1,8 +1,13 @@
 package controller.servlet;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +23,8 @@ import bean.PostBean;
 import bean.SelectBean;
 import common.AbstractController;
 import common.FactoryDao;
+import common.LocalPaths;
+import common.PropertyMap;
 import common.Util;
 import dao.CategoryDao;
 import dao.PostDao;
@@ -40,10 +47,12 @@ public class MainController extends AbstractController {
 
 	private List<SelectBean> getCategorySelectList() {
 		List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-		List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+		List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
+				.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 		List<SelectBean> selectList = new ArrayList<>();
 		for (Category c : pList) {
-			List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
+					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			if (sublist.size() > 0) {
 				for (Category s : sublist) {
 					SelectBean bean = new SelectBean();
@@ -102,6 +111,7 @@ public class MainController extends AbstractController {
 			return error();
 		}
 	}
+
 	@RequestMapping(value = "/search.html", method = RequestMethod.GET)
 	public String search(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("search.html");
@@ -114,7 +124,6 @@ public class MainController extends AbstractController {
 			}
 			String title = query;
 			long count = FactoryDao.getDao(PostDao.class).getCountByTitleLike(query);
-			
 
 			modelmap.addAttribute("title", title);
 			modelmap.addAttribute("count", count);
@@ -154,16 +163,16 @@ public class MainController extends AbstractController {
 				bean.setLastUpdateDate(Util.convertDateFormat(post.getLastupdateddate()));
 			}
 			bean.setTitle(post.getTitle());
-			
-			if(!Util.StringIsEmptyOrNull(post.getTag())) {
+
+			if (!Util.StringIsEmptyOrNull(post.getTag())) {
 				StringBuffer sb = new StringBuffer();
 				String[] tags = post.getTag().split(",");
-				for(String tag : tags) {
-					if(sb.length() > 0) {
+				for (String tag : tags) {
+					if (sb.length() > 0) {
 						sb.append(",");
 					}
-					if(tag.indexOf("#") == 0) {
-						sb.append("<a href=./search.html?query="+URLEncoder.encode(tag.substring(1), "UTF-8") +">");
+					if (tag.indexOf("#") == 0) {
+						sb.append("<a href=./search.html?query=" + URLEncoder.encode(tag.substring(1), "UTF-8") + ">");
 						sb.append(tag);
 						sb.append("</a>");
 					} else {
@@ -172,8 +181,8 @@ public class MainController extends AbstractController {
 				}
 				bean.setTags(sb.toString());
 			}
-			
-			//bean.setTags(post.getTag());
+
+			// bean.setTags(post.getTag());
 			bean.setContents(post.getContents());
 			modelmap.addAttribute("post", bean);
 			modelmap.addAttribute("data", getGson().toJson(bean));
@@ -192,5 +201,105 @@ public class MainController extends AbstractController {
 		}
 		name += category.getName();
 		return name;
+	}
+
+	Pattern pattern = Pattern.compile("\\.(tpl)\\.(html)$");
+
+	@RequestMapping(value = "/template.html", method = RequestMethod.GET)
+	public String template(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("template.html");
+		try {
+			setMenu(modelmap);
+			String templatePath = PropertyMap.getInstance().getProperty("config", "templatepath");
+			if (Util.StringIsEmptyOrNull(templatePath)) {
+				templatePath = LocalPaths.getClassPath();
+			}
+			File dir = new File(templatePath);
+			File[] list = dir.listFiles();
+			List<String> templateList = new ArrayList<>();
+			for (File file : list) {
+				if (pattern.matcher(file.getName()).find()) {
+					templateList.add(file.getName());
+				}
+			}
+			modelmap.addAttribute("templateList", templateList);
+			return "template";
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			return error();
+		}
+	}
+
+	@RequestMapping(value = "/templateDetail.html", method = RequestMethod.GET)
+	public String templateDetail(ModelMap modelmap, HttpSession session, HttpServletRequest req,
+			HttpServletResponse res) {
+		super.getLogger().info("templateDetail.html");
+		try {
+			setMenu(modelmap);
+			String temp = req.getParameter("temp");
+			if (temp == null) {
+				super.getLogger().warn("The parameter of temp is null.");
+				throw new RuntimeException();
+			}
+			String templatePath = PropertyMap.getInstance().getProperty("config", "templatepath");
+			if (Util.StringIsEmptyOrNull(templatePath)) {
+				templatePath = LocalPaths.getClassPath();
+			}
+			File file = new File(templatePath + File.separator + temp);
+			if (!file.exists()) {
+				super.getLogger().warn("The template file is nothing!");
+				throw new RuntimeException();
+			}
+			byte[] data = new byte[(int) file.length()];
+			try (FileInputStream stream = new FileInputStream(file)) {
+				stream.read(data);
+			}
+			modelmap.addAttribute("data", new String(data, "UTF-8"));
+			modelmap.addAttribute("templateName", temp);
+			return "templateDetail";
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			return error();
+		}
+	}
+
+	@RequestMapping(value = "/templateModify.html", method = RequestMethod.POST)
+	public String templateModify(ModelMap modelmap, HttpSession session, HttpServletRequest req,
+			HttpServletResponse res) {
+		super.getLogger().info("templateModify.html");
+		try {
+			String templateName = req.getParameter("templateName");
+			if (templateName == null) {
+				super.getLogger().warn("The parameter of templateName is null.");
+				throw new RuntimeException();
+			}
+			String templateData = req.getParameter("templateData");
+			if (templateData == null) {
+				super.getLogger().warn("The parameter of templateData is null.");
+				throw new RuntimeException();
+			}
+			String templatePath = PropertyMap.getInstance().getProperty("config", "templatepath");
+			if (Util.StringIsEmptyOrNull(templatePath)) {
+				templatePath = LocalPaths.getClassPath();
+			}
+			File file = new File(templatePath + File.separator + templateName);
+			if (!file.exists()) {
+				super.getLogger().warn("The template file is nothing!");
+				throw new RuntimeException();
+			}
+			String backFileName = file.getAbsolutePath() + "." + Util.getTimeUnique();
+			Util.copyFile(file.getAbsolutePath(), backFileName);
+			try (OutputStream outputStream = new FileOutputStream(file)) {
+				byte[] buffer = templateData.getBytes();
+				outputStream.write(buffer, 0, buffer.length);
+			}
+			if (!Util.StringEquals(templatePath, LocalPaths.getClassPath())) {
+				Util.copyFile(file.getAbsolutePath(), LocalPaths.getClassPath() + File.separator + templateName);
+			}
+			return redirect("template.html");
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			return error();
+		}
 	}
 }

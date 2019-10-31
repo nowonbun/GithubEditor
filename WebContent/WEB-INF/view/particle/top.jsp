@@ -15,6 +15,7 @@ body{
 }
 </style>
 <meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#29343a">
@@ -42,7 +43,7 @@ body{
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
-<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/common.js" charset="utf-8"></script>
 </head>
 <body>
 	<div class="loader off"></div>
@@ -64,9 +65,10 @@ body{
 				<li onclick="location.href='./';"><span class="fa fa-home" aria-hidden="true" title="Home"></span> <span>Home</span></li>
 				<li onclick="location.href='./write.html'"><span class="fa fa-file-text-o" aria-hidden="true" title="Write"></span> <span>Write</span></li>
 				<li onclick="location.href='./compile.html'"><span class="fa fa-gears" aria-hidden="true" title="Compile"></span> <span>Compile</span></li>
-				<li onclick="location.href='./gitsync.html'"><span class="fa fa-exchange" aria-hidden="true" title="..."></span> <span>Git sync</span></li>
-				<li class="menu-close"><span class="fa fa-times" aria-hidden="true" title="Close"></span> <span>Close</span></li>
-				<li class="menu-close-off"><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>
+				<li onclick="location.href='./gitsync.html'"><span class="fa fa-exchange" aria-hidden="true" title="sync"></span> <span>Git sync</span></li>
+				<li onclick="location.href='./template.html'"><span class="fa fa-clone" aria-hidden="true" title="template"></span> <span>template</span></li>
+				<!-- <li class="menu-close"><span class="fa fa-times" aria-hidden="true" title="Close"></span> <span>Close</span></li>
+				<li class="menu-close-off"><span class="fa fa-minus" aria-hidden="true" title="..."></span> <span>...</span></li>-->
 			</ul>
 		</div>
 		<!-- div class="form-inline my-2 my-lg-0 search-custom side-search" style="padding: 5px;">
@@ -79,17 +81,17 @@ body{
 					<c:choose>
 					    <c:when test="${empty item.subMenu}">
 						    <li class="">
-								<a class="link_item link-item-collapse category-item" href="${item.url}" data-code="${item.categoryCode }">${item.text}</a>
+								<a class="link_item link-item-collapse category-item" href="${item.url}" data-code="${item.categoryCode }">${item.text}<span class="category-item-count">(${item.count})</span></a>
 							</li>
 						</c:when>
 						<c:otherwise>
 							<li class="">
-								<a class="link_item link-item-collapse category-item" href="javascript:void(0)" data-code="${item.categoryCode }"> ${item.text}
+								<a class="link_item link-item-collapse category-item" href="javascript:void(0)" data-code="${item.categoryCode }"> ${item.text}<span class="category-item-count">(${item.count})</span>
 									<span class="fa fa-chevron-up pull-right"></span>
 								</a>
 								<ul class="sub_category_list">
 									<c:forEach items="${item.subMenu}" var="sub">
-										<li class=""><a class="link_sub_item category-item" href="${sub.url }" data-code="${sub.categoryCode }">${sub.text}</a></li>
+										<li class=""><a class="link_sub_item category-item" href="${sub.url }" data-code="${sub.categoryCode }">${sub.text}<span class="category-item-count">(${sub.count})</span></a></li>
 									</c:forEach>
 								</ul>
 							</li>

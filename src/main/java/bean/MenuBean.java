@@ -6,6 +6,7 @@ public class MenuBean {
 	private String url;
 	private String text;
 	private String categoryCode;
+	private int count;
 	private List<MenuBean> subMenu;
 
 	public String getUrl() {
@@ -40,4 +41,11 @@ public class MenuBean {
 		this.categoryCode = categoryCode;
 	}
 
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
 }

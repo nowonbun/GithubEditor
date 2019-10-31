@@ -27,9 +27,11 @@ public class GitSyncService {
 	}
 
 	private final GitSyncParameter parameter;
+	private final String gitroot;
 
 	private GitSyncService() {
 		logger = LoggerManager.getLogger(GitSyncService.class);
+		this.gitroot = PropertyMap.getInstance().getProperty("config", "gitRoot");
 		this.parameter = new GitSyncParameter();
 		this.parameter.setStart(false);
 	}
@@ -45,6 +47,12 @@ public class GitSyncService {
 	public void start() {
 		// https://hojak99.tistory.com/338
 		// https://www.mkyong.com/java/how-to-execute-shell-command-from-java/
+		if(Util.StringIsEmptyOrNull(this.gitroot)) {
+			logger.info("because the gitroot was not setting, this procedure is not able to run.");
+			this.parameter.setStart(true);
+			this.parameter.addMessage("because the gitroot was not setting, this procedure is not able to run.\n");
+			return;
+		}
 		if (this.parameter.isStart()) {
 			logger.info("The GitSync was already start!");
 			return;
@@ -87,7 +95,7 @@ public class GitSyncService {
 				});
 
 				try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin))) {
-					writer.write("cd " + PropertyMap.getInstance().getProperty("config", "gitRoot"));
+					writer.write("cd " + this.gitroot);
 					writer.write("\n");
 					writer.flush();
 					writer.write("git pull");

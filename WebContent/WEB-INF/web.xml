@@ -4,6 +4,9 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+  <session-config>
+    <session-timeout>10080</session-timeout>
+  </session-config>
   <servlet>
     <servlet-name>startup</servlet-name>
     <servlet-class>controller.servlet.InitController</servlet-class>
@@ -65,6 +68,6 @@
   </filter>
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>*.ajax</url-pattern>
   </filter-mapping>
 </web-app>

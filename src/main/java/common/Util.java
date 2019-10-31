@@ -1,5 +1,11 @@
 package common;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -137,4 +143,15 @@ public class Util {
 		return Util.gson;
 	}
 
+	public static void copyFile(String src, String dest) throws FileNotFoundException, IOException {
+		try (InputStream inputStream = new FileInputStream(src)) {
+			try (OutputStream outputStream = new FileOutputStream(dest)) {
+				byte[] buffer = new byte[1024];
+				int length = 0;
+				while ((length = inputStream.read(buffer)) > 0) {
+					outputStream.write(buffer, 0, length);
+				}
+			}
+		}
+	}
 }

@@ -55,7 +55,7 @@ public class PropertyMap {
 			byte[] data = new byte[(int) file.length()];
 			try (InputStream straem = new FileInputStream(file)) {
 				straem.read(data, 0, data.length);
-				return new String(data);
+				return new String(data, "UTF-8");
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();

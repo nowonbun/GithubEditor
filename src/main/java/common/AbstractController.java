@@ -18,6 +18,7 @@ import bean.AjaxBean;
 import bean.MenuBean;
 import bean.UserBean;
 import dao.CategoryDao;
+import dao.PostDao;
 import model.Category;
 
 public class AbstractController {
@@ -115,6 +116,7 @@ public class AbstractController {
 				bean.setUrl("list.html?category=" + c.getCode());
 				bean.setText(c.getName());
 				bean.setCategoryCode(c.getCode());
+				int categoryCount = 0;
 				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
 					bean.setSubMenu(new ArrayList<>());
@@ -124,8 +126,13 @@ public class AbstractController {
 						subBean.setText(sub.getName());
 						subBean.setCategoryCode(sub.getCode());
 						bean.getSubMenu().add(subBean);
+						int count = (int)FactoryDao.getDao(PostDao.class).getCountByCategory(sub);
+						categoryCount += count;
+						subBean.setCount(count);
 					}
+					
 				}
+				bean.setCount(categoryCount+ (int)FactoryDao.getDao(PostDao.class).getCountByCategory(c));
 				selectList.add(bean);
 			}
 			modelmap.addAttribute("menulist", selectList);

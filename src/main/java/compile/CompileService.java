@@ -123,8 +123,8 @@ public class CompileService extends AbstractManager {
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
 				String filepermission = PropertyMap.getInstance().getProperty("config", "httpFilePermission");
 				String dirpermission = PropertyMap.getInstance().getProperty("config", "httpDirPermisstion");
-				if (!Util.StringEquals(httppath, gitroot)) {
-					filemanager.copyToHttpRoot(httppath, groupName, filepermission, dirpermission);
+				if (!Util.StringIsEmptyOrNull(gitroot) && !Util.StringEquals(httppath, gitroot)) {
+					filemanager.copyToHttpRoot(gitroot, groupName, filepermission, dirpermission);
 				}
 				setStatus(CompileStatus.finish, "This compiler was completed.", 100);
 				new Thread(() -> {

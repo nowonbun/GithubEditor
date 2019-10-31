@@ -52,6 +52,7 @@ var _this = (function(obj) {
 					$(this).hide();
 				});
 				$("#searchResultCount").text(count);
+				$("input[type=search]").val(query);
 			}
 			_.loading.off();
 		}

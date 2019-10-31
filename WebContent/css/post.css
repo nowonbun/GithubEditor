@@ -258,6 +258,9 @@ div.table-responsive ul {
         /*font-size: 0.5rem;*/
         /*line-height: 1.0rem;*/
     }
+    .recently-post ul span,.other-category ul span{
+    	display:none;
+    }
 }
 
 /*****************

@@ -75,5 +75,5 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="./js/gitsync.js"></script>
+<script type="text/javascript" src="./js/gitsync.js" charset="utf-8"></script>
 <jsp:include page="./particle/bottom.jsp"></jsp:include>
