@@ -261,6 +261,9 @@ div.table-responsive ul {
     .recently-post ul span,.other-category ul span{
     	display:none;
     }
+    .recently-post ul a,.other-category ul a{
+    	max-width: calc(100%);
+    }
 }
 
 /*****************
