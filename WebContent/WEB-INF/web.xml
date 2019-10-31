@@ -69,5 +69,6 @@
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>*.ajax</url-pattern>
+    <url-pattern>*.html</url-pattern>
   </filter-mapping>
 </web-app>
