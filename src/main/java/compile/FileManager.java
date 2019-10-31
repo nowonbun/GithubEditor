@@ -53,11 +53,17 @@ public class FileManager extends AbstractManager {
 
 		if (file.isDirectory()) {
 			for (File f : file.listFiles()) {
+				if (f.getAbsolutePath().indexOf(".git") != -1) {
+					continue;
+				}
 				deleteFiles(f.getAbsolutePath());
 			}
 			file.delete();
 		}
 		if (file.isFile()) {
+			if (file.getAbsolutePath().indexOf(".git") != -1) {
+				return;
+			}
 			file.delete();
 		}
 	}
@@ -134,7 +140,7 @@ public class FileManager extends AbstractManager {
 
 		deleteFiles(gitRoot);
 		File http = new File(gitRoot);
-		http.mkdir();
+		//http.mkdir();
 
 		try {
 			// The group own will be changed.
