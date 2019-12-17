@@ -141,11 +141,14 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 		temp = replaceTagForTemplate(temp, "OTHERCATEGORY", getOtherCategory(post, posts));
 		temp = replaceTagForTemplate(temp, "RECENTLYCATEGORY", getRecentlyPost(posts));
+		temp = replaceTagForTemplate(temp, "UNIQIDENTIFIER", "NOWONBUN" + String.format("%05d", post.getIdx()));
 		return temp;
 	}
 
 	private String getOtherCategory(Post post, List<Post> posts) {
-		List<Post> sortedPosts = posts.stream().filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode())).collect(Collectors.toList());
+		List<Post> sortedPosts = posts.stream()
+				.filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode()))
+				.collect(Collectors.toList());
 		return getRecentlyPost(sortedPosts);
 	}
 
@@ -167,7 +170,8 @@ public class TemplateManager extends AbstractManager {
 
 	private StringBuffer createSearchItem(StringBuffer sb, Post post) {
 		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\">");
-		sb.append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
+		sb.append(
+				"<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
 		sb.append("<div class=\"list-body\" style=\"width: 100%;\">");
 		sb.append("<div class=\"flexbox\">");
 		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\">");
@@ -176,17 +180,20 @@ public class TemplateManager extends AbstractManager {
 		sb.append("</a>");
 		sb.append("<div class=\"list-meta ie-dotum\">");
 		sb.append("<p>");
-		sb.append("<a href=\"./search.html?category=" + post.getCategory().getCode() + "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>");
+		sb.append("<a href=\"./search.html?category=" + post.getCategory().getCode()
+				+ "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>");
 		sb.append("</p>");
 		sb.append("<p>");
 		sb.append("<span class=\"timeago ff-h dt-published tag-column\">" + convertTag(post.getTag()) + "</span>");
 		sb.append("</p>");
 		sb.append("<p>");
 		sb.append("<span class=\"data-column-label\">作成日付 :</span>");
-		sb.append("<span class=\"timeago ff-h dt-published date-column create-date\">" + Util.convertDateFormat(post.getCreateddate()) + "</span>");
+		sb.append("<span class=\"timeago ff-h dt-published date-column create-date\">"
+				+ Util.convertDateFormat(post.getCreateddate()) + "</span>");
 		sb.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ");
 		sb.append("<span class=\"data-column-label\">修正日付	:</span>");
-		sb.append("<span class=\"timeago ff-h dt-published date-column update-date\">" + Util.convertDateFormat(post.getLastupdateddate()) + "</span>");
+		sb.append("<span class=\"timeago ff-h dt-published date-column update-date\">"
+				+ Util.convertDateFormat(post.getLastupdateddate()) + "</span>");
 		sb.append("</p>");
 		sb.append("</div>");
 		sb.append("</div>");
@@ -242,7 +249,8 @@ public class TemplateManager extends AbstractManager {
 					int id = Integer.parseInt(idx);
 					Attachment attachment = FactoryDao.getDao(AttachmentDao.class).select(id);
 					if (attachment != null) {
-						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_" + URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
+						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_"
+								+ URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
 					} else {
 						attr = "";
 					}
@@ -277,19 +285,21 @@ public class TemplateManager extends AbstractManager {
 		StringBuffer sb = new StringBuffer();
 		try {
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
+					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			for (Category c : pList) {
 				sb.append("<li class=\"\">");
-				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
+						.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" href=\"javascript:void(0)\">");
 					sb.append(c.getName());
 					int categoryCount = 0;
-					for(Category sub: sublist) {
-						categoryCount += (int)FactoryDao.getDao(PostDao.class).getCountByCategory(sub);
+					for (Category sub : sublist) {
+						categoryCount += (int) FactoryDao.getDao(PostDao.class).getCountByCategory(sub);
 					}
 					sb.append("<span class=\"category-item-count\">(");
-					sb.append(categoryCount + (int)FactoryDao.getDao(PostDao.class).getCountByCategory(c));
+					sb.append(categoryCount + (int) FactoryDao.getDao(PostDao.class).getCountByCategory(c));
 					sb.append(")</span>");
 					sb.append("<span class=\"fa fa-chevron-up pull-right\"></span></a>");
 					sb.append("<ul class=\"sub_category_list\">");
@@ -301,7 +311,7 @@ public class TemplateManager extends AbstractManager {
 						sb.append("\">");
 						sb.append(sub.getName());
 						sb.append("<span class=\"category-item-count\">(");
-						sb.append((int)FactoryDao.getDao(PostDao.class).getCountByCategory(sub));
+						sb.append((int) FactoryDao.getDao(PostDao.class).getCountByCategory(sub));
 						sb.append(")</span>");
 						sb.append("</a></li>");
 					}
@@ -314,7 +324,7 @@ public class TemplateManager extends AbstractManager {
 					sb.append("\">");
 					sb.append(c.getName());
 					sb.append("<span class=\"category-item-count\">(");
-					sb.append((int)FactoryDao.getDao(PostDao.class).getCountByCategory(c));
+					sb.append((int) FactoryDao.getDao(PostDao.class).getCountByCategory(c));
 					sb.append(")</span>");
 					sb.append("</a>");
 				}
