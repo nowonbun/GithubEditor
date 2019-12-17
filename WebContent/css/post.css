@@ -295,3 +295,10 @@ div.table-responsive ul {
         width: 970px; height: 90px; 
     } 
 }*/
+
+/*****************
+* disqus
+******************/
+.disqus-footer__wrapper{
+    display: none;
+}
