@@ -302,3 +302,6 @@ div.table-responsive ul {
 .disqus-footer__wrapper{
     display: none;
 }
+#disqus_thread{
+    margin:20px 0px;
+}
