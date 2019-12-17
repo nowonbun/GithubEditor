@@ -318,9 +318,11 @@ article>div.searchListEntity>div.list-body a.list-link>p.list-summary {
 footer{
     max-width: 900px;
     text-align: right;
-    font-size: 0.7rem;
-	margin-left: auto;
+    font-size: 1.0rem;
+    margin-left: auto;
     margin-right: auto;
+    font-weight: bold;
+    line-height: 20px;
 }
 
 /*Small devices (landscape phones, 576px and up)*/
