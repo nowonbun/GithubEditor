@@ -126,7 +126,7 @@ public class PostAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/getAttachFile.ajax", method = RequestMethod.POST)
+	@RequestMapping(value = "/getAttachFile.ajax", method = RequestMethod.GET)
 	public void getAttachFile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("addAttachFile.ajax");
 		try {

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import bean.ListBean;
 import common.AbstractController;
 import common.FactoryDao;
@@ -19,7 +21,7 @@ import model.Post;
 
 @Controller
 public class ListAjaxController extends AbstractController {
-	@RequestMapping(value = "/list.ajax")
+	@RequestMapping(value = "/list.ajax", method = RequestMethod.POST)
 	public void list(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("list.ajax");
 		try {

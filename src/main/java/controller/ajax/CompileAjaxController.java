@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import bean.StatusBean;
 import common.AbstractController;
 import common.Util;
@@ -16,7 +18,7 @@ import gitsync.GitSyncService;
 @Controller
 public class CompileAjaxController extends AbstractController {
 
-	@RequestMapping(value = "/status.ajax")
+	@RequestMapping(value = "/status.ajax", method = RequestMethod.POST)
 	public void status(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("status.ajax");
 		try {
@@ -32,7 +34,7 @@ public class CompileAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/compile.ajax")
+	@RequestMapping(value = "/compile.ajax", method = RequestMethod.POST)
 	public void compile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("compile.ajax");
 		try {
@@ -44,7 +46,7 @@ public class CompileAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/gitstatus.ajax")
+	@RequestMapping(value = "/gitstatus.ajax", method = RequestMethod.POST)
 	public void gitstatus(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("gitstatus.ajax");
 		try {
@@ -59,7 +61,7 @@ public class CompileAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/gitsync.ajax")
+	@RequestMapping(value = "/gitsync.ajax", method = RequestMethod.POST)
 	public void gitsync(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("gitsync.ajax");
 		try {
