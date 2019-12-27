@@ -36,7 +36,7 @@ public class CompileAjaxController extends AbstractController {
 	public void compile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("compile.ajax");
 		try {
-			CompileService.getInstance().start();
+			CompileService.getInstance().start(false);
 			OKAjax(res);
 		} catch (Throwable e) {
 			super.getLogger().error(e);

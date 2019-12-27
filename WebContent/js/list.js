@@ -56,7 +56,7 @@ var _this = (function(obj) {
 						if (post.tags !== undefined && post.tags !== null) {
                             $article.find(".tag-column").html("");
                             var taglist = post.tags.split(',');
-                            console.log(taglist);
+                            //console.log(taglist);
                             for(var j=0;j<taglist.length;j++){
                             	var tagData = $.trim(taglist[j]);
                                 if(tagData[0] === '#'){
@@ -81,8 +81,8 @@ var _this = (function(obj) {
 					_.loading.off();
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(jqXHR);
-					console.log(errorThrown);
+					console.error(jqXHR);
+					console.error(errorThrown);
 					toastr.error("エラーが発生しました。ログを確認してください。");
 				},
 				complete : function(jqXHR, textStatus) {

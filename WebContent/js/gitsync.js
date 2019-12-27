@@ -1,6 +1,3 @@
-$(function(){
-	$("body").append("日本語");
-});
 var _this = (function(obj) {
 	return obj
 })((function() {

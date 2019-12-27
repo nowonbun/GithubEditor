@@ -1,9 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="./particle/top.jsp"></jsp:include>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
-<link rel="stylesheet" href="./css/highlight.init.css" >
 <link rel="stylesheet" href="./css/post.css">
+<style>
+    pre {
+    	border: 2px solid #e9e9e9;
+    	padding: 10px;
+    	background: #f8f8f8;
+	}
+	pre code{
+		border: initial;
+	}
+	blockquote {
+		padding: 5px 10px;
+	}
+</style>
 <div class="modal attachment-dialog" tabindex="-1" role="dialog" aria-label="Insert Image" aria-modal="true" style="display: none;">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -39,6 +50,13 @@
 				</c:forEach>
 			</select>
 		</div>
+		<div style="margin:10px 0px;">
+			<div class="custom-control custom-switch" style="display: inline-block;margin-right:20px;">
+				<input type="checkbox" class="custom-control-input" id="reservation">
+			  	<label class="custom-control-label" for="reservation">予約投稿</label>
+			</div>
+			<input type="text" class="form-control date-picker" style="display: inline-block;width: 150px;" id="reservationDate" disabled readonly>
+		</div>
 	</div>
 	<div class="article">
 		<div class="tt_article_useless_p_margin" id="article_contents"></div>
@@ -51,8 +69,4 @@
 	</div>
 </article>
 <script type="text/javascript" src="./js/write.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
-<script src="./js/highlightjs-line-numbers.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-<script>hljs.initLineNumbersOnLoad();</script>
 <jsp:include page="./particle/bottom.jsp"></jsp:include>

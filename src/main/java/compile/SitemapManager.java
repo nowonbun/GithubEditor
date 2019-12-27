@@ -50,6 +50,9 @@ public class SitemapManager extends AbstractManager {
 				if (post.getIsdeleted()) {
 					continue;
 				}
+				if (post.getIsreservation()) {
+					continue;
+				}
 				xml.append(createTag("url", () -> {
 					StringBuffer url = new StringBuffer();
 					url.append(createTag("loc", this.locRoot + "/" + post.getIdx() + ".html"));

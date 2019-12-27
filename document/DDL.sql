@@ -23,6 +23,7 @@ create table post(
 	createddate datetime,
 	lastupdateddate datetime,
 	isdeleted bit default 0,
+	isreservation bit default 0,
 	
 	primary key(idx),
 	foreign key (category_code) references category(code)
@@ -41,3 +42,19 @@ create table attachment(
 	primary key(idx),
 	foreign key (post_idx) references post(idx)
 ) comment = 'transaction';
+
+create table cronhistory(
+	idx int auto_increment not null,
+	processedDate datetime,
+	state int,
+	
+	primary key(idx)
+) comment = 'transaction';
+
+create table cronpost(
+	cronhistory_idx int not null,
+	post_idx int not null,
+	
+	foreign key (cronhistory_idx) references cronhistory(idx),
+	foreign key (post_idx) references post(idx)
+) comment = 'map';

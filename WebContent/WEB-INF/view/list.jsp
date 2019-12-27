@@ -5,7 +5,7 @@
 		<h1>
 			<span>${title}</span> 検索結果
 		</h1>
-		<p>検索件数 : ${count}　件</p>
+		<p>検索件数 : ${count}件</p>
 	</div>
 	<div class="list-area"></div>
 	<input type="hidden" id="category" value="${category}"> 

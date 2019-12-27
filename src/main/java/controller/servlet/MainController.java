@@ -182,12 +182,52 @@ public class MainController extends AbstractController {
 				bean.setTags(sb.toString());
 			}
 
-			// bean.setTags(post.getTag());
 			bean.setContents(post.getContents());
+			bean.setIsReservation(post.getIsreservation());
+			bean.setReservationDate(Util.convertDatepicker(post.getCreateddate()));
 			modelmap.addAttribute("post", bean);
-			modelmap.addAttribute("data", getGson().toJson(bean));
 			modelmap.addAttribute("categorylist", getCategorySelectList());
 			return "post";
+		} catch (Throwable e) {
+			super.getLogger().error(e);
+			return error();
+		}
+	}
+	
+	@RequestMapping(value = "/modify.html", method = RequestMethod.POST)
+	public String modify(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+		super.getLogger().info("modify.html");
+		try {
+			setMenu(modelmap);
+			String idx = req.getParameter("idx");
+			if (idx == null) {
+				super.getLogger().warn("The parameter of idx is null.");
+				throw new RuntimeException();
+			}
+			int id = Integer.parseInt(idx);
+			Post post = FactoryDao.getDao(PostDao.class).select(id);
+			if (post == null) {
+				super.getLogger().warn("The post is null by that get the id.");
+				throw new RuntimeException();
+			}
+			PostBean bean = new PostBean();
+			bean.setIdx(post.getIdx());
+			// TODO: Null Eception was occurrd.
+			bean.setCategoryCode(post.getCategory().getCode());
+			bean.setCategoryUrl("./list.html?category=" + post.getCategory().getCode());
+			bean.setCategoryName(getCategoryName(post.getCategory()));
+			bean.setCreateDate(Util.convertDateFormat(post.getCreateddate()));
+			if (post.getLastupdateddate() != null) {
+				bean.setLastUpdateDate(Util.convertDateFormat(post.getLastupdateddate()));
+			}
+			bean.setTitle(post.getTitle());
+			bean.setTags(post.getTag());
+			bean.setContents(post.getContents());
+			bean.setIsReservation(post.getIsreservation());
+			bean.setReservationDate(Util.convertDatepicker(post.getCreateddate()));
+			modelmap.addAttribute("post", bean);
+			modelmap.addAttribute("categorylist", getCategorySelectList());
+			return "modify";
 		} catch (Throwable e) {
 			super.getLogger().error(e);
 			return error();

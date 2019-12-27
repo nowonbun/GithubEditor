@@ -5,80 +5,9 @@ var _this = (function(obj) {
 	__.property = {
 		maximumImageFileSize : 1024 * 1024,
 		modifyMode : false,
-		originalData : JSON.parse($("#originalData").val())
+		idx : $("#idx").val()
 	}
 	__.fn = {
-		changeModifyMode : function() {
-			$("#article_title").html($("<input type='text' class='form-control' id='title_txt' placeholder='title'>").val(__.property.originalData.title));
-			$(".categoryArea").html($($("#categoryAreaTemplate").html()).prop("id", "category_sel"));
-			var tags = "";
-			if (__.property.originalData.tags !== undefined) {
-				tags = __.property.originalData.tags;
-				var list = tags.split(',');
-				console.log(list);
-				tags = "";
-				for (var i = 0; i < list.length; i++) {
-					if (tags.length > 0) {
-						tags += ",";
-					}
-					var tag = list[i];
-					if ($(tag).length > 0) {
-						tags += $(tag).text();
-					} else {
-						tags += tag;
-					}
-				}
-			}
-			$("#article_tag").html($("<input type='text' class='form-control' id='tag_txt' placeholder='tag'>").val(tags));
-			var node_height = $(window).height() - 400;
-			if (node_height < 250) {
-				node_height = 250;
-			}
-			$('#article_contents').summernote({
-				height : node_height,
-				maximumImageFileSize : __.property.maximumImageFileSize,
-				callbacks : {
-					onInit : function() {
-						// attachfile
-						var button = $('<button type="button" role="button" tabindex="-1" title="" aria-label="Attachfile" data-original-title="Attachfile"></button>');
-						button.addClass("note-btn btn btn-light btn-sm attachment-tools");
-						button.append($('<i class="fa fa-paperclip"></i>'));
-						button.on("click", function() {
-							$(".attachment-dialog").modal("show");
-						});
-						$(".note-btn-group.btn-group.note-insert").append(button);
-					}
-				}
-			});
-			__.property.modifyMode = true;
-		},
-		modifyPost : function() {
-			$.ajax({
-				type : 'POST',
-				dataType : 'json',
-				data : {
-					idx : __.property.originalData.idx,
-					title : $.trim($('#title_txt').val()),
-					category : $('#category_sel').val(),
-					contents : $('#article_contents').summernote('code'),
-					tags : $.trim($('#tag_txt').val())
-				},
-				url : "./modifyPost.ajax",
-				success : function(data) {
-					if (data.ret) {
-						location.href = data.message;
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(jqXHR);
-					console.log(errorThrown);
-					toastr.error("예상치 못한 에러가 발생했습니다. 로그를 확인해 주십시오.");
-				},
-				complete : function(jqXHR, textStatus) {
-					_.loading.off();
-				}
-			});
-		},
 		uploadAttachFile : function(filename, type, data, cb, er) {
 			$.ajax({
 				type : 'POST',
@@ -172,11 +101,14 @@ var _this = (function(obj) {
 
 	__.ev = function() {
 		$("#modify_btn").on("click", function() {
-			if (!__.property.modifyMode) {
-				__.fn.changeModifyMode();
-			} else {
-				__.fn.updatePost();
-			}
+			var form = document.createElement('form');
+			var submit = document.createElement('input');
+			form.action = "./modify.html?idx="+__.property.idx;
+			form.method = "POST";
+			submit.type = "submit";
+			form.appendChild(submit);
+			document.body.appendChild(form);
+			submit.click();
 		});
 		$("#delete_btn").on("click", function() {
 			_.loading.on();
@@ -184,7 +116,7 @@ var _this = (function(obj) {
 				type : 'POST',
 				dataType : 'json',
 				data : {
-					idx : __.property.originalData.idx
+					idx : __.property.idx
 				},
 				url : "./deletePost.ajax",
 				success : function(data) {
@@ -227,19 +159,26 @@ var _this = (function(obj) {
 			}
 			reader.readAsDataURL(file);
 		});
-		/*
-		 * $("pre code.hljs").each(function () { $(this).before($("<div
-		 * class='code-title'></div>").append($("<i class='fa fa-minus-square
-		 * code-collapse'></i>")) .append("&nbsp;[Source view]&nbsp;" +
-		 * $(this).data("type"))); $(this).parent().addClass("code-view"); });
-		 * $(document).on("click", ".code-title", function () { $this = $(this);
-		 * $i = $this.find("i.code-collapse"); if
-		 * ($i.hasClass("fa-plus-square")) { $i.removeClass("fa-plus-square");
-		 * $i.addClass("fa-minus-square");
-		 * $this.parent().removeClass("code-view-disabled"); } else {
-		 * $i.removeClass("fa-minus-square"); $i.addClass("fa-plus-square");
-		 * $this.parent().addClass("code-view-disabled"); } });
-		 */
+		
+		$("pre code.hljs").each(function () {
+            $(this).before($("<div class='code-title'></div>").append($("<i class='fa fa-minus-square code-collapse'></i>"))
+                .append("&nbsp;[Source view]&nbsp;" + $(this).data("type")));
+            $(this).parent().addClass("code-view");
+        });
+        $(document).on("click", ".code-title", function () {
+            $this = $(this);
+            $i = $this.find("i.code-collapse");
+            if ($i.hasClass("fa-plus-square")) {
+                $i.removeClass("fa-plus-square");
+                $i.addClass("fa-minus-square");
+                $this.parent().removeClass("code-view-disabled");
+            } else {
+                $i.removeClass("fa-minus-square");
+                $i.addClass("fa-plus-square");
+                $this.parent().addClass("code-view-disabled");
+            }
+        });
+		 
 	}
 	$(__.ev);
 	return {}

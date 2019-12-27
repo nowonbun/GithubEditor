@@ -35,10 +35,42 @@ public class PostDao extends AbstractDao<Post> {
 			}
 		});
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Post> selectAllNotReservation() {
+		return transaction((em) -> {
+			try {
+				Query query = em.createQuery("SELECT p FROM Post p WHERE p.isdeleted = false and p.isreservation = false order by p.idx desc");
+				return (List<Post>) query.getResultList();
+			} catch (NoResultException e) {
+				return null;
+			}
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Post> selectAllReservation() {
+		return transaction((em) -> {
+			try {
+				Query query = em.createQuery("SELECT p FROM Post p WHERE p.isdeleted = false and p.isreservation = true order by p.idx desc");
+				return (List<Post>) query.getResultList();
+			} catch (NoResultException e) {
+				return null;
+			}
+		});
+	}
 
 	public long getCountByCategory(Category category) {
 		return transaction((em) -> {
 			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false and p.category = :category");
+			query.setParameter("category", category);
+			return (long) query.getSingleResult();
+		});
+	}
+	
+	public long getCountByCategoryNotReservation(Category category) {
+		return transaction((em) -> {
+			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false and p.category = :category and p.isreservation = false");
 			query.setParameter("category", category);
 			return (long) query.getSingleResult();
 		});
@@ -86,6 +118,13 @@ public class PostDao extends AbstractDao<Post> {
 	public long getCount() {
 		return transaction((em) -> {
 			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false");
+			return (long) query.getSingleResult();
+		});
+	}
+	
+	public long getCountNotReservation() {
+		return transaction((em) -> {
+			Query query = em.createQuery("SELECT count(p) FROM Post p where p.isdeleted = false and p.isreservation = false");
 			return (long) query.getSingleResult();
 		});
 	}

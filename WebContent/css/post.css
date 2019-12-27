@@ -311,3 +311,7 @@ div.table-responsive ul {
     padding: 20px;
     box-shadow: 1px 2px 4px;
 }
+
+.code-view-disabled code{
+	display:none;
+}

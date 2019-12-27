@@ -83,6 +83,9 @@ public class RssManager extends AbstractManager {
 					if (post.getIsdeleted()) {
 						continue;
 					}
+					if(post.getIsreservation()) {
+						continue;
+					}
 					channel.append(createTag("item", () -> {
 						String link = this.hostName + "/" + post.getIdx() + ".html";
 						StringBuffer item = new StringBuffer();

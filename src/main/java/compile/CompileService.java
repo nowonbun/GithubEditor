@@ -9,6 +9,7 @@ import common.PropertyMap;
 import common.Util;
 import dao.CategoryDao;
 import dao.PostDao;
+import gitsync.GitSyncService;
 import model.Post;
 import model.Category;
 
@@ -55,7 +56,7 @@ public class CompileService extends AbstractManager {
 		return this.parameter.getProgress();
 	}
 
-	public void start() {
+	public void start(boolean isGitupdate) {
 		if (this.parameter.getCompileStatus() != CompileStatus.wait) {
 			logger.info("The compile was already start!");
 			return;
@@ -64,7 +65,7 @@ public class CompileService extends AbstractManager {
 		Executors.newSingleThreadExecutor().execute(() -> {
 			try {
 				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
-				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAll();
+				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAllNotReservation();
 
 				FileManager filemanager = new FileManager();
 				TemplateManager tempmanager = new TemplateManager();
@@ -135,6 +136,9 @@ public class CompileService extends AbstractManager {
 					}
 					setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 				}).start();
+				if(isGitupdate) {
+					GitSyncService.getInstance().start();
+				}
 			} catch (Throwable e) {
 				logger.error(e);
 			}

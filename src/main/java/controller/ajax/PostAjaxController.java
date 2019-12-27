@@ -7,9 +7,12 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import common.AbstractController;
 import common.FactoryDao;
 import common.Util;
@@ -18,6 +21,7 @@ import dao.CategoryDao;
 import dao.PostDao;
 import model.Attachment;
 import model.Post;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +29,7 @@ import org.jsoup.select.Elements;
 
 @Controller
 public class PostAjaxController extends AbstractController {
-	@RequestMapping(value = "/createPost.ajax")
+	@RequestMapping(value = "/createPost.ajax", method = RequestMethod.POST)
 	public void createPost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("createPost.ajax");
 		try {
@@ -33,6 +37,7 @@ public class PostAjaxController extends AbstractController {
 			String category = req.getParameter("category");
 			String contents = req.getParameter("contents");
 			String tags = req.getParameter("tags");
+			String reservation = req.getParameter("reservation");
 			if (Util.StringIsEmptyOrNull(title) || Util.StringIsEmptyOrNull(category)) {
 				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
@@ -65,14 +70,23 @@ public class PostAjaxController extends AbstractController {
 				}
 			}
 			post.setIsdeleted(false);
-			post.setCreateddate(new Date());
+			if (reservation != null) {
+				post.setIsreservation(true);
+				post.setCreateddate(Util.getDateFromDatepicker(reservation));
+			} else {
+				post.setIsreservation(false);
+				post.setCreateddate(new Date());
+			}
+
 			post.setTag(tags);
 			post.setContents(contents);
 			post.setLastupdateddate(new Date());
-			super.getLogger().info("The post was created.!");
-			FactoryDao.getDao(PostDao.class).update(post);
 
-			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
+			super.getLogger().info("The post was created.!");
+			post = FactoryDao.getDao(PostDao.class).update(post);
+
+			// OKAjax(res, "list.html?category=" + post.getCategory().getCode());
+			OKAjax(res, "post.html?idx=" + post.getIdx());
 			// https://jsoup.org/cookbook/extracting-data/attributes-text-html
 			// https://heekim0719.tistory.com/162
 			// "<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>"
@@ -84,7 +98,7 @@ public class PostAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/addAttachFile.ajax")
+	@RequestMapping(value = "/addAttachFile.ajax", method = RequestMethod.POST)
 	public void addAttachFile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("addAttachFile.ajax");
 		try {
@@ -112,7 +126,7 @@ public class PostAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/getAttachFile.ajax")
+	@RequestMapping(value = "/getAttachFile.ajax", method = RequestMethod.POST)
 	public void getAttachFile(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("addAttachFile.ajax");
 		try {
@@ -136,7 +150,7 @@ public class PostAjaxController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/modifyPost.ajax")
+	@RequestMapping(value = "/modifyPost.ajax", method = RequestMethod.POST)
 	public void modifyPost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("modifyPost.ajax");
 		try {
@@ -145,7 +159,9 @@ public class PostAjaxController extends AbstractController {
 			String category = req.getParameter("category");
 			String contents = req.getParameter("contents");
 			String tags = req.getParameter("tags");
-			if (Util.StringIsEmptyOrNull(idx) || Util.StringIsEmptyOrNull(title) || Util.StringIsEmptyOrNull(category)) {
+			String reservation = req.getParameter("reservation");
+			if (Util.StringIsEmptyOrNull(idx) || Util.StringIsEmptyOrNull(title)
+					|| Util.StringIsEmptyOrNull(category)) {
 				super.getLogger().warn("The parameter is null.");
 				throw new RuntimeException();
 			}
@@ -185,18 +201,29 @@ public class PostAjaxController extends AbstractController {
 			post.setIsdeleted(false);
 			post.setTag(tags);
 			post.setContents(contents);
+			if (post.getIsreservation()) {
+				if (reservation != null) {
+					post.setIsreservation(true);
+					post.setCreateddate(Util.getDateFromDatepicker(reservation));
+				} else {
+					post.setIsreservation(false);
+					post.setCreateddate(new Date());
+				}
+			}
+
 			post.setLastupdateddate(new Date());
 			super.getLogger().info("The post was updated.! id : " + post.getIdx());
 			FactoryDao.getDao(PostDao.class).update(post);
 
-			OKAjax(res, "list.html?category=" + post.getCategory().getCode());
+			// OKAjax(res, "list.html?category=" + post.getCategory().getCode());
+			OKAjax(res, "post.html?idx=" + post.getIdx());
 		} catch (Throwable e) {
 			super.getLogger().error(e);
 			res.setStatus(406);
 		}
 	}
 
-	@RequestMapping(value = "/deletePost.ajax")
+	@RequestMapping(value = "/deletePost.ajax", method = RequestMethod.POST)
 	public void deletePost(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("deletePost.ajax");
 		try {

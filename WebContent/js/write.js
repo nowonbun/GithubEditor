@@ -3,7 +3,8 @@ var _this = (function(obj) {
 	})((function() {
 		var  __ = {};
 		__.property = {
-			maximumImageFileSize: 1024 * 1024	
+			maximumImageFileSize: 1024 * 1024,
+			idx : $("#idx").val()
 		};
 		
 		__.fn = {
@@ -15,7 +16,8 @@ var _this = (function(obj) {
 						title : $.trim($('#title_txt').val()),
 						category : $('#category_sel').val(),
 						contents : $('#article_contents').summernote('code'),
-						tags : $.trim($('#tag_txt').val())
+						tags : $.trim($('#tag_txt').val()),
+						reservation: $("#reservation").prop("checked")?$("#reservationDate").val():null
 					},
 					url : "./createPost.ajax",
 					success : function(data) {
@@ -27,6 +29,34 @@ var _this = (function(obj) {
 						console.log(jqXHR);
 						console.log(errorThrown);
 						toastr.error("エラーが発生しました。ログを確認してください。");
+					},
+					complete : function(jqXHR, textStatus) {
+						_.loading.off();
+					}
+				});
+			},
+			modifyPost : function() {
+				$.ajax({
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						idx : __.property.idx,
+						title : $.trim($('#title_txt').val()),
+						category : $('#category_sel').val(),
+						contents : $('#article_contents').summernote('code'),
+						tags : $.trim($('#tag_txt').val()),
+						reservation: $("#reservation").prop("checked")?$("#reservationDate").val():null
+					},
+					url : "./modifyPost.ajax",
+					success : function(data) {
+						if (data.ret) {
+							location.href = data.message;
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						console.log(errorThrown);
+						toastr.error("예상치 못한 에러가 발생했습니다. 로그를 확인해 주십시오.");
 					},
 					complete : function(jqXHR, textStatus) {
 						_.loading.off();
@@ -150,35 +180,120 @@ var _this = (function(obj) {
 						checkNwritePost();
 					});
 				});
-
+			});
+			
+			$("#modify_btn").on("click", function(){
+				if ($.trim($('#title_txt').val()) === "") {
+					toastr.error("empty title");
+					return;
+				}
+				_.loading.on();
+				var state = 0;
+				var count = $("img[data-filename]").length + $("a.attachfile[data-filename]").length;
+				function checkNmodifyPost() {
+					state++;
+					if (state === count) {
+						__.fn.modifyPost();
+					}
+				}
+				if (count === 0) {
+					__.fn.modifyPost();
+				}
+				$("img[data-filename]").each(function() {
+					var $this = $(this);
+					var data = __.fn.getBase64Data($(this).prop("src"));
+					if (data === null) {
+						checkNmodifyPost();
+						return;
+					}
+					__.fn.uploadAttachFile($(this).data("filename"), data.type, data.item, function(data) {
+						$this.prop("src", data.message);
+						checkNmodifyPost();
+					}, function() {
+						$this.prop("src", "");
+						checkNmodifyPost();
+					});
+				});
+				$("a.attachfile[data-filename]").each(function() {
+					var $this = $(this);
+					var data = __.fn.getBase64Data($(this).prop("href"));
+					if (data === null) {
+						checkNmodifyPost();
+						return;
+					}
+					__.fn.uploadAttachFile($(this).data("filename"), data.type, data.item, function(data) {
+						$this.prop("href", data.message);
+						checkNmodifyPost();
+					}, function() {
+						$this.prop("href", "");
+						checkNmodifyPost();
+					});
+				});
+			});
+			
+			$("#delete_btn").on("click", function() {
+				_.loading.on();
+				$.ajax({
+					type : 'POST',
+					dataType : 'json',
+					data : {
+						idx : __.property.idx
+					},
+					url : "./deletePost.ajax",
+					success : function(data) {
+						if (data.ret) {
+							location.href = data.message;
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						console.log(errorThrown);
+						toastr.error("エラーが発生しました。ログを確認してください。");
+					},
+					complete : function(jqXHR, textStatus) {
+						_.loading.off();
+					}
+				});
+			});
+			
+			$("#reservation").change(function(){
+				if($("#reservation").prop("checked")){
+					$("#reservationDate").prop("disabled", false);
+				} else {
+					$("#reservationDate").val("");
+					$("#reservationDate").prop("disabled", true);
+				}
+			});
+			
+			$('.date-picker').datepicker({
+				dateFormat: "yy-mm-dd",
+				minDate: 1
 			});
 		}
 		$(__.ev);
-		$(function(){
-			_.loading.on();
-			var node_height = $(window).height() - 400;
-			if(node_height < 250){
-				node_height = 250;
-			}
-			$('#article_contents').summernote({
-				height : node_height,
-				maximumImageFileSize : __.property.maximumImageFileSize,
-				callbacks:{
-					onInit: function(){
-						//attachfile
-						var button = $('<button type="button" role="button" tabindex="-1" title="" aria-label="Attachfile" data-original-title="Attachfile"></button>');
-						button.addClass("note-btn btn btn-light btn-sm attachment-tools");
-						button.append($('<i class="fa fa-paperclip"></i>'));
-						button.on("click", function(){
-							$(".attachment-dialog").modal("show");
-						});
-						$(".note-btn-group.btn-group.note-insert").append(button);			
-					}
-				}
-			});
-			_.loading.off();
-		});
 		
+		_.loading.on();
+		var node_height = $(window).height() - 400;
+		if(node_height < 250){
+			node_height = 250;
+		}
+		$('#article_contents').summernote({
+			height : node_height,
+			maximumImageFileSize : __.property.maximumImageFileSize,
+			callbacks:{
+				onInit: function(){
+					//attachfile
+					var button = $('<button type="button" role="button" tabindex="-1" title="" aria-label="Attachfile" data-original-title="Attachfile"></button>');
+					button.addClass("note-btn btn btn-light btn-sm attachment-tools");
+					button.append($('<i class="fa fa-paperclip"></i>'));
+					button.on("click", function(){
+						$(".attachment-dialog").modal("show");
+					});
+					$(".note-btn-group.btn-group.note-insert").append(button);			
+				}
+			}
+		});
+		_.loading.off();
 		return {
 		}
 	})());

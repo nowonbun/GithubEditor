@@ -13,6 +13,15 @@
 body{
 	font-family: 'Noto Sans JP', 'Arial',sans-serif!important;
 }
+.ui-datepicker {
+	z-index:9999!important;
+}
+.date-picker[readonly]{
+	background-color: white!important;
+}
+.date-picker[disabled]{
+	background-color:  #e9ecef!important;
+}
 </style>
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -31,6 +40,9 @@ body{
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/rainbow.min.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<!-- link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css"-->
 <link rel="stylesheet" type="text/css" href="./css/highlight.init.css">
 <link rel="stylesheet" type="text/css" href="./css/loader.css">
 <link rel="stylesheet" type="text/css" href="./css/common.css">
@@ -43,6 +55,8 @@ body{
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!-- script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script-->
 <script type="text/javascript" src="./js/common.js" charset="utf-8"></script>
 </head>
 <body>

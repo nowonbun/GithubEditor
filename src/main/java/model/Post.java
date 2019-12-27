@@ -35,6 +35,12 @@ public class Post implements Serializable {
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Attachment> attachments;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinTable(name = "cronpost", joinColumns = { @JoinColumn(name = "post_idx") }, inverseJoinColumns = { @JoinColumn(name = "cronhistory_idx") })
+	private Cronhistory cronhistory;
+	
+	private boolean isreservation;
+
 	public Post() {
 	}
 
@@ -64,6 +70,14 @@ public class Post implements Serializable {
 
 	public boolean getIsdeleted() {
 		return this.isdeleted;
+	}
+
+	public void setIsreservation(boolean isreservation) {
+		this.isreservation = isreservation;
+	}
+	
+	public boolean getIsreservation() {
+		return this.isreservation;
 	}
 
 	public void setIsdeleted(boolean isdeleted) {
@@ -124,4 +138,11 @@ public class Post implements Serializable {
 		this.category = category;
 	}
 
+	public Cronhistory getCronhistory() {
+		return this.cronhistory;
+	}
+
+	public void setCronhistory(Cronhistory cronhistory) {
+		this.cronhistory = cronhistory;
+	}
 }

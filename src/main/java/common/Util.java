@@ -24,6 +24,7 @@ public class Util {
 	private final static DateFormat javascriptDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private final static DateFormat GMTDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
 	private final static DateFormat GMTDateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	private final static DateFormat datepickerFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private static Gson gson = null;
 
 	public static boolean StringEquals(String val1, String val2) {
@@ -59,6 +60,14 @@ public class Util {
 	public static Date getDateFromString(String pDate) {
 		try {
 			return yyyyMMddFormat.parse(pDate);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+	public static Date getDateFromDatepicker(String pDate) {
+		try {
+			return datepickerFormat.parse(pDate);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -134,6 +143,13 @@ public class Util {
 			return null;
 		}
 		return GMTDateFormat2.format(date);
+	}
+
+	public static String convertDatepicker(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return datepickerFormat.format(date);
 	}
 
 	public static Gson getGson() {

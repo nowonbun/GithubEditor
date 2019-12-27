@@ -10,6 +10,8 @@ public class PostBean {
 	private String categoryUrl;
 	private String createDate;
 	private String lastUpdateDate;
+	private boolean isReservation;
+	private String reservationDate;
 
 	public int getIdx() {
 		return idx;
@@ -83,4 +85,19 @@ public class PostBean {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
+	public void setIsReservation(boolean isReservation) {
+		this.isReservation = isReservation;
+	}
+
+	public boolean getIsReservation() {
+		return this.isReservation;
+	}
+
+	public String getReservationDate() {
+		return reservationDate;
+	}
+
+	public void setReservationDate(String reservationDate) {
+		this.reservationDate = reservationDate;
+	}
 }

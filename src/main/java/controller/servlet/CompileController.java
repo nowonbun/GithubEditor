@@ -17,7 +17,7 @@ public class CompileController extends AbstractController {
 		super.getLogger().info("compile.html");
 		try {
 			setMenu(modelmap);
-			modelmap.addAttribute("postCount", FactoryDao.getDao(PostDao.class).getCount());
+			modelmap.addAttribute("postCount", FactoryDao.getDao(PostDao.class).getCountNotReservation());
 			return "compile";
 		} catch (Throwable e) {
 			super.getLogger().error(e);

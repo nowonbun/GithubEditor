@@ -70,15 +70,18 @@ public class TemplateManager extends AbstractManager {
 		StringBuffer sb = new StringBuffer();
 		List<Post> posts = new LinkedList<>();
 		for (Post post : category.getPosts()) {
-			posts.add(0, post);
-		}
-		for (Post post : posts) {
 			if (post.getIsdeleted()) {
 				continue;
 			}
+			if (post.getIsreservation()) {
+				continue;
+			}
+			posts.add(0, post);
+		}
+		for (Post post : posts) {
 			sb = createSearchItem(sb, post);
 		}
-		temp = replaceTagForTemplate(temp, "SEARCHCOUNT", String.valueOf(category.getPosts().size()));
+		temp = replaceTagForTemplate(temp, "SEARCHCOUNT", String.valueOf(posts.size()));
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
 		return temp;
 	}
@@ -296,10 +299,10 @@ public class TemplateManager extends AbstractManager {
 					sb.append(c.getName());
 					int categoryCount = 0;
 					for (Category sub : sublist) {
-						categoryCount += (int) FactoryDao.getDao(PostDao.class).getCountByCategory(sub);
+						categoryCount += (int) FactoryDao.getDao(PostDao.class).getCountByCategoryNotReservation(sub);
 					}
 					sb.append("<span class=\"category-item-count\">(");
-					sb.append(categoryCount + (int) FactoryDao.getDao(PostDao.class).getCountByCategory(c));
+					sb.append(categoryCount + (int) FactoryDao.getDao(PostDao.class).getCountByCategoryNotReservation(c));
 					sb.append(")</span>");
 					sb.append("<span class=\"fa fa-chevron-up pull-right\"></span></a>");
 					sb.append("<ul class=\"sub_category_list\">");
@@ -311,7 +314,7 @@ public class TemplateManager extends AbstractManager {
 						sb.append("\">");
 						sb.append(sub.getName());
 						sb.append("<span class=\"category-item-count\">(");
-						sb.append((int) FactoryDao.getDao(PostDao.class).getCountByCategory(sub));
+						sb.append((int) FactoryDao.getDao(PostDao.class).getCountByCategoryNotReservation(sub));
 						sb.append(")</span>");
 						sb.append("</a></li>");
 					}
@@ -324,7 +327,7 @@ public class TemplateManager extends AbstractManager {
 					sb.append("\">");
 					sb.append(c.getName());
 					sb.append("<span class=\"category-item-count\">(");
-					sb.append((int) FactoryDao.getDao(PostDao.class).getCountByCategory(c));
+					sb.append((int) FactoryDao.getDao(PostDao.class).getCountByCategoryNotReservation(c));
 					sb.append(")</span>");
 					sb.append("</a>");
 				}
