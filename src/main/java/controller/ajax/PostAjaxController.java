@@ -70,7 +70,7 @@ public class PostAjaxController extends AbstractController {
 				}
 			}
 			post.setIsdeleted(false);
-			if (reservation != null) {
+			if (!Util.StringIsEmptyOrNull(reservation)) {
 				post.setIsreservation(true);
 				post.setCreateddate(Util.getDateFromDatepicker(reservation));
 			} else {
@@ -202,7 +202,7 @@ public class PostAjaxController extends AbstractController {
 			post.setTag(tags);
 			post.setContents(contents);
 			if (post.getIsreservation()) {
-				if (reservation != null) {
+				if (!Util.StringIsEmptyOrNull(reservation)) {
 					post.setIsreservation(true);
 					post.setCreateddate(Util.getDateFromDatepicker(reservation));
 				} else {
