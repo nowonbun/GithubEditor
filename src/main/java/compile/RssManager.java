@@ -10,6 +10,7 @@ import model.Post;
 public class RssManager extends AbstractManager {
 
 	private List<Category> categorys;
+	private List<Post> posts;
 	private String rssTitle;
 	private String rssLink;
 	private String rssDescription;
@@ -20,7 +21,7 @@ public class RssManager extends AbstractManager {
 	private String hostName;
 	private String rssAuthor;
 
-	public RssManager(List<Category> categorys) {
+	public RssManager(List<Category> categorys, List<Post> posts) {
 		super();
 		this.categorys = categorys;
 		this.rssTitle = PropertyMap.getInstance().getProperty("config", "rss_title");
@@ -61,11 +62,27 @@ public class RssManager extends AbstractManager {
 				item.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
 				return item.toString();
 			}));
-			for (Category category : this.categorys) {
-				long count = this.categorys.stream().filter(x -> x.getCategory() == category).count();
-				if (count > 0) {
+			for (Post post : posts) {
+				if (post.getIsdeleted()) {
 					continue;
 				}
+				if (post.getIsreservation()) {
+					continue;
+				}
+				channel.append(createTag("item", () -> {
+					String link = this.hostName + "/" + post.getIdx() + ".html";
+					StringBuffer item = new StringBuffer();
+					item.append(createTag("title", post.getTitle()));
+					item.append(createTag("link", link));
+					item.append(createTag("description", createDescription(post.getContents(), true)));
+					item.append(createTag("category", getCategoryName(post.getCategory())));
+					item.append(createTag("author", this.rssAuthor));
+					item.append(createTag("guid", link));
+					item.append(createTag("pubDate", Util.convertGMTDateFormat(post.getLastupdateddate())));
+					return item.toString();
+				}));
+			}
+			for (Category category : this.categorys) {
 				channel.append(createTag("item", () -> {
 					String link = this.hostName + "/" + category.getUniqcode() + ".html";
 					StringBuffer item = new StringBuffer();
@@ -79,27 +96,20 @@ public class RssManager extends AbstractManager {
 					item.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
 					return item.toString();
 				}));
-				for (Post post : category.getPosts()) {
-					if (post.getIsdeleted()) {
-						continue;
-					}
-					if(post.getIsreservation()) {
-						continue;
-					}
-					channel.append(createTag("item", () -> {
-						String link = this.hostName + "/" + post.getIdx() + ".html";
-						StringBuffer item = new StringBuffer();
-						item.append(createTag("title", post.getTitle()));
-						item.append(createTag("link", link));
-						item.append(createTag("description", "<![CDATA[" + createDescription(post.getContents()) + "]]>"));
-						item.append(createTag("category", getCategoryName(post.getCategory())));
-						item.append(createTag("author", this.rssAuthor));
-						item.append(createTag("guid", link));
-						item.append(createTag("pubDate", Util.convertGMTDateFormat(post.getLastupdateddate())));
-						return item.toString();
-					}));
-				}
 			}
+			channel.append(createTag("item", () -> {
+				String link = this.hostName + "/index.html";
+				StringBuffer item = new StringBuffer();
+				item.append(createTag("title", "明月の開発ストーリ"));
+				item.append(createTag("link", link));
+				item.append(createTag("description", "明月の開発ストーリ"));
+				item.append(createTag("category", "明月の開発ストーリ"));
+				item.append(createTag("author", this.rssAuthor));
+				item.append(createTag("guid", link));
+				// TODO: pubDate
+				item.append(createTag("pubDate", Util.convertGMTDateFormat(new Date())));
+				return item.toString();
+			}));
 			return channel.toString();
 		}));
 		xml.append("</rss>");

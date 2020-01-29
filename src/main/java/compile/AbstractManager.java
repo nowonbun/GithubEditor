@@ -19,6 +19,10 @@ public class AbstractManager {
 	}
 
 	protected String createDescription(String contents) {
+		return createDescription(contents, false);
+	}
+
+	protected String createDescription(String contents, boolean isRss) {
 		contents = contents.toLowerCase();
 		int pos = contents.indexOf("<pre");
 		while (pos > -1) {
@@ -32,8 +36,13 @@ public class AbstractManager {
 			contents = pre + System.lineSeparator() + after;
 			pos = contents.indexOf("<pre");
 		}
-		String html = contents.replaceAll("<[^>]*>", "");
-		html = html.replace("&", "&amp;");
+		String html;
+		if (!isRss) {
+			html = contents.replaceAll("<[^>]*>", "");
+			html = html.replace("&", "&amp;");
+		} else {
+			html = contents.replace("&", "&amp;");
+		}
 		html = html.replace("&nbsp;", "");
 		html = html.replace("\n", "");
 		html = html.replace("\"", "&quot;");

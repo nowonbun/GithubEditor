@@ -69,7 +69,7 @@ public class CompileService extends AbstractManager {
 
 				FileManager filemanager = new FileManager();
 				TemplateManager tempmanager = new TemplateManager();
-				RssManager rssmanager = new RssManager(categorys);
+				RssManager rssmanager = new RssManager(categorys, posts);
 				SitemapManager sitemapmanager = new SitemapManager(categorys);
 				setStatus(CompileStatus.start, "The compiler will be start.", 1);
 				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
@@ -111,11 +111,13 @@ public class CompileService extends AbstractManager {
 				sb.append("User-agent: *");
 				sb.append("\r\n");
 				sb.append("Allow: /");
-				//sb.append("\r\n");
-				//sb.append("\r\n");
+				// sb.append("\r\n");
+				// sb.append("\r\n");
 
-				/*String hostname = PropertyMap.getInstance().getProperty("config", "host_name");
-				sb.append("Sitemap: " + hostname + "/sitemap.xml");*/
+				/*
+				 * String hostname = PropertyMap.getInstance().getProperty("config",
+				 * "host_name"); sb.append("Sitemap: " + hostname + "/sitemap.xml");
+				 */
 
 				filemanager.createFile("robots.txt", sb.toString());
 				filemanager.createFile("robot.txt", sb.toString());
@@ -136,7 +138,7 @@ public class CompileService extends AbstractManager {
 					}
 					setStatus(CompileStatus.wait, "This compiler was ready.", 0);
 				}).start();
-				if(isGitupdate) {
+				if (isGitupdate) {
 					GitSyncService.getInstance().start();
 				}
 			} catch (Throwable e) {
