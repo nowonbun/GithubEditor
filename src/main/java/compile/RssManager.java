@@ -24,6 +24,7 @@ public class RssManager extends AbstractManager {
 	public RssManager(List<Category> categorys, List<Post> posts) {
 		super();
 		this.categorys = categorys;
+		this.posts = posts;
 		this.rssTitle = PropertyMap.getInstance().getProperty("config", "rss_title");
 		this.rssLink = PropertyMap.getInstance().getProperty("config", "rss_link");
 		this.rssDescription = PropertyMap.getInstance().getProperty("config", "rss_description");
