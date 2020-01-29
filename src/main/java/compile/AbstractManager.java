@@ -51,8 +51,10 @@ public class AbstractManager {
 		html = html.replace(">", "&gt;");
 
 		String ret = html;
-		if (ret.length() > 1020) {
-			return ret.substring(0, 1020);
+		if (!isRss) {
+			if (ret.length() > 1020) {
+				return ret.substring(0, 1020);
+			}
 		}
 		return ret;
 	}
