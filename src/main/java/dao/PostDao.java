@@ -49,6 +49,18 @@ public class PostDao extends AbstractDao<Post> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Post> selectAllNotReservationOrderUpdatedate() {
+		return transaction((em) -> {
+			try {
+				Query query = em.createQuery("SELECT p FROM Post p WHERE p.isdeleted = false and p.isreservation = false order by p.lastupdateddate desc");
+				return (List<Post>) query.getResultList();
+			} catch (NoResultException e) {
+				return null;
+			}
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Post> selectAllReservation() {
 		return transaction((em) -> {
 			try {

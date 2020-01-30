@@ -66,11 +66,11 @@ public class CompileService extends AbstractManager {
 			try {
 				List<Category> categorys = FactoryDao.getDao(CategoryDao.class).selectAll();
 				List<Post> posts = FactoryDao.getDao(PostDao.class).selectAllNotReservation();
-
+				List<Post> posts2 = FactoryDao.getDao(PostDao.class).selectAllNotReservationOrderUpdatedate();
 				FileManager filemanager = new FileManager();
 				TemplateManager tempmanager = new TemplateManager();
-				RssManager rssmanager = new RssManager(categorys, posts);
-				SitemapManager sitemapmanager = new SitemapManager(categorys);
+				RssManager rssmanager = new RssManager(categorys, posts2);
+				SitemapManager sitemapmanager = new SitemapManager(categorys, posts2);
 				setStatus(CompileStatus.start, "The compiler will be start.", 1);
 				setStatus(CompileStatus.init, "The git root files will be  all deleted", 5);
 				filemanager.initGitDirectory();
