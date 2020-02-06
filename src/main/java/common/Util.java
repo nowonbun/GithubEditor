@@ -170,4 +170,27 @@ public class Util {
 			}
 		}
 	}
+
+	public static String convertUnicode(String val) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < val.length(); i++) {
+			int code = val.codePointAt(i);
+			if (code < 128) {
+				sb.append(String.format("%c", code));
+			} else {
+				sb.append(String.format("\\u%04x", code));
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String convertString(String val) {
+		for (int i = 0; i < val.length(); i++) {
+			if ('\\' == val.charAt(i) && 'u' == val.charAt(i + 1)) {
+				Character r = (char) Integer.parseInt(val.substring(i + 2, i + 6), 16);
+				val = val.replace(val.substring(i, i + 6), r.toString());
+			}
+		}
+		return val;
+	}
 }

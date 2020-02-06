@@ -10,6 +10,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import bean.ApplicationJson;
 import common.FactoryDao;
 import common.PropertyMap;
 import common.Util;
@@ -145,13 +147,15 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "OTHERCATEGORY", getOtherCategory(post, posts));
 		temp = replaceTagForTemplate(temp, "RECENTLYCATEGORY", getRecentlyPost(posts));
 		temp = replaceTagForTemplate(temp, "UNIQIDENTIFIER", "NOWONBUN" + String.format("%05d", post.getIdx()));
+		ApplicationJson aj = new ApplicationJson(this.hostname + "/" + post.getIdx() + ".html", title + " :: " + post.getTitle(), createDescription(post.getContents()), post.getCreateddate(), post.getLastupdateddate());
+		String json = Util.getGson().toJson(aj);
+		String unicode = Util.convertUnicode(json);
+		temp = replaceTagForTemplate(temp, "APPLICATIONJSON", unicode.replace("/", "\\/"));
 		return temp;
 	}
 
 	private String getOtherCategory(Post post, List<Post> posts) {
-		List<Post> sortedPosts = posts.stream()
-				.filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode()))
-				.collect(Collectors.toList());
+		List<Post> sortedPosts = posts.stream().filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode())).collect(Collectors.toList());
 		return getRecentlyPost(sortedPosts);
 	}
 
@@ -173,8 +177,7 @@ public class TemplateManager extends AbstractManager {
 
 	private StringBuffer createSearchItem(StringBuffer sb, Post post) {
 		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\">");
-		sb.append(
-				"<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
+		sb.append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
 		sb.append("<div class=\"list-body\" style=\"width: 100%;\">");
 		sb.append("<div class=\"flexbox\">");
 		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\">");
@@ -183,20 +186,17 @@ public class TemplateManager extends AbstractManager {
 		sb.append("</a>");
 		sb.append("<div class=\"list-meta ie-dotum\">");
 		sb.append("<p>");
-		sb.append("<a href=\"./search.html?category=" + post.getCategory().getCode()
-				+ "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>");
+		sb.append("<a href=\"./search.html?category=" + post.getCategory().getCode() + "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>");
 		sb.append("</p>");
 		sb.append("<p>");
 		sb.append("<span class=\"timeago ff-h dt-published tag-column\">" + convertTag(post.getTag()) + "</span>");
 		sb.append("</p>");
 		sb.append("<p>");
 		sb.append("<span class=\"data-column-label\">作成日付 :</span>");
-		sb.append("<span class=\"timeago ff-h dt-published date-column create-date\">"
-				+ Util.convertDateFormat(post.getCreateddate()) + "</span>");
+		sb.append("<span class=\"timeago ff-h dt-published date-column create-date\">" + Util.convertDateFormat(post.getCreateddate()) + "</span>");
 		sb.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ");
 		sb.append("<span class=\"data-column-label\">修正日付	:</span>");
-		sb.append("<span class=\"timeago ff-h dt-published date-column update-date\">"
-				+ Util.convertDateFormat(post.getLastupdateddate()) + "</span>");
+		sb.append("<span class=\"timeago ff-h dt-published date-column update-date\">" + Util.convertDateFormat(post.getLastupdateddate()) + "</span>");
 		sb.append("</p>");
 		sb.append("</div>");
 		sb.append("</div>");
@@ -252,8 +252,7 @@ public class TemplateManager extends AbstractManager {
 					int id = Integer.parseInt(idx);
 					Attachment attachment = FactoryDao.getDao(AttachmentDao.class).select(id);
 					if (attachment != null) {
-						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_"
-								+ URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
+						attr = "./contents/" + attachment.getPost().getIdx() + "/" + attachment.getIdx() + "_" + URLEncoder.encode(attachment.getFilename(), StandardCharsets.UTF_8.toString());
 					} else {
 						attr = "";
 					}
@@ -288,12 +287,10 @@ public class TemplateManager extends AbstractManager {
 		StringBuffer sb = new StringBuffer();
 		try {
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
-			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null)
-					.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 			for (Category c : pList) {
 				sb.append("<li class=\"\">");
-				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c)
-						.sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+				List<Category> sublist = categorylist.stream().filter(x -> x.getCategory() == c).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
 				if (sublist.size() > 0) {
 					sb.append("<a class=\"link_item link-item-collapse category-item\" href=\"javascript:void(0)\">");
 					sb.append(c.getName());
