@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-			<version>5.1.1.RELEASE</version>
+			<version>5.1.13.RELEASE</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 		<dependency>
