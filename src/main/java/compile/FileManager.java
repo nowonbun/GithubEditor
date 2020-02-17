@@ -75,7 +75,7 @@ public class FileManager extends AbstractManager {
 			deleteFiles(newDir);
 		}
 		newDir.mkdir();
-		files.parallelStream().forEach(f -> {
+		files.forEach(f -> {
 			try {
 				copyFile(f, newDir.getAbsolutePath() + File.separator + f.getName());
 			} catch (Throwable e) {
