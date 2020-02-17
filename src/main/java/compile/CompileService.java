@@ -88,12 +88,12 @@ public class CompileService extends AbstractManager {
 				filemanager.createFile("search.html", tempmanager.createSearchTemp(posts));
 
 				// list
-				categorys.parallelStream().forEach(category -> {
+				categorys.forEach(category -> {
 					filemanager.createFile(category.getUniqcode() + ".html", tempmanager.createListTemp(category));
 				});
 
 				// post.html
-				posts.parallelStream().forEach(post -> {
+				posts.forEach(post -> {
 					filemanager.createAttachfiles(post.getIdx(), post.getAttachments());
 					filemanager.createFile(post.getIdx() + ".html", tempmanager.createPostTemp(post, posts));
 				});
