@@ -121,6 +121,7 @@ public class CompileService extends AbstractManager {
 
 				filemanager.createFile("robots.txt", sb.toString());
 				filemanager.createFile("robot.txt", sb.toString());
+				filemanager.createFile("ads.txt","google.com, pub-6300064900388375, DIRECT, f08c47fec0942fa0");
 				String gitroot = PropertyMap.getInstance().getProperty("config", "gitRoot");
 				String httppath = PropertyMap.getInstance().getProperty("config", "httpServer");
 				String groupName = PropertyMap.getInstance().getProperty("config", "httpGroup");
