@@ -104,7 +104,7 @@ public class CompileService extends AbstractManager {
 				// sitemap
 				filemanager.createFile("sitemap.xml", sitemapmanager.build());
 				filemanager.createFile("CNAME", "www.nowonbun.com");
-				filemanager.createFile("ads.txt", "google.com, pub-6300064900388375, DIRECT, f08c47fec0942fa0");
+				//filemanager.createFile("ads.txt", "google.com, pub-6300064900388375, DIRECT, f08c47fec0942fa0");
 
 				// robots.txt
 				StringBuffer sb = new StringBuffer();
