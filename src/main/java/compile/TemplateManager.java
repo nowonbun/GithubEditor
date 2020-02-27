@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import bean.ApplicationJson;
+import bean.ApplicationJson2;
 import common.FactoryDao;
 import common.PropertyMap;
 import common.Util;
@@ -85,6 +86,10 @@ public class TemplateManager extends AbstractManager {
 		}
 		temp = replaceTagForTemplate(temp, "SEARCHCOUNT", String.valueOf(posts.size()));
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		ApplicationJson2 aj = new ApplicationJson2(posts);
+		String json = Util.getGson().toJson(aj);
+		String unicode = Util.convertUnicode(json);
+		temp = replaceTagForTemplate(temp, "APPLICATIONJSON", unicode.replace("/", "\\/"));
 		return temp;
 	}
 
@@ -103,6 +108,10 @@ public class TemplateManager extends AbstractManager {
 			sb = createSearchItem(sb, post);
 		}
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		ApplicationJson2 aj = new ApplicationJson2(posts);
+		String json = Util.getGson().toJson(aj);
+		String unicode = Util.convertUnicode(json);
+		temp = replaceTagForTemplate(temp, "APPLICATIONJSON", unicode.replace("/", "\\/"));
 		return temp;
 	}
 
@@ -121,6 +130,10 @@ public class TemplateManager extends AbstractManager {
 			sb = createSearchItem(sb, post);
 		}
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
+		ApplicationJson2 aj = new ApplicationJson2(posts);
+		String json = Util.getGson().toJson(aj);
+		String unicode = Util.convertUnicode(json);
+		temp = replaceTagForTemplate(temp, "APPLICATIONJSON", unicode.replace("/", "\\/"));
 		return temp;
 	}
 
@@ -176,12 +189,12 @@ public class TemplateManager extends AbstractManager {
 	}
 
 	private StringBuffer createSearchItem(StringBuffer sb, Post post) {
-		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\">");
+		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\" property=\"itemListElement\" typeof=\"ListItem\">");
 		sb.append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
 		sb.append("<div class=\"list-body\" style=\"width: 100%;\">");
 		sb.append("<div class=\"flexbox\">");
-		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\">");
-		sb.append("<h5 class=\"list-head ie-nanum ci-link\">" + post.getTitle() + "</h5>");
+		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\" property=\"item\" typeof=\"WebPage\">");
+		sb.append("<h5 class=\"list-head ie-nanum ci-link\" property=\"name\">" + post.getTitle() + "</h5>");
 		sb.append("<p class=\"list-summary\">" + createDescription(post.getContents()) + "</p>");
 		sb.append("</a>");
 		sb.append("<div class=\"list-meta ie-dotum\">");
