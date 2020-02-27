@@ -100,21 +100,21 @@ body{
 	<section class="menu-back-layout menu-close off"></section>
 	<div class="container-fluid main-container">
 		<!-- 메인 -->
-		<article class="entry post">
+		<article class="entry post" vocab="http://schema.org/" typeof="BlogPosting" resource="#####CANONICAL#####">
 			<div class="titleArea">
 				<div class="title" id="article_title">
-					<h1 id="titleTxt">#####CONTENTS_TITLE#####</h1>
+					<h1 id="titleTxt" property="headline">#####CONTENTS_TITLE#####</h1>
 				</div>
 				<hr class="titileHr">
 				<div class="categoryArea">
-					<a href="#####CATEGORY_LINK#####">#####CATEGORY_NAME#####</a> &nbsp;&nbsp; 作成日付 : #####CREATED_DATE##### &nbsp;&nbsp;修正日付 : #####LAST_UPDATED_DATE#####
+					<a href="#####CATEGORY_LINK#####">#####CATEGORY_NAME#####</a> &nbsp;&nbsp; 作成日付 : <span property="datePublished">#####CREATED_DATE#####</span> &nbsp;&nbsp;修正日付 : <span property="dateModified">#####LAST_UPDATED_DATE#####</span>
 				</div>
 			</div>
 			<div class="article">
 				<!-- 일본 반응형 - 1 -->
 				<ins class="adsbygoogle adsens_responsive" style="display:inline-block" data-ad-client="" data-ad-slot=""></ins>
 				<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-				<div class="tt_article_useless_p_margin" id="article_contents">#####CONTENTS#####</div>
+				<div class="tt_article_useless_p_margin" id="article_contents" property="description">#####CONTENTS#####</div>
 				<!-- 일본 반응형 2 -->
 				<ins class="adsbygoogle adsens_responsive" style="display:inline-block" data-ad-client="" data-ad-slot=""></ins>
 				<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
