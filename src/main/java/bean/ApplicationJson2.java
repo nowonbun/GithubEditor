@@ -10,7 +10,7 @@ public class ApplicationJson2 {
 	@SerializedName("@context")
 	private String context = "http://schema.org";
 	@SerializedName("@type")
-	private String type = "BlogPosting";
+	private String type = "BreadcrumbList";
 	private List<ApplicationJson_itemListElement> itemListElement = new ArrayList<>();
 
 	class ApplicationJson_item {
