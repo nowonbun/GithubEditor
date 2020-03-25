@@ -56,6 +56,7 @@ public class ApplicationJson {
 	private String context = "http://schema.org";
 	@SerializedName("@type")
 	private String type = "BlogPosting";
+	private ApplicationJson_image image = new ApplicationJson_image();
 	private ApplicationJson_mainEntityOfPage mainEntityOfPage;
 	private String url;
 	private String headline;
