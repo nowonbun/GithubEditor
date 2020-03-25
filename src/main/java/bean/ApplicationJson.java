@@ -43,9 +43,9 @@ public class ApplicationJson {
 
 	class ApplicationJson_publisher {
 		@SerializedName("@type")
-		private String type = "Person";
+		private String type = "Organization";
 		private String name;
-		private ApplicationJson_image image = new ApplicationJson_image();
+		private ApplicationJson_image logo = new ApplicationJson_image();
 
 		public ApplicationJson_publisher() {
 			this.name = PropertyMap.getInstance().getProperty("config", "rss_webMaster");

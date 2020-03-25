@@ -81,8 +81,9 @@ public class TemplateManager extends AbstractManager {
 			}
 			posts.add(0, post);
 		}
+		int position = 1;
 		for (Post post : posts) {
-			sb = createSearchItem(sb, post);
+			sb = createSearchItem(sb, post, position++);
 		}
 		temp = replaceTagForTemplate(temp, "SEARCHCOUNT", String.valueOf(posts.size()));
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
@@ -104,8 +105,9 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 
 		StringBuffer sb = new StringBuffer();
+		int position = 1;
 		for (Post post : posts) {
-			sb = createSearchItem(sb, post);
+			sb = createSearchItem(sb, post, position++);
 		}
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
 		ApplicationJson2 aj = new ApplicationJson2(posts);
@@ -126,8 +128,9 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
 
 		StringBuffer sb = new StringBuffer();
+		int position = 1;
 		for (Post post : posts) {
-			sb = createSearchItem(sb, post);
+			sb = createSearchItem(sb, post, position++);
 		}
 		temp = replaceTagForTemplate(temp, "LIST", sb.toString());
 		ApplicationJson2 aj = new ApplicationJson2(posts);
@@ -188,11 +191,12 @@ public class TemplateManager extends AbstractManager {
 		return sb.toString();
 	}
 
-	private StringBuffer createSearchItem(StringBuffer sb, Post post) {
+	private StringBuffer createSearchItem(StringBuffer sb, Post post, int position) {
 		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\" property=\"itemListElement\" typeof=\"ListItem\">");
 		sb.append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
 		sb.append("<div class=\"list-body\" style=\"width: 100%;\">");
 		sb.append("<div class=\"flexbox\">");
+		sb.append("<span property=\"position\" style=\"display:none;\">" + position + "</span>");
 		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\" property=\"item\" typeof=\"WebPage\">");
 		sb.append("<h5 class=\"list-head ie-nanum ci-link\" property=\"name\">" + post.getTitle() + "</h5>");
 		sb.append("<p class=\"list-summary\">" + createDescription(post.getContents()) + "</p>");
