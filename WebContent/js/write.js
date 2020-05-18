@@ -35,7 +35,7 @@ var _this = (function(obj) {
 					}
 				});
 			},
-			modifyPost : function() {
+			modifyPost : function(isDate) {
 				$.ajax({
 					type : 'POST',
 					dataType : 'json',
@@ -45,7 +45,8 @@ var _this = (function(obj) {
 						category : $('#category_sel').val(),
 						contents : $('#article_contents').summernote('code'),
 						tags : $.trim($('#tag_txt').val()),
-						reservation: $("#reservation").prop("checked")?$("#reservationDate").val():null
+						reservation: $("#reservation").prop("checked")?$("#reservationDate").val():null,
+						date: isDate
 					},
 					url : "./modifyPost.ajax",
 					success : function(data) {
@@ -193,11 +194,60 @@ var _this = (function(obj) {
 				function checkNmodifyPost() {
 					state++;
 					if (state === count) {
-						__.fn.modifyPost();
+						__.fn.modifyPost(false);
 					}
 				}
 				if (count === 0) {
-					__.fn.modifyPost();
+					__.fn.modifyPost(false);
+				}
+				$("img[data-filename]").each(function() {
+					var $this = $(this);
+					var data = __.fn.getBase64Data($(this).prop("src"));
+					if (data === null) {
+						checkNmodifyPost();
+						return;
+					}
+					__.fn.uploadAttachFile($(this).data("filename"), data.type, data.item, function(data) {
+						$this.prop("src", data.message);
+						checkNmodifyPost();
+					}, function() {
+						$this.prop("src", "");
+						checkNmodifyPost();
+					});
+				});
+				$("a.attachfile[data-filename]").each(function() {
+					var $this = $(this);
+					var data = __.fn.getBase64Data($(this).prop("href"));
+					if (data === null) {
+						checkNmodifyPost();
+						return;
+					}
+					__.fn.uploadAttachFile($(this).data("filename"), data.type, data.item, function(data) {
+						$this.prop("href", data.message);
+						checkNmodifyPost();
+					}, function() {
+						$this.prop("href", "");
+						checkNmodifyPost();
+					});
+				});
+			});
+			
+			$("#modify_btn_update").on("click", function(){
+				if ($.trim($('#title_txt').val()) === "") {
+					toastr.error("empty title");
+					return;
+				}
+				_.loading.on();
+				var state = 0;
+				var count = $("img[data-filename]").length + $("a.attachfile[data-filename]").length;
+				function checkNmodifyPost() {
+					state++;
+					if (state === count) {
+						__.fn.modifyPost(true);
+					}
+				}
+				if (count === 0) {
+					__.fn.modifyPost(true);
 				}
 				$("img[data-filename]").each(function() {
 					var $this = $(this);

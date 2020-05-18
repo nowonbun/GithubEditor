@@ -53,6 +53,7 @@
 <div class="row" style="margin-bottom: 20px; margin-left:0px; margin-right:0px;">
 	<div class="col-md-12" style="text-align: right;">
 		<button class="btn btn-success" id="modify_btn">修正</button>
+		<button class="btn btn-success" id="modify_btn_update">修正-日付更新</button>
 		<button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">削除</button>
 	</div>
 </div>

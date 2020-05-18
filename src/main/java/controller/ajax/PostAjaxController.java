@@ -160,6 +160,7 @@ public class PostAjaxController extends AbstractController {
 			String contents = req.getParameter("contents");
 			String tags = req.getParameter("tags");
 			String reservation = req.getParameter("reservation");
+			String isDate = req.getParameter("date");
 			if (Util.StringIsEmptyOrNull(idx) || Util.StringIsEmptyOrNull(title)
 					|| Util.StringIsEmptyOrNull(category)) {
 				super.getLogger().warn("The parameter is null.");
@@ -210,8 +211,9 @@ public class PostAjaxController extends AbstractController {
 					post.setCreateddate(new Date());
 				}
 			}
-
-			post.setLastupdateddate(new Date());
+			if("true".equals(isDate)) {
+				post.setLastupdateddate(new Date());	
+			}
 			super.getLogger().info("The post was updated.! id : " + post.getIdx());
 			FactoryDao.getDao(PostDao.class).update(post);
 

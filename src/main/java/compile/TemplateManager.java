@@ -191,35 +191,43 @@ public class TemplateManager extends AbstractManager {
 		return sb.toString();
 	}
 
+	private StringBuffer insertTabStringBuffer(StringBuffer sb, int count) {
+		for (int i = 0; i < count; i++) {
+			sb.append("\t");
+		}
+		return sb;
+	}
+
 	private StringBuffer createSearchItem(StringBuffer sb, Post post, int position) {
-		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\" property=\"itemListElement\" typeof=\"ListItem\">");
-		sb.append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">");
-		sb.append("<div class=\"list-body\" style=\"width: 100%;\">");
-		sb.append("<div class=\"flexbox\">");
-		sb.append("<span property=\"position\" style=\"display:none;\">" + position + "</span>");
-		sb.append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\" property=\"item\" typeof=\"WebPage\">");
-		sb.append("<h5 class=\"list-head ie-nanum ci-link\" property=\"name\">" + post.getTitle() + "</h5>");
-		sb.append("<p class=\"list-summary\">" + createDescription(post.getContents()) + "</p>");
-		sb.append("</a>");
-		sb.append("<div class=\"list-meta ie-dotum\">");
-		sb.append("<p>");
-		sb.append("<a href=\"./search.html?category=" + post.getCategory().getCode() + "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>");
-		sb.append("</p>");
-		sb.append("<p>");
-		sb.append("<span class=\"timeago ff-h dt-published tag-column\">" + convertTag(post.getTag()) + "</span>");
-		sb.append("</p>");
-		sb.append("<p>");
-		sb.append("<span class=\"data-column-label\">作成日付 :</span>");
-		sb.append("<span class=\"timeago ff-h dt-published date-column create-date\">" + Util.convertDateFormat(post.getCreateddate()) + "</span>");
-		sb.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ");
-		sb.append("<span class=\"data-column-label\">修正日付	:</span>");
-		sb.append("<span class=\"timeago ff-h dt-published date-column update-date\">" + Util.convertDateFormat(post.getLastupdateddate()) + "</span>");
-		sb.append("</p>");
-		sb.append("</div>");
-		sb.append("</div>");
-		sb.append("</div>");
-		sb.append("</div>");
-		sb.append("</article>");
+		sb.append("<article class=\"list-item\" data-category-code=\"" + post.getCategory().getCode() + "\" property=\"itemListElement\" typeof=\"ListItem\">").append("\r\n");
+		insertTabStringBuffer(sb,5).append("<div class=\"list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix searchListEntity\">").append("\r\n");
+		insertTabStringBuffer(sb,6).append("<div class=\"list-body\" style=\"width: 100%;\">").append("\r\n");
+		insertTabStringBuffer(sb,7).append("<div class=\"flexbox\">").append("\r\n");
+		insertTabStringBuffer(sb,8).append("<span property=\"position\" style=\"display:none;\">" + position + "</span>").append("\r\n");
+		insertTabStringBuffer(sb,8).append("<a class=\"list-link\" href=\"./" + post.getIdx() + ".html\" property=\"item\" typeof=\"WebPage\">").append("\r\n");
+		insertTabStringBuffer(sb,9).append("<h5 class=\"list-head ie-nanum ci-link\" property=\"name\">" + post.getTitle() + "</h5>").append("\r\n");
+		insertTabStringBuffer(sb,9).append("<p class=\"list-summary\">" + createDescription(post.getContents()) + "</p>").append("\r\n");
+		insertTabStringBuffer(sb,8).append("</a>").append("\r\n");
+		insertTabStringBuffer(sb,8).append("<div class=\"list-meta ie-dotum\">").append("\r\n");
+		insertTabStringBuffer(sb,9).append("<p>").append("\r\n");
+		insertTabStringBuffer(sb,10).append("<a href=\"./search.html?category=" + post.getCategory().getCode() + "\" class=\"p-category ci-color\">" + super.getCategoryName(post.getCategory()) + "</a>").append("\r\n");
+		insertTabStringBuffer(sb,9).append("</p>").append("\r\n");
+		insertTabStringBuffer(sb,9).append("<p>").append("\r\n");
+		insertTabStringBuffer(sb,10).append("<span class=\"timeago ff-h dt-published tag-column\">" + convertTag(post.getTag()) + "</span>").append("\r\n");
+		insertTabStringBuffer(sb,9).append("</p>").append("\r\n");
+		insertTabStringBuffer(sb,9).append("<p>").append("\r\n");
+		insertTabStringBuffer(sb,10).append("<span class=\"data-column-label\">作成日付 :</span>").append("\r\n");
+		insertTabStringBuffer(sb,10).append("<span class=\"timeago ff-h dt-published date-column create-date\">" + Util.convertDateFormat(post.getCreateddate()) + "</span>").append("\r\n");
+		insertTabStringBuffer(sb,10).append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ").append("\r\n");
+		insertTabStringBuffer(sb,10).append("<span class=\"data-column-label\">修正日付	:</span>").append("\r\n");
+		insertTabStringBuffer(sb,10).append("<span class=\"timeago ff-h dt-published date-column update-date\">" + Util.convertDateFormat(post.getLastupdateddate()) + "</span>").append("\r\n");
+		insertTabStringBuffer(sb,9).append("</p>").append("\r\n");
+		insertTabStringBuffer(sb,8).append("</div>").append("\r\n");
+		insertTabStringBuffer(sb,7).append("</div>").append("\r\n");
+		insertTabStringBuffer(sb,6).append("</div>").append("\r\n");
+		insertTabStringBuffer(sb,5).append("</div>").append("\r\n");
+		insertTabStringBuffer(sb,4).append("</article>").append("\r\n");
+		insertTabStringBuffer(sb,4).append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ").append("\r\n");
 		return sb;
 	}
 
