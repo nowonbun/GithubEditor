@@ -227,7 +227,7 @@ public class TemplateManager extends AbstractManager {
 		insertTabStringBuffer(sb,6).append("</div>").append("\r\n");
 		insertTabStringBuffer(sb,5).append("</div>").append("\r\n");
 		insertTabStringBuffer(sb,4).append("</article>").append("\r\n");
-		insertTabStringBuffer(sb,4).append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ").append("\r\n");
+		sb.append("\r\n");
 		return sb;
 	}
 
