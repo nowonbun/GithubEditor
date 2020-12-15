@@ -216,7 +216,7 @@ public class TemplateManager extends AbstractManager {
 		}
 		if (index + (this.categorycount / 2) >= posts.size()) {
 			eindex = posts.size() - 1;
-			sindex = eindex - this.categorycount -1;
+			sindex = eindex - this.categorycount + 1;
 			if(sindex < 0) {
 				sindex = 0;
 			}
