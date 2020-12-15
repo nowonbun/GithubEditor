@@ -186,16 +186,16 @@ public class TemplateManager extends AbstractManager {
 		}
 		StringBuffer sb = new StringBuffer();
 		sb.append("<div class=\"pre-post-category\">");
-		if (index != 0) {
+		if (index != posts.size() - 1) {
 			sb.append("<div class=\"pre-category\">");
 			sb.append("<span>◀前の投稿</span>");
-			sb.append("<a href=\"" + this.hostname + "/" + posts.get(index - 1).getIdx() + ".html\" target=\"_blank\">" + posts.get(index - 1).getTitle() + "</a>");
+			sb.append("<a href=\"" + this.hostname + "/" + posts.get(index + 1).getIdx() + ".html\" target=\"_blank\">" + posts.get(index + 1).getTitle() + "</a>");
 			sb.append("</div>");
 		}
-		if (index != posts.size() - 1) {
+		if (index != 0) {
 			sb.append("<div class=\"post-category\">");
 			sb.append("<span>次の投稿▶</span>");
-			sb.append("<a href=\"" + this.hostname + "/" + posts.get(index + 1).getIdx() + ".html\" target=\"_blank\">" + posts.get(index + 1).getTitle() + "</a>");
+			sb.append("<a href=\"" + this.hostname + "/" + posts.get(index - 1).getIdx() + ".html\" target=\"_blank\">" + posts.get(index - 1).getTitle() + "</a>");
 			sb.append("</div>");
 		}
 		sb.append("</div>");
@@ -209,16 +209,17 @@ public class TemplateManager extends AbstractManager {
 				break;
 			}
 		}
-		int sindex =0;
-		int eindex =0;
+		int sindex = 0;
+		int eindex = 0;
 		if (index - (this.categorycount / 2) > 0) {
 			sindex = index - (this.categorycount / 2);
 		}
 		if (index + (this.categorycount / 2) >= posts.size()) {
 			eindex = posts.size() - 1;
+			sindex = eindex - this.categorycount;
 		}
 		List<Post> sortedPosts = new ArrayList<>();
-		for (int i = sindex; i < posts.size() && i < eindex; i++) {
+		for (int i = sindex; i < posts.size() && i <= eindex; i++) {
 			sortedPosts.add(posts.get(i));
 		}
 		return getRecentlyPost(sortedPosts);
