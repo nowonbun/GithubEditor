@@ -217,6 +217,9 @@ public class TemplateManager extends AbstractManager {
 		if (index + (this.categorycount / 2) >= posts.size()) {
 			eindex = posts.size() - 1;
 			sindex = eindex - this.categorycount;
+			if(sindex < 0) {
+				sindex = 0;
+			}
 		}
 		List<Post> sortedPosts = new ArrayList<>();
 		for (int i = sindex; i < posts.size() && i <= eindex; i++) {
