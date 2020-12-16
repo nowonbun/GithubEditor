@@ -209,17 +209,14 @@ public class TemplateManager extends AbstractManager {
 				break;
 			}
 		}
-		int sindex = 0;
-		int eindex = 0;
-		if (index - (this.categorycount / 2) > 0) {
-			sindex = index - (this.categorycount / 2);
-		}
-		if (index + (this.categorycount / 2) >= posts.size()) {
+		int sindex = index - (this.categorycount / 2);
+		int eindex = index + (this.categorycount / 2);
+		if (eindex >= posts.size()) {
 			eindex = posts.size() - 1;
 			sindex = eindex - this.categorycount + 1;
-			if(sindex < 0) {
-				sindex = 0;
-			}
+		}
+		if (sindex < 0) {
+			sindex = 0;
 		}
 		List<Post> sortedPosts = new ArrayList<>();
 		for (int i = sindex; i < posts.size() && i <= eindex; i++) {
