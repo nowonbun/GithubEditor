@@ -68,6 +68,7 @@ var _ = (function(obj) {
 	            newdiv.style.left = '-99999px';
 	            body_element.appendChild(newdiv);
 	            newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+	            newdiv.innerHTML = "<pre>" + escapeHTML(newdiv.outerText).replace(/\n\n/ig, '\n') + "</pre>";
 	            newdiv.innerHTML += '<br /><br />Reference: <a href="' + url + '">' + decodedUrl + '</a> [明月の開発ストーリ]';
 	            selection.selectAllChildren(newdiv);
 	            window.setTimeout(function () {
