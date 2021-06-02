@@ -48,6 +48,29 @@ var _ = (function(obj) {
 	        $("#ImgModal .close").on("click", function () {
 	            $("#ImgModal").hide();
 	        });
+	        $("body").bind('copy', function (e) {
+	            var url = document.location.href,
+	                      decodedUrl = decodeURI(url),
+	                      selection = window.getSelection();
+	            if (typeof window.getSelection == "undefined") {
+	                event.preventDefault();
+	                if (window.clipboardData) {
+	                    window.clipboardData.setData('Text', selection + '\n\n 출처: [명월 일지]' + decodedUrl);
+	                }
+	                return;
+	            }
+	            var body_element = document.getElementsByTagName('body')[0];
+	            var newdiv = document.createElement('div');
+	            newdiv.style.position = 'absolute';
+	            newdiv.style.left = '-99999px';
+	            body_element.appendChild(newdiv);
+	            newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+	            newdiv.innerHTML += '<br /><br />Reference: <a href="' + url + '">' + decodedUrl + '</a> [明月の開発ストーリ]';
+	            selection.selectAllChildren(newdiv);
+	            window.setTimeout(function () {
+	                body_element.removeChild(newdiv);
+	            }, 1);
+	        });
 		},
 		loading : {
 			on : function() {
