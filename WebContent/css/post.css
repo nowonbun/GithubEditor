@@ -164,7 +164,7 @@ div.table-responsive ul {
 }
 
 /*20190903*/
-.recently-post,.other-category{
+.recently-post,.other-category,.pre-post-category{
     border: 1px solid #ededed;
     box-shadow: 1px 2px 4px;
     padding: 10px;
@@ -181,13 +181,16 @@ div.table-responsive ul {
     text-decoration: none;
 }
 
-.recently-post ul,.other-category ul{
+.recently-post ul,.other-category ul, .pre-category, .post-category{
     list-style: none;
     padding-left: 10px;
     font-size: 0.7rem;
     line-height: 1.2rem;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+.pre-category span, .post-category span{
+	margin-right:10px;
 }
 
 .recently-post ul li,.other-category ul li{

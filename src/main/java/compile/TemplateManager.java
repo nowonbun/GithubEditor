@@ -3,6 +3,7 @@ package compile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -160,7 +161,10 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "IMAGEURL", this.imageurl);
 		temp = replaceTagForTemplate(temp, "TWITTER", this.twitter);
 		temp = replaceTagForTemplate(temp, "SITENAME", this.title);
-		temp = replaceTagForTemplate(temp, "OTHERCATEGORY", getOtherCategory(post, posts));
+		List<Post> sortedPosts = posts.stream().filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode())).collect(Collectors.toList());
+		temp = replaceTagForTemplate(temp, "OTHERCATEGORY", getOtherCategory(post, sortedPosts));
+		temp = replaceTagForTemplate(temp, "PRE_POST_ARTICLE", getPrePostArticle(post, sortedPosts));
+		
 		temp = replaceTagForTemplate(temp, "RECENTLYCATEGORY", getRecentlyPost(posts));
 		temp = replaceTagForTemplate(temp, "UNIQIDENTIFIER", "NOWONBUN" + String.format("%05d", post.getIdx()));
 		ApplicationJson aj = new ApplicationJson(this.hostname + "/" + post.getIdx() + ".html", title + " :: " + post.getTitle(), createDescription(post.getContents()), post.getCreateddate(), post.getLastupdateddate());
@@ -169,9 +173,55 @@ public class TemplateManager extends AbstractManager {
 		temp = replaceTagForTemplate(temp, "APPLICATIONJSON", unicode.replace("/", "\\/"));
 		return temp;
 	}
+	
+	private String getPrePostArticle(Post post, List<Post> posts) {
+		if (posts.size() < 2) {
+			return "";
+		}
+		int index = 0;
+		for (; index < posts.size(); index++) {
+			if (posts.get(index) == post) {
+				break;
+			}
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("<div class=\"pre-post-category\">");
+		if (index != posts.size() - 1) {
+			sb.append("<div class=\"pre-category\">");
+			sb.append("<span>◀前の投稿</span>");
+			sb.append("<a href=\"" + this.hostname + "/" + posts.get(index + 1).getIdx() + ".html\" target=\"_blank\">" + posts.get(index + 1).getTitle() + "</a>");
+			sb.append("</div>");
+		}
+		if (index != 0) {
+			sb.append("<div class=\"post-category\">");
+			sb.append("<span>次の投稿▶</span>");
+			sb.append("<a href=\"" + this.hostname + "/" + posts.get(index - 1).getIdx() + ".html\" target=\"_blank\">" + posts.get(index - 1).getTitle() + "</a>");
+			sb.append("</div>");
+		}
+		sb.append("</div>");
+		return sb.toString();
+	}
 
 	private String getOtherCategory(Post post, List<Post> posts) {
-		List<Post> sortedPosts = posts.stream().filter(x -> x.getCategory().getCode().equals(post.getCategory().getCode())).collect(Collectors.toList());
+		int index = 0;
+		for (; index < posts.size(); index++) {
+			if (posts.get(index) == post) {
+				break;
+			}
+		}
+		int sindex = index - (this.categorycount / 2);
+		int eindex = index + (this.categorycount / 2);
+		if (eindex >= posts.size()) {
+			eindex = posts.size() - 1;
+			sindex = eindex - this.categorycount + 1;
+		}
+		if (sindex < 0) {
+			sindex = 0;
+		}
+		List<Post> sortedPosts = new ArrayList<>();
+		for (int i = sindex; i < posts.size() && i <= eindex; i++) {
+			sortedPosts.add(posts.get(i));
+		}
 		return getRecentlyPost(sortedPosts);
 	}
 
