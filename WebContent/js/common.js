@@ -1,3 +1,6 @@
+function escapeHTML(unsafe) {
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+};
 var _ = (function(obj) {
 	$(obj.onLoad);
 	return obj;
@@ -55,7 +58,7 @@ var _ = (function(obj) {
 	            if (typeof window.getSelection == "undefined") {
 	                event.preventDefault();
 	                if (window.clipboardData) {
-	                    window.clipboardData.setData('Text', selection + '\n\n 출처: [명월 일지]' + decodedUrl);
+	                    window.clipboardData.setData('Text', selection + '\n\n Reference: [明月の開発ストーリ]' + decodedUrl);
 	                }
 	                return;
 	            }

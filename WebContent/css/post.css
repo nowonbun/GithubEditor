@@ -136,6 +136,14 @@ article h2>b>span {
     padding: 3px;
 }
 
+.code-copy {
+    float: right;
+    position: relative;
+    right: 10px;
+    padding-top: 3px;
+    font-size: 11px;
+}
+
 /*기존 소스뷰 삭제*/
 div textarea[name=code] {
     display: none;
