@@ -246,7 +246,7 @@ div.table-responsive ul {
         font-size: 1.0rem;
     }
     .code-title {
-        font-size: 0.6rem;
+        font-size: 0.7rem;
     }
     .hljs-ln-numbers .hljs-ln-line, .hljs-ln-code .hljs-ln-line {
         font-size: 0.55rem;
@@ -274,6 +274,9 @@ div.table-responsive ul {
     }
     .recently-post ul a,.other-category ul a{
     	max-width: calc(100%);
+    }
+    .code-title {
+    	
     }
 }
 
