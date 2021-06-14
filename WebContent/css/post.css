@@ -254,6 +254,7 @@ div.table-responsive ul {
     }
     .hljs-ln-code .hljs-ln-line {
         margin-left: 5px;
+        white-space: pre;
     }
     .hljs-ln-numbers .hljs-ln-line {
         margin-right: 5px;
