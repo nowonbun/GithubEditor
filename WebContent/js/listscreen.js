@@ -1,24 +1,15 @@
-var _this = (function(obj) {
-	return obj
-})((function() {
-	var __ = {};
-
-	__.property = {
-	}
-
-	__.fn = {
-		
-	};
-
-	__.ev = function() {
-
-	};
-	$(__.ev);
-
-	$(function() {
-	});
-
-	return {
-
-	};
+"use strict";
+var _this = (function (obj) {
+    return obj;
+})((function () {
+    var __ = {
+        property: {},
+        fn: {},
+        ev: function () {
+        }
+    };
+    $(__.ev);
+    $(function () {
+    });
+    return {};
 })());
