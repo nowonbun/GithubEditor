@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -22,6 +23,8 @@ public class LoggerManager {
 	private LoggerManager() {
 		flyweight = new HashMap<>();
 		File file = new File(LocalPaths.getClassPath() + File.separator + "log4j.xml");
+		//LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+		//context.setConfigLocation(file.toURI());
 		try (InputStream stream = new FileInputStream(file)) {
 			PropertyConfigurator.configure(stream);
 		} catch (Throwable e) {
