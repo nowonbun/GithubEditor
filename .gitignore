@@ -1,3 +1,4 @@
+/build/
 /target/
-/src/main/resource/META-INF
+/src/main/resource/META-INF/
 /src/main/resource/META-INF/persistence.xml
