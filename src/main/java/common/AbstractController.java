@@ -108,9 +108,13 @@ public class AbstractController {
 
 	protected void setMenu(ModelMap modelmap) {
 		try {
+			logger.error("test1");
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
+			logger.error("test2");
 			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
+			logger.error("test3");
 			List<MenuBean> selectList = new ArrayList<>();
+			logger.error("test4");
 			for (Category c : pList) {
 				MenuBean bean = new MenuBean();
 				bean.setUrl("list.html?category=" + c.getCode());
@@ -135,6 +139,7 @@ public class AbstractController {
 				bean.setCount(categoryCount+ (int)FactoryDao.getDao(PostDao.class).getCountByCategory(c));
 				selectList.add(bean);
 			}
+			logger.error("test5");
 			modelmap.addAttribute("menulist", selectList);
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
