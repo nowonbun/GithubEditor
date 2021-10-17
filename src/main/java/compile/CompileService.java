@@ -2,7 +2,7 @@ package compile;
 
 import java.util.List;
 import java.util.concurrent.Executors;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import common.FactoryDao;
 import common.LoggerManager;
 import common.PropertyMap;
