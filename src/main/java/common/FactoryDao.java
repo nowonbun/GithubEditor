@@ -24,7 +24,7 @@ public class FactoryDao {
 			}
 			return (T) instance.flyweight.get(clz);
 		} catch (Throwable e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e+ "ttttttt");
 		}
 	}
 
