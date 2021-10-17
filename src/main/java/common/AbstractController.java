@@ -109,6 +109,8 @@ public class AbstractController {
 	protected void setMenu(ModelMap modelmap) {
 		try {
 			logger.error("test1");
+			CategoryDao dao = FactoryDao.getDao(CategoryDao.class);
+			logger.error("test2");
 			List<Category> categorylist = FactoryDao.getDao(CategoryDao.class).selectAll();
 			logger.error("test2");
 			List<Category> pList = categorylist.stream().filter(x -> x.getCategory() == null).sorted((x, y) -> Integer.compare(x.getSeq(), y.getSeq())).collect(Collectors.toList());
