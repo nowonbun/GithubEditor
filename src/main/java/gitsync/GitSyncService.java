@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.concurrent.Executors;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import common.LoggerManager;
 import common.PropertyMap;
 import common.Util;
