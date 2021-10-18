@@ -24,17 +24,11 @@ public class LoggerManager {
 		File file = new File(LocalPaths.getClassPath() + File.separator + "log4j.xml");
 		LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
 		context.setConfigLocation(file.toURI());
-		//try (InputStream stream = new FileInputStream(file)) {
-		//	PropertyConfigurator.configure(stream);
-		//} catch (Throwable e) {
-		//	throw new RuntimeException(e);
-		//}
 	}
 
 	public Logger get(Class<?> clazz) {
 		if (!flyweight.containsKey(clazz)) {
 			flyweight.put(clazz, LogManager.getLogger(clazz));
-			//flyweight.put(clazz, Logger.getLogger(clazz));
 		}
 		return flyweight.get(clazz);
 	}
