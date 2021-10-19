@@ -1,6 +1,6 @@
 "use strict";
-var _this = (function (obj) {
-    return obj;
+(function (obj) {
+    $(obj.onLoad);
 })((function () {
     var __ = {
         property: {
@@ -44,7 +44,7 @@ var _this = (function (obj) {
         },
         ev: function () {
             $(".compile-btn").on("click", function () {
-                _.loading.on();
+                loading.on();
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -58,7 +58,7 @@ var _this = (function (obj) {
                         toastr.error("エラーが発生しました。ログを確認してください。");
                     },
                     complete: function (jqXHR, textStatus) {
-                        _.loading.off();
+                        loading.off();
                     }
                 });
             });
@@ -69,5 +69,8 @@ var _this = (function (obj) {
         // setInterval(__.fn.status, 1000);
         setTimeout(__.fn.status, 1000);
     });
-    return {};
+    return {
+        onLoad: function () {
+        }
+    };
 })());

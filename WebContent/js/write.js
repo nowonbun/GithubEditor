@@ -1,6 +1,6 @@
 "use strict";
-var _this = (function (obj) {
-    return obj;
+(function (obj) {
+    $(obj.onLoad);
 })((function () {
     var __ = {
         property: {
@@ -43,7 +43,7 @@ var _this = (function (obj) {
                         toastr.error("エラーが発生しました。ログを確認してください。");
                     },
                     complete: function (jqXHR, textStatus) {
-                        _.loading.off();
+                        loading.off();
                     }
                 });
             },
@@ -84,7 +84,7 @@ var _this = (function (obj) {
                         toastr.error("예상치 못한 에러가 발생했습니다. 로그를 확인해 주십시오.");
                     },
                     complete: function (jqXHR, textStatus) {
-                        _.loading.off();
+                        loading.off();
                     }
                 });
             },
@@ -149,19 +149,19 @@ var _this = (function (obj) {
                     }
                     //https://summernote.org/deep-dive/#insertimage
                     var file = el.files[0];
-                    var filename = file.name;
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
+                    var filename_1 = file.name;
+                    var reader_1 = new FileReader();
+                    reader_1.onload = function (e) {
                         var node = document.createElement('p');
-                        var ret = reader.result;
+                        var ret = reader_1.result;
                         if (ret !== null) {
-                            $(node).append($("<a class='attachfile'><img src='./img/zip.gif'> " + filename + "</a>").attr("href", ret.toString()).attr("data-filename", filename));
+                            $(node).append($("<a class='attachfile'><img src='./img/zip.gif'> " + filename_1 + "</a>").attr("href", ret.toString()).attr("data-filename", filename_1));
                             $('#article_contents').summernote('insertNode', node);
                             $("input[type=file].note-attach-input").val("");
                             $(".attachment-dialog").modal("hide");
                         }
                     };
-                    reader.readAsDataURL(file);
+                    reader_1.readAsDataURL(file);
                 }
             });
             $('#add_btn').on('click', function () {
@@ -170,7 +170,7 @@ var _this = (function (obj) {
                     toastr.error("empty title");
                     return;
                 }
-                _.loading.on();
+                loading.on();
                 var state = 0;
                 var count = $("img[data-filename]").length + $("a.attachfile[data-filename]").length;
                 function checkNwritePost() {
@@ -219,7 +219,7 @@ var _this = (function (obj) {
                     toastr.error("empty title");
                     return;
                 }
-                _.loading.on();
+                loading.on();
                 var state = 0;
                 var count = $("img[data-filename]").length + $("a.attachfile[data-filename]").length;
                 function checkNmodifyPost() {
@@ -268,7 +268,7 @@ var _this = (function (obj) {
                     toastr.error("empty title");
                     return;
                 }
-                _.loading.on();
+                loading.on();
                 var state = 0;
                 var count = $("img[data-filename]").length + $("a.attachfile[data-filename]").length;
                 function checkNmodifyPost() {
@@ -312,7 +312,7 @@ var _this = (function (obj) {
                 });
             });
             $("#delete_btn").on("click", function () {
-                _.loading.on();
+                loading.on();
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -331,7 +331,7 @@ var _this = (function (obj) {
                         toastr.error("エラーが発生しました。ログを確認してください。");
                     },
                     complete: function (jqXHR, textStatus) {
-                        _.loading.off();
+                        loading.off();
                     }
                 });
             });
@@ -351,7 +351,7 @@ var _this = (function (obj) {
         }
     };
     $(__.ev);
-    _.loading.on();
+    loading.on();
     var height = $(window).height();
     if (height !== undefined) {
         var node_height = height - 400;
@@ -375,6 +375,9 @@ var _this = (function (obj) {
             }
         });
     }
-    _.loading.off();
-    return {};
+    loading.off();
+    return {
+        onLoad: function () {
+        }
+    };
 })());
