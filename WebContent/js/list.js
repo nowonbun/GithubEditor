@@ -1,6 +1,6 @@
 "use strict";
-var _this = (function (obj) {
-    return obj;
+(function (obj) {
+    $(obj.onLoad);
 })((function () {
     var __ = {
         property: {
@@ -27,7 +27,7 @@ var _this = (function (obj) {
                 if (code !== undefined && $.trim(code.toString()) !== "") {
                     var $item = $(".category-item[data-code=" + code + "]");
                     $item.addClass("active");
-                    /*var $parent = $item.closest("ul.sub_category_list");
+                    /*let $parent = $item.closest("ul.sub_category_list");
                     if($parent.length > 0){
                         $parent.prev().trigger("click");
                     }*/
@@ -37,7 +37,7 @@ var _this = (function (obj) {
                 }
             },
             getList: function () {
-                _.loading.on();
+                loading.on();
                 if (__.property.count === 0) {
                     var $article = $("<article class='no-list-item'></article>");
                     var $entity = $("<div class='list-row pos-right ratio-fixed ratio-4by3 crop-center lts-narrow fouc clearfix no-result'></div>");
@@ -47,7 +47,7 @@ var _this = (function (obj) {
                     $entity.append($entity_body);
                     $article.append($entity);
                     $(".list-area").append($article);
-                    _.loading.off();
+                    loading.off();
                     return;
                 }
                 $.ajax({
@@ -91,7 +91,7 @@ var _this = (function (obj) {
                             $(".list-area").append($article);
                         }
                         __.property.page++;
-                        _.loading.off();
+                        loading.off();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.error(jqXHR);
@@ -99,7 +99,7 @@ var _this = (function (obj) {
                         toastr.error("エラーが発生しました。ログを確認してください。");
                     },
                     complete: function (jqXHR, textStatus) {
-                        _.loading.off();
+                        loading.off();
                     }
                 });
             }
@@ -125,5 +125,8 @@ var _this = (function (obj) {
         __.fn.getList();
         __.fn.selectList();
     });
-    return {};
+    return {
+        onLoad: function () {
+        }
+    };
 })());

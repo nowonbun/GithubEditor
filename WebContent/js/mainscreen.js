@@ -1,6 +1,6 @@
 "use strict";
-var _this = (function (obj) {
-    return obj;
+(function (obj) {
+    $(obj.onLoad);
 })((function () {
     var __ = {
         property: {},
@@ -33,14 +33,14 @@ var _this = (function (obj) {
                 else if (query !== null) {
                     $(".searchList h1 span").text(query);
                 }
-                _.loading.on();
+                loading.on();
                 $.ajax({
                     type: 'GET',
                     dataType: 'json',
                     url: "./list.json",
                     success: function (data) {
                         // console.log(data);
-                        // var ret = $(data).find("item");
+                        // let ret = $(data).find("item");
                         // console.log(data);
                         var list = [];
                         for (var i = 0; i < data.length; i++) {
@@ -72,7 +72,7 @@ var _this = (function (obj) {
                             $entity.append($entity_body);
                             $article.append($entity);
                             $(".list-area").append($article);
-                            _.loading.off();
+                            loading.off();
                             return;
                         }
                         for (var i = 0; i < list.length; i++) {
@@ -105,7 +105,7 @@ var _this = (function (obj) {
                             $article.find(".p-category").prop("href", "/?category=" + post.categoryCode);
                             $(".list-area").append($article);
                         }
-                        _.loading.off();
+                        loading.off();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(jqXHR);
@@ -113,7 +113,7 @@ var _this = (function (obj) {
                         toastr.error("エラーが発生しました。ログを確認してください。");
                     },
                     complete: function (jqXHR, textStatus) {
-                        _.loading.off();
+                        loading.off();
                     }
                 });
             }
@@ -125,5 +125,8 @@ var _this = (function (obj) {
     $(function () {
         __.fn.getList();
     });
-    return {};
+    return {
+        onLoad: function () {
+        }
+    };
 })());

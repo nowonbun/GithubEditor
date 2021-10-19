@@ -1,6 +1,6 @@
 "use strict";
-var _this = (function (obj) {
-    return obj;
+(function (obj) {
+    $(obj.onLoad);
 })((function () {
     var __ = {
         property: {},
@@ -54,5 +54,8 @@ var _this = (function (obj) {
         }
     };
     $(__.ev);
-    return {};
+    return {
+        onLoad: function () {
+        }
+    };
 })());

@@ -16,7 +16,7 @@ import common.Util;
 
 @Controller
 public class LoginController extends AbstractController {
-	@RequestMapping(value = "/index.html")
+	@RequestMapping(value = { "/", "/index.html" })
 	public String index(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
 		super.getLogger().info("index.html");
 		try {
@@ -44,7 +44,8 @@ public class LoginController extends AbstractController {
 			String pEmail = req.getParameter("email");
 			String id = PropertyMap.getInstance().getProperty("config", "id");
 			String email = PropertyMap.getInstance().getProperty("config", "email");
-			if ((Util.StringEquals(id, pId) && Util.StringEquals(email, pEmail)) || (Util.StringIsEmptyOrNull(id) && Util.StringIsEmptyOrNull(email))) {
+			if ((Util.StringEquals(id, pId) && Util.StringEquals(email, pEmail))
+					|| (Util.StringIsEmptyOrNull(id) && Util.StringIsEmptyOrNull(email))) {
 				UserBean user = new UserBean();
 				user.setId(pId);
 				user.setEmail(pEmail);

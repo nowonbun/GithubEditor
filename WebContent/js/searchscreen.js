@@ -1,6 +1,6 @@
 "use strict";
-var _this = (function (obj) {
-    return obj;
+(function (obj) {
+    $(obj.onLoad);
 })((function () {
     var __ = {
         property: {},
@@ -33,28 +33,28 @@ var _this = (function (obj) {
                 else if (query !== null) {
                     $(".searchList h1 span").text(query);
                 }
-                _.loading.on();
+                loading.on();
                 if (category !== null) {
                     $("article:not([data-category-code=" + category + "])").hide();
                     $("#searchResultCount").text($("article[data-category-code=" + category + "]").length);
                 }
                 else if (query !== null) {
-                    var count = 0;
+                    var count_1 = 0;
                     $("article").each(function () {
                         if (query !== null && $(this).find("h5.ci-link").text().toUpperCase().indexOf(query.toUpperCase()) > -1) {
-                            count++;
+                            count_1++;
                             return;
                         }
                         if (query !== null && $(this).find(".tag-column").text().toUpperCase().indexOf(query.toUpperCase()) > -1) {
-                            count++;
+                            count_1++;
                             return;
                         }
                         $(this).hide();
                     });
-                    $("#searchResultCount").text(count);
+                    $("#searchResultCount").text(count_1);
                     $("input[type=search]").val(query);
                 }
-                _.loading.off();
+                loading.off();
             }
         },
         ev: function () {
@@ -65,5 +65,8 @@ var _this = (function (obj) {
         /* __.fn.getList(); */
         __.fn.view();
     });
-    return {};
+    return {
+        onLoad: function () {
+        }
+    };
 })());
