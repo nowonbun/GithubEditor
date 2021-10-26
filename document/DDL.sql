@@ -61,9 +61,10 @@ create table cronpost(
 
 create table analysis(
 	idx int auto_increment not null,
-	url varchar(255),
-	referrer varchar(255),
-	browser varchar(255),
+	url varchar(1024),
+	referrer varchar(1024),
+	browser varchar(1024),
+	agent varchar(1024),
 	createddate datetime,	
 	primary key(idx)
 ) comment = 'analysis';
