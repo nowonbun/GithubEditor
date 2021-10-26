@@ -16,6 +16,24 @@ var loading = {
 (function (obj) {
     $(obj.onLoad);
 })((function () {
+    function getBrowser() {
+        var userAgent = navigator.userAgent, tem, matchTest = userAgent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        if (/trident/i.test(matchTest[1])) {
+            tem = /\brv[ :]+(\d+)/g.exec(userAgent) || [];
+            return 'IE ' + (tem[1] || '');
+        }
+        if (matchTest[1] === 'Chrome') {
+            tem = userAgent.match(/\b(OPR|Edge)\/(\d+)/);
+            if (tem != null) {
+                return tem.slice(1).join(' ').replace('OPR', 'Opera');
+            }
+        }
+        matchTest = matchTest[2] ? [matchTest[1], matchTest[2]] : [navigator.appName, navigator.appVersion, '-?'];
+        if ((tem = userAgent.match(/version\/(\d+)/i)) != null) {
+            matchTest.splice(1, 1, tem[1]);
+        }
+        return matchTest.join(' ');
+    }
     $(".menu-toggle").on("click", function () {
         var $this = $(this);
         $("aside.leftside").toggleClass("on");
@@ -94,6 +112,20 @@ var loading = {
                     }, 1);
                 }
             });
+            try {
+                $.ajax({
+                    url: "https://dev.nowonbun.com/analysis.php",
+                    type: "POST",
+                    data: {
+                        url: location.href,
+                        referrer: document.referrer,
+                        browser: getBrowser()
+                    }
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
         }
     };
 })());

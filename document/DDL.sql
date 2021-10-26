@@ -58,3 +58,12 @@ create table cronpost(
 	foreign key (cronhistory_idx) references cronhistory(idx),
 	foreign key (post_idx) references post(idx)
 ) comment = 'map';
+
+create table analysis(
+	idx int auto_increment not null,
+	url varchar(255),
+	referrer varchar(255),
+	browser varchar(255),
+	createddate datetime,	
+	primary key(idx)
+) comment = 'analysis';
