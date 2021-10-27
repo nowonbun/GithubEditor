@@ -19,178 +19,186 @@ import common.IF.LambdaExpression;
 
 public class Util {
 
-	private final static DateFormat yyyyMMddFormat = new SimpleDateFormat("yyyy/MM/dd");
-	private final static DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMddHHmmss");
-	private final static DateFormat javascriptDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	private final static DateFormat GMTDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-	private final static DateFormat GMTDateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-	private final static DateFormat datepickerFormat = new SimpleDateFormat("yyyy-MM-dd");
-	private static Gson gson = null;
+  private final static DateFormat yyyyMMddFormat = new SimpleDateFormat("yyyy/MM/dd");
+  private final static DateFormat dateFormat2 = new SimpleDateFormat("yyyyMMddHHmmss");
+  private final static DateFormat javascriptDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+  private final static DateFormat GMTDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+  private final static DateFormat GMTDateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+  private final static DateFormat datepickerFormat = new SimpleDateFormat("yyyy-MM-dd");
+  private final static DateFormat databaseFormat = new SimpleDateFormat("yyyyMMdd");
+  private static Gson gson = null;
 
-	public static boolean StringEquals(String val1, String val2) {
-		if (val1 == null) {
-			return false;
-		}
-		if (val2 == null) {
-			return false;
-		}
-		return val1.equals(val2);
-	}
+  public static boolean StringEquals(String val1, String val2) {
+    if (val1 == null) {
+      return false;
+    }
+    if (val2 == null) {
+      return false;
+    }
+    return val1.equals(val2);
+  }
 
-	public static boolean StringEqualsUpper(String val1, String val2) {
-		if (val1 == null) {
-			return false;
-		}
-		if (val2 == null) {
-			return false;
-		}
-		return val1.toUpperCase().equals(val2.toUpperCase());
-	}
+  public static boolean StringEqualsUpper(String val1, String val2) {
+    if (val1 == null) {
+      return false;
+    }
+    if (val2 == null) {
+      return false;
+    }
+    return val1.toUpperCase().equals(val2.toUpperCase());
+  }
 
-	public static boolean StringIsEmptyOrNull(String val) {
-		if (val == null) {
-			return true;
-		}
-		if (val.trim().length() == 0) {
-			return true;
-		}
-		return false;
-	}
+  public static boolean StringIsEmptyOrNull(String val) {
+    if (val == null) {
+      return true;
+    }
+    if (val.trim().length() == 0) {
+      return true;
+    }
+    return false;
+  }
 
-	public static Date getDateFromString(String pDate) {
-		try {
-			return yyyyMMddFormat.parse(pDate);
-		} catch (ParseException e) {
-			return null;
-		}
-	}
+  public static Date getDateFromString(String pDate) {
+    try {
+      return yyyyMMddFormat.parse(pDate);
+    } catch (ParseException e) {
+      return null;
+    }
+  }
 
-	public static Date getDateFromDatepicker(String pDate) {
-		try {
-			return datepickerFormat.parse(pDate);
-		} catch (ParseException e) {
-			return null;
-		}
-	}
+  public static Date getDateFromDatepicker(String pDate) {
+    try {
+      return datepickerFormat.parse(pDate);
+    } catch (ParseException e) {
+      return null;
+    }
+  }
 
-	public static Date getNow() {
-		return Calendar.getInstance().getTime();
-	}
+  public static Date getNow() {
+    return Calendar.getInstance().getTime();
+  }
 
-	public static int getYear(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		return cal.get(Calendar.YEAR);
-	}
+  public static int getYear(Date date) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    return cal.get(Calendar.YEAR);
+  }
 
-	public static int getMonth(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		return cal.get(Calendar.MONTH) + 1;
-	}
+  public static int getMonth(Date date) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    return cal.get(Calendar.MONTH) + 1;
+  }
 
-	public static int getDay(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		return cal.get(Calendar.DAY_OF_MONTH);
-	}
+  public static int getDay(Date date) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    return cal.get(Calendar.DAY_OF_MONTH);
+  }
 
-	public static String createCookieKey() {
-		String key = UUID.randomUUID().toString();
-		return key.replace("-", "") + dateFormat2.format(new Date());
-	}
+  public static String createCookieKey() {
+    String key = UUID.randomUUID().toString();
+    return key.replace("-", "") + dateFormat2.format(new Date());
+  }
 
-	public static String getTimeUnique() {
-		return dateFormat2.format(new Date());
-	}
+  public static String getTimeUnique() {
+    return dateFormat2.format(new Date());
+  }
 
-	public static int getCookieExpire() {
-		return 60 * 60 * 24 * PropertyMap.getInstance().getPropertyInt("config", "cookie_expire");
-	}
+  public static int getCookieExpire() {
+    return 60 * 60 * 24 * PropertyMap.getInstance().getPropertyInt("config", "cookie_expire");
+  }
 
-	public static String getCookiePath() {
-		return PropertyMap.getInstance().getProperty("config", "cookie_path");
-	}
+  public static String getCookiePath() {
+    return PropertyMap.getInstance().getProperty("config", "cookie_path");
+  }
 
-	public static <T> T searchArray(T[] array, LambdaExpression<T, Boolean> condition) {
-		if (array == null) {
-			return null;
-		}
-		for (T node : array) {
-			if (condition.run(node)) {
-				return node;
-			}
-		}
-		return null;
-	}
+  public static <T> T searchArray(T[] array, LambdaExpression<T, Boolean> condition) {
+    if (array == null) {
+      return null;
+    }
+    for (T node : array) {
+      if (condition.run(node)) {
+        return node;
+      }
+    }
+    return null;
+  }
 
-	public static String convertDateFormat(Date date) {
-		if (date == null) {
-			return null;
-		}
-		return javascriptDateFormat.format(date);
-	}
+  public static String convertDateFormat(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return javascriptDateFormat.format(date);
+  }
 
-	public static String convertGMTDateFormat(Date date) {
-		if (date == null) {
-			return null;
-		}
-		return GMTDateFormat.format(date);
-	}
+  public static String convertGMTDateFormat(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return GMTDateFormat.format(date);
+  }
 
-	public static String convertGMT2DateFormat(Date date) {
-		if (date == null) {
-			return null;
-		}
-		return GMTDateFormat2.format(date);
-	}
+  public static String convertGMT2DateFormat(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return GMTDateFormat2.format(date);
+  }
 
-	public static String convertDatepicker(Date date) {
-		if (date == null) {
-			return null;
-		}
-		return datepickerFormat.format(date);
-	}
+  public static String convertDatepicker(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return datepickerFormat.format(date);
+  }
 
-	public static Gson getGson() {
-		if (Util.gson == null) {
-			Util.gson = new Gson();
-		}
-		return Util.gson;
-	}
+  public static String convertDatabaseFormat(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return databaseFormat.format(date);
+  }
 
-	public static void copyFile(String src, String dest) throws FileNotFoundException, IOException {
-		try (InputStream inputStream = new FileInputStream(src)) {
-			try (OutputStream outputStream = new FileOutputStream(dest)) {
-				byte[] buffer = new byte[1024];
-				int length = 0;
-				while ((length = inputStream.read(buffer)) > 0) {
-					outputStream.write(buffer, 0, length);
-				}
-			}
-		}
-	}
+  public static Gson getGson() {
+    if (Util.gson == null) {
+      Util.gson = new Gson();
+    }
+    return Util.gson;
+  }
 
-	public static String convertUnicode(String val) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < val.length(); i++) {
-			int code = val.codePointAt(i);
-			if (code < 128) {
-				sb.append(String.format("%c", code));
-			} else {
-				sb.append(String.format("\\u%04x", code));
-			}
-		}
-		return sb.toString();
-	}
+  public static void copyFile(String src, String dest) throws FileNotFoundException, IOException {
+    try (InputStream inputStream = new FileInputStream(src)) {
+      try (OutputStream outputStream = new FileOutputStream(dest)) {
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = inputStream.read(buffer)) > 0) {
+          outputStream.write(buffer, 0, length);
+        }
+      }
+    }
+  }
 
-	public static String convertString(String val) {
-		for (int i = 0; i < val.length(); i++) {
-			if ('\\' == val.charAt(i) && 'u' == val.charAt(i + 1)) {
-				Character r = (char) Integer.parseInt(val.substring(i + 2, i + 6), 16);
-				val = val.replace(val.substring(i, i + 6), r.toString());
-			}
-		}
-		return val;
-	}
+  public static String convertUnicode(String val) {
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < val.length(); i++) {
+      int code = val.codePointAt(i);
+      if (code < 128) {
+        sb.append(String.format("%c", code));
+      } else {
+        sb.append(String.format("\\u%04x", code));
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String convertString(String val) {
+    for (int i = 0; i < val.length(); i++) {
+      if ('\\' == val.charAt(i) && 'u' == val.charAt(i + 1)) {
+        Character r = (char) Integer.parseInt(val.substring(i + 2, i + 6), 16);
+        val = val.replace(val.substring(i, i + 6), r.toString());
+      }
+    }
+    return val;
+  }
 }

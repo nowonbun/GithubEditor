@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c")
+@NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
 public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -16,18 +16,18 @@ public class Category implements Serializable {
 
 	private String name;
 
-	private String uniqcode;
-
 	private int seq;
 
+	private String uniqcode;
+
 	@ManyToOne
-	@JoinColumn(name = "p_category_code")
+	@JoinColumn(name="p_category_code")
 	private Category category;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="category", fetch = FetchType.EAGER)
 	private List<Category> categories;
 
-	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="category", fetch = FetchType.LAZY)
 	private List<Post> posts;
 
 	public Category() {
@@ -55,6 +55,14 @@ public class Category implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getSeq() {
+		return this.seq;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
 	}
 
 	public String getUniqcode() {
@@ -115,14 +123,6 @@ public class Category implements Serializable {
 		post.setCategory(null);
 
 		return post;
-	}
-
-	public void setSeq(int seq) {
-		this.seq = seq;
-	}
-
-	public int getSeq() {
-		return this.seq;
 	}
 
 }

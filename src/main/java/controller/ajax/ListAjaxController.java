@@ -1,6 +1,7 @@
 package controller.ajax;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,10 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import bean.AnalysisBean;
 import bean.ListBean;
 import common.AbstractController;
 import common.Util;
+import dao.AnalysisDao;
 import dao.CategoryDao;
 import dao.PostDao;
 import model.Category;
@@ -29,6 +31,10 @@ public class ListAjaxController extends AbstractController {
   @Autowired
   @Qualifier("CategoryDao")
   private CategoryDao categoryDao;
+
+  @Autowired
+  @Qualifier("AnalysisDao")
+  private AnalysisDao analysisDao;
 
   @RequestMapping(value = "/list.ajax", method = RequestMethod.POST)
   public void list(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
@@ -74,6 +80,29 @@ public class ListAjaxController extends AbstractController {
       // https://stackoverflow.com/questions/240546/remove-html-tags-from-a-string
       // summary
 
+      returnJson(res, ret);
+    } catch (Throwable e) {
+      super.getLogger().error(e);
+      res.setStatus(406);
+    }
+  }
+
+  @RequestMapping(value = "/analysis.ajax", method = RequestMethod.POST)
+  public void analysis(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
+    super.getLogger().info("analysis.ajax");
+    try {
+      var list = analysisDao.getList(new Date());
+      var ret = new ArrayList<AnalysisBean>();
+      for (var data : list) {
+        var bean = new AnalysisBean();
+        bean.setIdx(data.getIdx());
+        bean.setUrl(data.getUrl());
+        bean.setReferrer(data.getReferrer());
+        bean.setBrowser(data.getBrowser());
+        bean.setAgent(data.getAgent());
+        bean.setCreateddate(Util.convertDateFormat(data.getCreateddate()));
+        ret.add(bean);
+      }
       returnJson(res, ret);
     } catch (Throwable e) {
       super.getLogger().error(e);

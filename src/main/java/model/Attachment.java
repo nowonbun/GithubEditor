@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@NamedQuery(name = "Attachment.findAll", query = "SELECT a FROM Attachment a")
+@NamedQuery(name="Attachment.findAll", query="SELECT a FROM Attachment a")
 public class Attachment implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -19,17 +19,17 @@ public class Attachment implements Serializable {
 	@Lob
 	private byte[] data;
 
+	private String filename;
+
 	private boolean isdeleted;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
 
+	private String type;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Post post;
-
-	private String filename;
-
-	private String type;
 
 	public Attachment() {
 	}

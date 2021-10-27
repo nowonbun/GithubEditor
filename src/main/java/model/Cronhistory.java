@@ -71,5 +71,4 @@ public class Cronhistory implements Serializable {
 
 		return post;
 	}
-
 }
