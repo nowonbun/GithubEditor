@@ -34,13 +34,12 @@ var loading = {
         }
         return matchTest.join(' ');
     }
-    $(".menu-toggle").on("click", function () {
-        var $this = $(this);
+    $(document).on("click", ".menu-toggle", function () {
         $("aside.leftside").toggleClass("on");
         $("section.menu-back-layout").toggleClass("off");
         $("body").toggleClass("mobile-fixed");
     });
-    $(".menu-close").on("click", function () {
+    $(document).on("click", ".menu-close", function () {
         $("aside.leftside").removeClass("on");
         $("section.menu-back-layout").addClass("off");
         $("body").removeClass("mobile-fixed");
