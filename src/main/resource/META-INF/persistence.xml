@@ -6,6 +6,7 @@
 		<class>model.Category</class>
 		<class>model.Post</class>
 		<class>model.Cronhistory</class>
+		<class>model.Analysis</class>
 		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
 			<property name="eclipselink.query-results-cache" value="false" />

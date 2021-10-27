@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p")
+@NamedQuery(name="Post.findAll", query="SELECT p FROM Post p")
 public class Post implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -22,24 +22,24 @@ public class Post implements Serializable {
 
 	private boolean isdeleted;
 
+	private boolean isreservation;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
 
-	private String title;
-
 	private String tag;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	private Category category;
+	private String title;
 
 	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Attachment> attachments;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinTable(name = "cronpost", joinColumns = { @JoinColumn(name = "post_idx") }, inverseJoinColumns = { @JoinColumn(name = "cronhistory_idx") })
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinTable(name="cronpost", joinColumns = { @JoinColumn(name = "post_idx") }, inverseJoinColumns = { @JoinColumn(name = "cronhistory_idx") })
 	private Cronhistory cronhistory;
 	
-	private boolean isreservation;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Category category;
 
 	public Post() {
 	}
@@ -72,16 +72,16 @@ public class Post implements Serializable {
 		return this.isdeleted;
 	}
 
-	public void setIsreservation(boolean isreservation) {
-		this.isreservation = isreservation;
+	public void setIsdeleted(boolean isdeleted) {
+		this.isdeleted = isdeleted;
 	}
-	
+
 	public boolean getIsreservation() {
 		return this.isreservation;
 	}
 
-	public void setIsdeleted(boolean isdeleted) {
-		this.isdeleted = isdeleted;
+	public void setIsreservation(boolean isreservation) {
+		this.isreservation = isreservation;
 	}
 
 	public Date getLastupdateddate() {
@@ -130,6 +130,14 @@ public class Post implements Serializable {
 		return attachment;
 	}
 
+	public Cronhistory getCronhistory() {
+		return this.cronhistory;
+	}
+
+	public void setCronhistory(Cronhistory cronhistory) {
+		this.cronhistory = cronhistory;
+	}
+
 	public Category getCategory() {
 		return this.category;
 	}
@@ -138,11 +146,4 @@ public class Post implements Serializable {
 		this.category = category;
 	}
 
-	public Cronhistory getCronhistory() {
-		return this.cronhistory;
-	}
-
-	public void setCronhistory(Cronhistory cronhistory) {
-		this.cronhistory = cronhistory;
-	}
 }

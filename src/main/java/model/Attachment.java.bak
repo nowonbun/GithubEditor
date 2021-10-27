@@ -21,7 +21,7 @@ public class Attachment implements Serializable {
 
 	private String filename;
 
-	private boolean isdeleted;
+	private byte isdeleted;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastupdateddate;
