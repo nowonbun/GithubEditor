@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ import common.AbstractController;
 import common.LocalPaths;
 import common.PropertyMap;
 import common.Util;
+import dao.AnalysisDao;
 import dao.CategoryDao;
 import dao.PostDao;
 import model.Category;
@@ -41,12 +44,20 @@ public class MainController extends AbstractController {
   @Autowired
   @Qualifier("PostDao")
   private PostDao postDao;
+  
+  @Autowired
+  @Qualifier("AnalysisDao")
+  private AnalysisDao analysisDao;
 
   @RequestMapping(value = "/main.html", method = RequestMethod.GET)
   public String main(ModelMap modelmap, HttpSession session, HttpServletRequest req, HttpServletResponse res) {
     super.getLogger().info("main.html");
     try {
       setMenu(modelmap);
+      var calender = Calendar.getInstance();
+      calender.add(Calendar.DATE, -1);
+      modelmap.addAttribute("yesderdaycount", analysisDao.getCount(calender.getTime()));
+      modelmap.addAttribute("todaycount", analysisDao.getCount(new Date()));
       return "main";
     } catch (Throwable e) {
       super.getLogger().error(e);
