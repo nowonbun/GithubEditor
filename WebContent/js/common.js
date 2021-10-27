@@ -113,16 +113,16 @@ var loading = {
                 }
             });
             try {
-                $.ajax({
-                    url: "https://dev.nowonbun.com/analysis.php",
-                    type: "POST",
-                    data: {
-                        url: location.href,
-                        referrer: document.referrer,
-                        browser: getBrowser(),
-                        agent: navigator.userAgent
-                    }
-                });
+//                $.ajax({
+//                    url: "https://dev.nowonbun.com/analysis.php",
+//                    type: "POST",
+//                    data: {
+//                        url: location.href,
+//                        referrer: document.referrer,
+//                        browser: getBrowser(),
+//                        agent: navigator.userAgent
+//                    }
+//                });
             }
             catch (e) {
                 console.log(e);
