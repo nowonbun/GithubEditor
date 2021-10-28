@@ -91,6 +91,9 @@ var loading = {
             document.addEventListener('copy', function (e) {
                 var _a;
                 var url = document.location.href, decodedUrl = decodeURI(url), selection = window.getSelection();
+                if (document.location.href.indexOf("githubeditor") !== -1) {
+                    return;
+                }
                 if (typeof window.getSelection === "undefined") {
                     e.preventDefault();
                     (_a = e.clipboardData) === null || _a === void 0 ? void 0 : _a.setData('Text', selection + '\n\n Reference: [明月の開発ストーリ]' + decodedUrl);
